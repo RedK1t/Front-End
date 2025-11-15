@@ -29,7 +29,7 @@ export default function TargetCard(props: TargetCardProps) {
   const { isNew } = props;
   if (isNew) {
     return (
-      <div className="bg-gray/50 border-dark-yellowish-white flex h-52 w-72 cursor-pointer flex-col items-center justify-center rounded-[14px] border px-3 pt-1.5 pb-4 transition-all duration-300 hover:translate-y-[-4px]">
+      <div className="bg-gray/50 border-dark-yellowish-white flex h-52 w-72 cursor-pointer flex-col items-center justify-center rounded-[14px] border px-3 pt-1.5 pb-4 transition-all duration-300 hover:translate-y[-4px]">
         <img src={plusIcon} alt="Plus Icon" className="h-15 w-15" />
         <p className="heading-text">Add Target</p>
       </div>
@@ -40,7 +40,7 @@ export default function TargetCard(props: TargetCardProps) {
     const { targetName, targetDomain, vulnerabilitiesFound, lastScanned } =
       props;
     return (
-      <div className="bg-gray/50 border-dark-yellowish-white flex h-52 w-72 flex-col justify-between rounded-[14px] border px-3 pt-1.5 pb-4 transition-all duration-300 hover:translate-y-[-4px]">
+      <div className="bg-gray/50 border-dark-yellowish-white flex h-52 w-72 flex-col justify-between rounded-[14px] border px-3 pt-1.5 pb-4 transition-all duration-300 hover:translate-y[-4px]">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <p className="heading-text text-white">{targetName}</p>
