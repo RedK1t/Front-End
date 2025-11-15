@@ -1,4 +1,4 @@
-import uparrowIcon from "../../../assets/uparrowIcon.png";
+// import uparrowIcon from "../../../assets/uparrowIcon.png";
 import plusIcon from "../../../assets/plusIcon.svg";
 import shareIcon from "../../../assets/shareIcon.svg";
 
@@ -108,11 +108,11 @@ export default function TargetCard(props: TargetCardProps) {
               <p className="heading-text text-red text-shadow-red text-shadow-[0_0_24px_rgba(255,0,0,1)]">
                 {vulnerabilitiesFound}
               </p>
-              <img
+              {/* <img
                 src={uparrowIcon}
                 alt="Up Arrow Icon"
                 className="h-5 w-5 -translate-y-1/4"
-              />
+              /> */}
             </div>
           </div>
 
