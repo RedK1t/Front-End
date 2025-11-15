@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import "tailwindcss";
+@tailwind utilities;
+
+
+@theme {
+  --font-quicksand: Quicksand, sans-serif;
+  --font-jetbrains-mono: "JetBrains Mono", monospace;
+
+  --color-red: #CE3232;
+  --color-black: #0B0B0B;
+  --color-white: #FFFFFF;
+  --color-gray: #1F1F1F;
+  --color-yellowish-white: #D7CCBC;
+  --color-dark-yellowish-white: #AB9F8E;
+  --color-button-glow: #CF222230;
+  --color-light-red: #CF2222;
+  --color-dark-red: #FA010C;
+  --color-green-transparent: #22C55E15;
+  --color-blue-transparent: #3B82F615;
+  --color-yellow: #FFA600;
+  --color-orange: #F97316;
+  --color-orange-transparent: #F9731615;
+  --color-cyan: #2DD4BF;
+  --color-cyan-transparent: #2DD4BF15;
+  --color-red-transparent: #4F1E1E25;
+  --color-blue: #3B82F6;
+  --color-green: #4ADE80;
+}
+
+@layer components {
+  .heading-text {
+    @apply font-quicksand text-[28px] font-semibold;
+  }
+
+  .large-text {
+    @apply font-quicksand text-xl font-semibold;
+  }
+
+  .normal-text {
+    @apply font-quicksand text-sm font-medium;
+  }
+
+  .small-text {
+    @apply font-quicksand text-[12px] font-medium;
+  }
+
+  .coding-text {
+    @apply font-jetbrains-mono text-[12px] font-normal;
+  }
+}
+
+@layer base {
+
+  html,
+  body {
+    @apply bg-black text-white;
+  }
+}

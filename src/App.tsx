@@ -1,0 +1,10 @@
+import "./App.css";
+import Home from "./features/home/Home";
+
+export default function App() {
+  return (
+    <div className="container mx-auto">
+      <Home />
+    </div>
+  );
+}
