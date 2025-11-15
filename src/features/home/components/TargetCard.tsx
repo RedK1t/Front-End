@@ -1,4 +1,4 @@
-import uparrowIcon from "../../../assets/uparrowIcon.svg";
+import uparrowIcon from "../../../assets/uparrowIcon.png";
 import plusIcon from "../../../assets/plusIcon.svg";
 import shareIcon from "../../../assets/shareIcon.svg";
 
