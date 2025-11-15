@@ -1,6 +1,7 @@
-import fawryLogo from "../../../assets/fawry.png";
 import uparrowIcon from "../../../assets/uparrowIcon.svg";
 import plusIcon from "../../../assets/plusIcon.svg";
+
+const LOGO_DEV_PUBLIC_KEY = "pk_e6MtMO_tQm6SnFDQtPovWg";
 
 type RecentTargetCardProps = {
   isNew?: false;
@@ -15,6 +16,15 @@ type NewTargetCardProps = {
 };
 
 type TargetCardProps = RecentTargetCardProps | NewTargetCardProps;
+function CompanyLogo({ domain }: { domain: string }) {
+  return (
+    <img
+      src={`https://img.logo.dev/${domain}?token=${LOGO_DEV_PUBLIC_KEY}&format=png&retina=true`}
+      alt="Company logo"
+      className="h-12 w-12"
+    />
+  );
+}
 export default function TargetCard(props: TargetCardProps) {
   const { isNew } = props;
   if (isNew) {
@@ -36,7 +46,8 @@ export default function TargetCard(props: TargetCardProps) {
             <p className="heading-text text-white">{targetName}</p>
             <p className="normal-text text-yellowish-white">{targetDomain}</p>
           </div>
-          <img src={fawryLogo} alt="Fawry Logo" className="h-12 w-12" />
+          {/* <img src={fawryLogo} alt="Fawry Logo" className="h-12 w-12" /> */}
+          <CompanyLogo domain={targetDomain} />
         </div>
 
         <div className="flex justify-between">

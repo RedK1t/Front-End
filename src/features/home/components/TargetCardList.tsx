@@ -12,13 +12,13 @@ export default function TargetCardList() {
       />
       <TargetCard
         targetName="Fawry"
-        targetDomain="www.fawry.com"
+        targetDomain="www.google.com"
         vulnerabilitiesFound={47}
         lastScanned="1 day ago"
       />
       <TargetCard
         targetName="Fawry"
-        targetDomain="www.fawry.com"
+        targetDomain="www.figma.com"
         vulnerabilitiesFound={47}
         lastScanned="1 day ago"
       />
