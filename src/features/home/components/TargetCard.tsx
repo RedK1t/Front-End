@@ -1,6 +1,7 @@
 import uparrowIcon from "../../../assets/uparrowIcon.svg";
 import plusIcon from "../../../assets/PlusIcon.svg";
 import shareIcon from "../../../assets/ShareIcon.svg";
+import searchIcon from "../../../assets/SearchIcon.svg";
 
 const LOGO_DEV_PUBLIC_KEY = "pk_e6MtMO_tQm6SnFDQtPovWg";
 
@@ -77,7 +78,10 @@ export default function TargetCard(props: TargetCardProps) {
                 <img src={shareIcon} alt="Share Icon" className="h-6 w-6" />
                 Share
               </button>
-              <button className="border-dark-red shadow-dark-red/20 bg-gray large-text flex cursor-pointer items-center gap-2 rounded-lg border px-8 py-1 shadow-[0_0_15px]"></button>
+              <button className="border-dark-red shadow-dark-red/20 bg-red large-text flex cursor-pointer items-center gap-2 rounded-lg border px-8 py-1 shadow-[0_0_15px]">
+                <img src={searchIcon} alt="Search Icon" className="h-6 w-6" />
+                Test Now
+              </button>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">
@@ -92,7 +96,7 @@ export default function TargetCard(props: TargetCardProps) {
     const { targetName, targetDomain, vulnerabilitiesFound, lastScanned } =
       props;
     return (
-      <div className="bg-gray/50 border-dark-yellowish-white hover:translate-y[-4px] flex h-52 w-72 flex-col justify-between rounded-[14px] border px-3 pt-1.5 pb-4 transition-all duration-300">
+      <div className="bg-gray/50 border-dark-yellowish-white flex h-52 w-72 flex-col justify-between rounded-[14px] border px-3 pt-1.5 pb-4 transition-all duration-300 hover:-translate-y-[4px]">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <p className="heading-text text-white">{targetName}</p>
@@ -121,7 +125,7 @@ export default function TargetCard(props: TargetCardProps) {
               <p className="normal-text">Last Scanned</p>
               <p className="normal-text text-red">{lastScanned}</p>
             </div>
-            <button className="small-text shadow-button-glow border-button-glow cursor-pointer rounded-md border bg-black px-2 py-1 text-white shadow-[0_0_15px]">
+            <button className="small-text shadow-red/20 hover:shadow-red/50 border-button-glow cursor-pointer rounded-md border bg-black px-2 py-1 text-white shadow-[0_0_15px]">
               manage
             </button>
           </div>
