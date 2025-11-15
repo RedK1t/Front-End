@@ -36,55 +36,10 @@ export default function TargetCard(props: TargetCardProps) {
   const { isNew } = props;
   if (isNew) {
     return (
-      <>
-        <button
-          onClick={openModal}
-          className="bg-gray/50 border-dark-yellowish-white flex h-52 w-72 cursor-pointer flex-col items-center justify-center rounded-[14px] border px-3 pt-1.5 pb-4 transition-all duration-300 hover:translate-y-[-4px]"
-        >
-          <img src={plusIcon} alt="Plus Icon" className="h-15 w-15" />
-          <p className="heading-text">Add Target</p>
-          {/* Open the modal using document.getElementById('ID').showModal() method */}
-        </button>
-
-        {/* Modal */}
-        <dialog id="addTargetModal" className="modal backdrop-blur-xs">
-          {/* Modal Box */}
-          <div className="modal-box bg-gray/80 border-yellowish-white flex flex-col gap-14 rounded-2xl border-[0.5px] px-10 py-5 shadow-lg backdrop-blur-md">
-            {/* Modal Input */}
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col items-start gap-2">
-                <p className="heading-text text-light-red">Target Name</p>
-                <input
-                  type="text"
-                  placeholder="Tesla"
-                  className="placeholder:large-text placeholder:text-dark-yellowish-white w-full rounded-md border border-white bg-black p-3"
-                />
-              </div>
-
-              <div className="flex flex-col items-start gap-2">
-                <p className="heading-text text-light-red">Main Domain</p>
-                <input
-                  type="text"
-                  placeholder="tesla.com"
-                  className="placeholder:large-text placeholder:text-dark-yellowish-white w-full rounded-md border border-white bg-black p-3"
-                />
-              </div>
-            </div>
-
-            {/* Modal Buttons */}
-            <div className="flex items-center justify-between">
-              <button className="border-dark-red shadow-dark-red/20 bg-gray large-text flex cursor-pointer items-center gap-2 rounded-lg border px-8 py-1 shadow-[0_0_15px]">
-                <img src={shareIcon} alt="Share Icon" className="h-6 w-6" />
-                Share
-              </button>
-              <button className="border-dark-red shadow-dark-red/20 bg-gray large-text flex cursor-pointer items-center gap-2 rounded-lg border px-8 py-1 shadow-[0_0_15px]"></button>
-            </div>
-          </div>
-          <form method="dialog" className="modal-backdrop">
-            <button>close</button>
-          </form>
-        </dialog>
-      </>
+      <div className="bg-gray/50 border-dark-yellowish-white flex h-52 w-72 cursor-pointer flex-col items-center justify-center rounded-[14px] border px-3 pt-1.5 pb-4 transition-all duration-300 hover:translate-y-[-4px]">
+        <img src={plusIcon} alt="Plus Icon" className="h-15 w-15" />
+        <p className="heading-text">Add Target</p>
+      </div>
     );
   }
 
@@ -92,7 +47,7 @@ export default function TargetCard(props: TargetCardProps) {
     const { targetName, targetDomain, vulnerabilitiesFound, lastScanned } =
       props;
     return (
-      <div className="bg-gray/50 border-dark-yellowish-white flex h-52 w-72 flex-col justify-between rounded-[14px] border px-3 pt-1.5 pb-4 transition-all duration-300 hover:translate-y-[-4px]">
+      <div className="bg-gray/50 border-dark-yellowish-white hover:translate-y[-4px] flex h-52 w-72 flex-col justify-between rounded-[14px] border px-3 pt-1.5 pb-4 transition-all duration-300">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <p className="heading-text text-white">{targetName}</p>
