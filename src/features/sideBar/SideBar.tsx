@@ -2,6 +2,7 @@ import { createPortal } from "react-dom";
 import overviewIcon from "../../assets/overviewIcon.svg";
 import searchIcon from "../../assets/SearchIcon.svg";
 import scannerIcon from "../../assets/scannerIcon.svg";
+import sitemapIcon from "../../assets/sitemapIcon.svg";
 import proxyIcon from "../../assets/proxyIcon.svg";
 import reportIcon from "../../assets/reportIcon.svg";
 import toolsIcon from "../../assets/toolsIcon.svg";
@@ -41,6 +42,12 @@ export default function SideBar() {
         icon={searchIcon}
         text="Reconnaissance"
         to="/reconnaissance"
+        isOpen={isOpen}
+      />
+      <NavItem
+        icon={sitemapIcon}
+        text="SiteMap"
+        to="/sitemap"
         isOpen={isOpen}
       />
       <NavItem
