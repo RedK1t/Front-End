@@ -1,13 +1,11 @@
 import { createPortal } from "react-dom";
 import overviewIcon from "../../assets/overviewIcon.svg";
-import notificationIcon from "../../assets/notificationIconCropped.svg";
 import searchIcon from "../../assets/SearchIcon.svg";
 import scannerIcon from "../../assets/scannerIcon.svg";
 import proxyIcon from "../../assets/proxyIcon.svg";
 import reportIcon from "../../assets/reportIcon.svg";
 import toolsIcon from "../../assets/toolsIcon.svg";
 import settingsIcon from "../../assets/settingsIconCropped.svg";
-import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import NavItem from "./NavItem";
 
