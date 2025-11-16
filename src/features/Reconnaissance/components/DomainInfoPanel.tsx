@@ -8,7 +8,7 @@ export default function DomainInfoPanel() {
   const filter = searchParams.get("dig");
   return (
     /*  Panel */
-    <div className="bg-gray flex h-[80dvh] w-1/2 flex-col gap-y-10 rounded-md px-6 py-6">
+    <div className="bg-gray flex h-[80dvh] w-full flex-col gap-y-10 rounded-md px-6 py-6 lg:w-1/2">
       {/*  Header */}
       <div className="flex w-full items-center justify-between">
         <p className="large-text text-white">{filter} information</p>

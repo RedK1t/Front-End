@@ -6,7 +6,7 @@ export default function Reconnaissance() {
   return (
     <div className="flex flex-col gap-5">
       <Filters />
-      <div className="mx-auto flex w-11/12 items-center justify-between gap-16">
+      <div className="mx-auto flex w-11/12 flex-col items-center justify-between gap-12 lg:flex-row">
         <DomainInfoPanel />
         <SubdomainsPanel />
       </div>

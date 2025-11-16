@@ -2,6 +2,7 @@ import uparrowIcon from "../../../assets/uparrowIcon.svg";
 import plusIcon from "../../../assets/PlusIcon.svg";
 import shareIcon from "../../../assets/ShareIcon.svg";
 import searchIcon from "../../../assets/SearchIcon.svg";
+import { Link } from "react-router-dom";
 
 const LOGO_DEV_PUBLIC_KEY = "pk_e6MtMO_tQm6SnFDQtPovWg";
 
@@ -78,10 +79,13 @@ export default function TargetCard(props: TargetCardProps) {
                 <img src={shareIcon} alt="Share Icon" className="h-6 w-6" />
                 Share
               </button>
-              <button className="border-dark-red shadow-dark-red/20 bg-dark-red large-text flex cursor-pointer items-center gap-2 rounded-lg border px-8 py-1 shadow-[0_0_15px]">
+              <Link
+                to="/reconnaissance"
+                className="border-dark-red shadow-dark-red/20 bg-dark-red large-text flex cursor-pointer items-center gap-2 rounded-lg border px-8 py-1 shadow-[0_0_15px]"
+              >
                 <img src={searchIcon} alt="Search Icon" className="h-6 w-6" />
                 Test Now
-              </button>
+              </Link>
             </div>
           </div>
           <form method="dialog" className="modal-backdrop">

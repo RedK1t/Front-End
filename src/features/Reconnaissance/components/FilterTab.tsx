@@ -12,7 +12,8 @@ export default function FilterTab({
   children,
 }: FilterTabProps) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const tabStyles = "normal-text px-2 py-1 ";
+  const tabStyles =
+    "normal-text px-2 py-1 cursor-pointer transition-all duration-300";
   const hoverStyles =
     "ring-dark-yellowish-white shadow-yellowish-white/30 rounded-full ring text-white shadow-[0_0_10px]";
 

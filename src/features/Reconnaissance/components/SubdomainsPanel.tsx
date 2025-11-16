@@ -7,7 +7,7 @@ export default function SubdomainsPanel() {
   const filter = searchParams.get("subdomain");
   return (
     /*  Panel */
-    <div className="bg-gray flex h-[80dvh] w-1/2 flex-col gap-y-2.5 rounded-md px-6 py-6">
+    <div className="bg-gray flex h-[80dvh] w-full flex-col gap-y-2.5 rounded-md px-6 py-6 lg:w-1/2">
       {/*  Header */}
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-col gap-1">

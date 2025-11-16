@@ -6,9 +6,11 @@ export default function Filters() {
   const [searchParams, setSearchParams] = useSearchParams();
   useEffect(() => {
     const newParams = new URLSearchParams(searchParams);
-    newParams.set("dig", searchParams.get("dig") || "whois");
-    newParams.set("subdomain", searchParams.get("subdomain") || "all");
-    setSearchParams(newParams);
+    if (!searchParams.has("dig")) newParams.set("dig", "whois");
+    if (!searchParams.has("subdomain")) newParams.set("subdomain", "all");
+    if (!searchParams.has("dig") || !searchParams.has("subdomain")) {
+      setSearchParams(newParams, { replace: true });
+    }
   }, []);
   return (
     <div className="mx-auto flex w-11/12 items-center justify-between pt-11">
