@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Home from "./features/home/Home";
 import Reconnaissance from "./features/Reconnaissance/Reconnaissance";
+import AppLayout from "./features/AppLayout";
 
 const router = createBrowserRouter([
   {
@@ -9,10 +10,19 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/Reconnaissance",
-    element: <Reconnaissance />,
+    element: <AppLayout />,
+    children: [
+      {
+        path: "/Reconnaissance",
+        element: <Reconnaissance />,
+      },
+    ],
   },
 ]);
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+    </>
+  );
 }
