@@ -36,6 +36,8 @@ export default function TargetCard(props: TargetCardProps) {
     modal?.showModal();
   }
   const { isNew } = props;
+
+  // If the card is new, return a button to open the modal
   if (isNew) {
     return (
       <>
@@ -96,20 +98,26 @@ export default function TargetCard(props: TargetCardProps) {
     );
   }
 
+  // If the card is not new, return a regular target card
   if (!isNew) {
     const { targetName, targetDomain, vulnerabilitiesFound, lastScanned } =
       props;
     return (
       <div className="bg-gray/80 flex h-52 w-72 flex-col justify-between rounded-[14px] p-4 transition-all duration-300 hover:-translate-y-[4px]">
+        {/* Header */}
         <div className="flex items-center justify-between">
+          {/* Header Content */}
           <div className="flex flex-col">
             <p className="heading-text text-white">{targetName}</p>
             <p className="normal-text text-yellowish-white">{targetDomain}</p>
           </div>
+          {/* Header Icon */}
           <CompanyLogo domain={targetDomain} />
         </div>
 
+        {/* Content */}
         <div className="flex justify-between">
+          {/* Content Left */}
           <div className="flex w-1/2 flex-col gap-2">
             <p className="normal-text text-white">Vulnerabilities Found</p>
             <div className="flex items-end">
@@ -123,7 +131,7 @@ export default function TargetCard(props: TargetCardProps) {
               />
             </div>
           </div>
-
+          {/* Content Right */}
           <div className="flex flex-col items-end justify-between">
             <div className="flex flex-col gap-1 text-end">
               <p className="normal-text">Last Scanned</p>

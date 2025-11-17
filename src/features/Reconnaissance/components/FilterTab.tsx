@@ -17,6 +17,7 @@ export default function FilterTab({
   const hoverStyles =
     "ring-dark-yellowish-white shadow-yellowish-white/30 rounded-full ring text-white shadow-[0_0_10px]";
 
+  // Handle click event to set filter parameter
   function handleClick() {
     const newParams = new URLSearchParams(searchParams);
     newParams.set(paramName, paramData);

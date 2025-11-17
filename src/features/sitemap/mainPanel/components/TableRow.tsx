@@ -19,11 +19,15 @@ export default function TableRow({
   return (
     <>
       <div className="text-center">{lastSeen}</div>
+
+      {/*  Source */}
       <div
         className={`w-14 rounded-[5px] text-center ${source === "Active" ? "bg-cyan-transparent text-cyan" : source === "Passive" ? "bg-orange-transparent text-yellow" : ""}`}
       >
         {source}
       </div>
+
+      {/* Status */}
       <div className="text-center">{status}</div>
       <div
         className={`w-16 rounded-[3px] text-center ${
@@ -40,7 +44,11 @@ export default function TableRow({
       >
         {method}
       </div>
+
+      {/* Path */}
       <div className="text-center">{path}</div>
+
+      {/* Checkbox */}
       <div className="text-center">
         <div
           onClick={() => setIsChecked(!isChecked)}

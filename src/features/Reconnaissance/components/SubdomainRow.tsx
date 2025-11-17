@@ -13,10 +13,13 @@ export default function SubdomainRow({ subdomain, ip }: SubdomainRowProps) {
     <div className="flex flex-col rounded-md bg-black px-4 py-2">
       {/*  Subdomain  */}
       <div className="flex items-center justify-between">
+        {/* Subdomain Name & IP */}
         <div className="flex flex-col gap-1">
           <p className="normal-text text-red">{subdomain}</p>
           <p className="normal-text text-yellowish-white">{ip}</p>
         </div>
+
+        {/* Subdomain Actions */}
         <div className="flex items-center gap-8">
           <button
             onClick={() => setIsOpen(!isOpen)}

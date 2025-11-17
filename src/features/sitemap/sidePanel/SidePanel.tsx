@@ -2,7 +2,7 @@ import FolderItem from "./FolderItem";
 
 export default function SidePanel() {
   return (
-    <div className="mx-auto flex w-11/12 flex-col justify-end overflow-x-hidden py-5">
+    <div className="mx-auto flex w-11/12 flex-col justify-end overflow-hidden py-5">
       <FolderItem id="Fawry.com" withLine={false} folderName="Fawry.com">
         <FolderItem id="Fawry.com/payments" folderName="/payments">
           <FolderItem id="Fawry.com/payments/v1" folderName="/v1"></FolderItem>

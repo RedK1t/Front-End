@@ -13,6 +13,8 @@ import NavItem from "./NavItem";
 export default function SideBar() {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Handle SideBar Open/Close on Mouse Enter/Leave
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
@@ -28,9 +30,11 @@ export default function SideBar() {
       node.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
+
   const sidebarRoot = document.getElementById("sidebar");
   if (!sidebarRoot) return null;
 
+  // SideBar Portal
   return createPortal(
     <div
       ref={ref}

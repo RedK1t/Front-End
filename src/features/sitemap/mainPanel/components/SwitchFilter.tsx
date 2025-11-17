@@ -17,6 +17,7 @@ export default function SwitchFilter({
   const isCheckedParam = searchParams.get(onText) || "true";
   const [isChecked, setIsChecked] = useState(isCheckedParam === "true");
 
+  // Set Filter to Search Params
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set(onText, isChecked.toString());
@@ -27,6 +28,7 @@ export default function SwitchFilter({
     <div
       className={`bg-gray ${isChecked ? "flex-row" : "flex-row-reverse"} small-text flex h-8 w-fit items-center justify-between rounded-md px-0.5 text-white transition-all duration-300`}
     >
+      {/* SwitchFilter Text */}
       <label className="swap px-2">
         <input
           type="checkbox"
@@ -37,6 +39,7 @@ export default function SwitchFilter({
         <div className="swap-off small-text text-center">{offText}</div>
       </label>
 
+      {/* SwitchFilter Icon */}
       <label className="swap">
         <input
           type="checkbox"

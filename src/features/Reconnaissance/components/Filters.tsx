@@ -4,6 +4,8 @@ import { useEffect } from "react";
 
 export default function Filters() {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Set default filters if not present
   useEffect(() => {
     const newParams = new URLSearchParams(searchParams);
     if (!searchParams.has("dig")) newParams.set("dig", "whois");
@@ -14,6 +16,7 @@ export default function Filters() {
   }, []);
   return (
     <div className="mx-auto flex w-11/12 items-center justify-between pt-11">
+      {/* Dig Filter */}
       <div className="bg-gray text-yellowish-white flex items-center gap-1 rounded-2xl px-2 py-1">
         <FilterTab paramName="dig" paramData="whois">
           WHOIS
@@ -28,6 +31,8 @@ export default function Filters() {
           INFO
         </FilterTab>
       </div>
+
+      {/* Subdomain Filter */}
       <div className="bg-gray text-yellowish-white flex items-center gap-1 rounded-2xl px-2 py-1">
         <FilterTab paramName="subdomain" paramData="all">
           All

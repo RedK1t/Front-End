@@ -7,8 +7,12 @@ import { useEffect } from "react";
 
 export default function Filters() {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Get Filters from Search Params
   const isStandard = searchParams.get("Standard") || "true";
   const isCapturing = searchParams.get("Capturing") || "true";
+
+  // Set Filters to Search Params
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("Standard", isStandard);

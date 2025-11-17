@@ -19,6 +19,8 @@ export default function FolderItem({
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const isSelected = searchParams.get("folder") === id;
+
+  // Set Filter to Search Params
   function handleSelect() {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("folder", id);
@@ -27,6 +29,7 @@ export default function FolderItem({
   return (
     <div className="flex justify-end pr-[9px]">
       <div className="flex flex-col">
+        {/* Folder Row */}
         <div
           onClick={handleSelect}
           className={`text-yellowish-white normal-text flex cursor-pointer items-center justify-end gap-1 rounded py-1 pl-12 ${isSelected ? "bg-red/30" : ""}`}
@@ -35,13 +38,20 @@ export default function FolderItem({
           <FolderIcon className="text-yellow h-4 w-4" />
           <button onClick={() => setIsOpen((prev) => !prev)}>
             <IoMdArrowDropdown
-              className={`h-5 w-5 transition-all duration-100 ${isOpen ? "" : "rotate-90"}`}
+              className={`h-5 w-5 transition-all duration-200 ease-in-out ${isOpen ? "" : "rotate-90"}`}
             />
           </button>
         </div>
 
-        {isOpen && children}
+        {/* Embedded folders */}
+        <div
+          className={`flex flex-col overflow-hidden transition-all duration-200 ease-in-out ${isOpen ? "max-h-[1000px]" : "max-h-0"}`}
+        >
+          {children}
+        </div>
       </div>
+
+      {/* Line */}
       <div
         className={`ml-3 h-full w-px self-stretch ${withLine ? "bg-dark-yellowish-white" : "bg-black"}`}
       />

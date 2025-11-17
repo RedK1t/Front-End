@@ -20,6 +20,7 @@ export default function SelectFilter({
   const [searchParams, setSearchParams] = useSearchParams();
   return (
     <div className="bg-gray flex items-center rounded-md pl-2">
+      {/* SelectFilter Clear Button */}
       <MdCancel
         onClick={(e) => {
           e.preventDefault();
@@ -29,21 +30,22 @@ export default function SelectFilter({
         }}
         className="cursor-pointer text-white/50"
       />
+
+      {/* SelectFilter */}
       <Select
         value={searchParams.get(placeholder) || ""}
         onValueChange={(value) => {
-          if (value === searchParams.get(placeholder)) {
-            searchParams.delete(placeholder);
-          }
-          console.log(searchParams);
+          // Set Filter to Search Params
           const newParams = new URLSearchParams(searchParams);
           newParams.set(placeholder, value);
           setSearchParams(newParams);
         }}
       >
+        {/* SelectFilter Trigger */}
         <SelectTrigger className="bg-gray small-text min-w-[100px] border-0 text-white">
           <SelectValue placeholder={placeholder}></SelectValue>
         </SelectTrigger>
+        {/* SelectFilter Content */}
         <SelectContent className="bg-gray small-text min-w-[100px] border-0 text-white">
           {options.map((option) => (
             <SelectItem key={option} value={option}>
