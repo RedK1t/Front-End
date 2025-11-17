@@ -48,7 +48,7 @@ export default function SwitchFilter({
         </div>
         <div className="swap-off large-text border-red flex h-7 w-7 items-center justify-center rounded-sm border text-center">
           {offIcon.includes("svg") ? (
-            <img src={offIcon} alt={offText} className="h-8/10" />
+            <img src={offIcon} alt={offText} className="h-7/10" />
           ) : (
             offIcon
           )}
