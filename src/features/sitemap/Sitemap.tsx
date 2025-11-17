@@ -1,5 +1,6 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import MainPanel from "./mainPanel/MainPanel";
+import SidePanel from "./sidePanel/SidePanel";
 
 export default function Sitemap() {
   return (
@@ -15,7 +16,7 @@ export default function Sitemap() {
             </Panel>
             <PanelResizeHandle />
             <Panel minSize={15} className="overflow-y-auto!">
-              middle
+              <SidePanel />
             </Panel>
           </PanelGroup>
         </Panel>
