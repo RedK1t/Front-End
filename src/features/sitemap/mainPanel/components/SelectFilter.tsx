@@ -19,7 +19,7 @@ export default function SelectFilter({
 }: SelectFilterProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   return (
-    <div className="flex items-center gap-2">
+    <div className="bg-gray flex items-center rounded-md pl-2">
       <MdCancel
         onClick={(e) => {
           e.preventDefault();
@@ -27,6 +27,7 @@ export default function SelectFilter({
           newParams.delete(placeholder);
           setSearchParams(newParams);
         }}
+        className="cursor-pointer text-white/50"
       />
       <Select
         value={searchParams.get(placeholder) || ""}
@@ -40,10 +41,10 @@ export default function SelectFilter({
           setSearchParams(newParams);
         }}
       >
-        <SelectTrigger className="bg-gray small-text min-w-[125px] border-0 text-white">
+        <SelectTrigger className="bg-gray small-text min-w-[100px] border-0 text-white">
           <SelectValue placeholder={placeholder}></SelectValue>
         </SelectTrigger>
-        <SelectContent className="bg-gray small-text min-w-[125px] border-0 text-white">
+        <SelectContent className="bg-gray small-text min-w-[100px] border-0 text-white">
           {options.map((option) => (
             <SelectItem key={option} value={option}>
               {option}

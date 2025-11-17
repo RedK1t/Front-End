@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function NavItem({
   icon,
@@ -11,7 +11,8 @@ export default function NavItem({
   to: string;
   isOpen: boolean;
 }) {
-  const isActive = to === window.location.pathname;
+  const { pathname } = useLocation();
+  const isActive = to === pathname;
   return (
     <Link
       to={to}

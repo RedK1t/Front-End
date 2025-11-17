@@ -7,17 +7,24 @@ export default function Sitemap() {
       <PanelGroup autoSaveId="sitemap" direction="vertical">
         <Panel>
           <PanelGroup autoSaveId="sitemap-horizontal" direction="horizontal">
-            <Panel className="border-light-red border" minSize={65}>
+            <Panel
+              className="border-light-red overflow-y-auto! border-r"
+              minSize={65}
+            >
               <MainPanel />
             </Panel>
             <PanelResizeHandle />
-            <Panel minSize={15} className="border-light-red border">
+            <Panel minSize={15} className="overflow-y-auto!">
               middle
             </Panel>
           </PanelGroup>
         </Panel>
         <PanelResizeHandle />
-        <Panel minSize={20} maxSize={50} className="border-light-red border">
+        <Panel
+          minSize={20}
+          maxSize={50}
+          className="border-light-red overflow-y-auto! border-t"
+        >
           left
         </Panel>
       </PanelGroup>

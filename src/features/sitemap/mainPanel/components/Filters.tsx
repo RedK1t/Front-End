@@ -16,11 +16,15 @@ export default function Filters() {
     setSearchParams(newSearchParams, { replace: true });
   }, [isStandard, isCapturing, searchParams, setSearchParams]);
   return (
-    <div className="flex flex-row-reverse items-center justify-between">
-      <Input
-        placeholder="Search for Endpoints"
-        className="small-text bg-gray max-w-[200px] border-0"
+    <>
+      {/* <SwitchFilter offText="Idle" onText="Capturing" onIcon="I" offIcon="O" /> */}
+      <SwitchFilter
+        offText="Hierarchical"
+        onText="Standard"
+        onIcon="/"
+        offIcon={mindMapIcon}
       />
+      <SelectFilter placeholder="source" options={["active", "passive"]} />
       <SelectFilter
         placeholder="status code"
         options={[
@@ -40,14 +44,17 @@ export default function Filters() {
         placeholder="method"
         options={["GET", "POST", "PUT", "DELETE"]}
       />
-      <SelectFilter placeholder="source" options={["active", "passive"]} />
-      <SwitchFilter offText="Idle" onText="Capturing" onIcon="I" offIcon="O" />
-      <SwitchFilter
-        offText="Hierarchical"
-        onText="Standard"
-        onIcon="/"
-        offIcon={mindMapIcon}
+
+      <Input
+        placeholder="Search for Endpoints"
+        className="small-text bg-gray col-span-2 max-w-[250px] border-0"
+        value={searchParams.get("Search") || ""}
+        onChange={(e) => {
+          const newSearchParams = new URLSearchParams(searchParams);
+          newSearchParams.set("Search", e.target.value);
+          setSearchParams(newSearchParams, { replace: true });
+        }}
       />
-    </div>
+    </>
   );
 }
