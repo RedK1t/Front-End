@@ -52,7 +52,7 @@ export default function TableRow({
       <div className="text-center">
         <div
           onClick={() => setIsChecked(!isChecked)}
-          className={`border-dark-yellowish-white flex h-5 w-5 items-center justify-center rounded border text-center ${isChecked ? "bg-dark-red" : ""}`}
+          className={`flex h-5 w-5 items-center justify-center rounded text-center ${isChecked ? "bg-dark-red/70" : "border-dark-yellowish-white border"}`}
         >
           {isChecked ? <Check /> : ""}
         </div>

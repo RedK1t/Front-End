@@ -77,15 +77,15 @@ export default function TargetCard(props: TargetCardProps) {
 
             {/* Modal Buttons */}
             <div className="flex items-center justify-between">
-              <button className="border-dark-red shadow-dark-red/20 bg-gray large-text flex cursor-pointer items-center gap-2 rounded-lg border px-8 py-1 shadow-[0_0_15px]">
-                <img src={shareIcon} alt="Share Icon" className="h-6 w-6" />
+              <button className="border-dark-red shadow-dark-red/20 bg-gray normal-text flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 shadow-[0_0_15px]">
+                <img src={shareIcon} alt="Share Icon" className="h-5 w-5" />
                 Share
               </button>
               <Link
                 to="/reconnaissance"
-                className="border-dark-red shadow-dark-red/20 bg-dark-red large-text flex cursor-pointer items-center gap-2 rounded-lg border px-8 py-1 shadow-[0_0_15px]"
+                className="border-dark-red shadow-dark-red/20 bg-dark-red normal-text flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 shadow-[0_0_15px]"
               >
-                <img src={searchIcon} alt="Search Icon" className="h-6 w-6" />
+                <img src={searchIcon} alt="Search Icon" className="h-5 w-5" />
                 Test Now
               </Link>
             </div>
@@ -138,7 +138,7 @@ export default function TargetCard(props: TargetCardProps) {
               <p className="normal-text text-red">{lastScanned}</p>
             </div>
             <button className="small-text shadow-red/20 hover:shadow-red/50 border-button-glow cursor-pointer rounded-md border bg-black px-2 py-1 text-white shadow-[0_0_15px]">
-              manage
+              Manage
             </button>
           </div>
         </div>

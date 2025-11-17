@@ -1,6 +1,7 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import MainPanel from "./mainPanel/MainPanel";
 import SidePanel from "./sidePanel/SidePanel";
+import BottomPanel from "./bottomPanel/BottomPanel";
 
 export default function Sitemap() {
   return (
@@ -22,11 +23,11 @@ export default function Sitemap() {
         </Panel>
         <PanelResizeHandle />
         <Panel
-          minSize={20}
+          minSize={17}
           maxSize={50}
-          className="border-light-red overflow-y-auto! border-t"
+          className="border-light-red overflow-y-hidden! border-t"
         >
-          left
+          <BottomPanel />
         </Panel>
       </PanelGroup>
     </div>
