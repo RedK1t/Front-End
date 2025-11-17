@@ -37,16 +37,18 @@ export default function SwitchFilter({
         <div className="swap-off small-text text-center">{offText}</div>
       </label>
 
-      <label className="swap bg-red h-7 w-7 rounded-sm">
+      <label className="swap">
         <input
           type="checkbox"
           checked={isChecked}
           onChange={() => setIsChecked(!isChecked)}
         />
-        <div className="swap-on large-text text-center">{onIcon}</div>
-        <div className="swap-off large-text text-center">
+        <div className="swap-on large-text bg-red h-7 w-7 rounded-sm text-center">
+          {onIcon}
+        </div>
+        <div className="swap-off large-text border-red flex h-7 w-7 items-center justify-center rounded-sm border text-center">
           {offIcon.includes("svg") ? (
-            <img src={offIcon} alt={offText} className="h-9/10" />
+            <img src={offIcon} alt={offText} className="h-8/10" />
           ) : (
             offIcon
           )}
