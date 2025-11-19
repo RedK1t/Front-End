@@ -51,7 +51,7 @@ export default function SideBar() {
       <NavItem
         icon={sitemapIcon}
         text="SiteMap"
-        to="/sitemap"
+        to="/sitemap/standard"
         isOpen={isOpen}
       />
       <NavItem

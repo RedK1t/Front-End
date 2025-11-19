@@ -1,33 +1,31 @@
 import { Input } from "@/components/ui/input";
 import SelectFilter from "./SelectFilter";
-import SwitchFilter from "./SwitchFilter";
-import mindMapIcon from "@/assets/mind-map.svg";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
+import StandardSwitch from "./StandardSwitch";
+// import CapturingSwitch from "./CapturingSwitch";
 
 export default function Filters() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Get Filters from Search Params
-  const isStandard = searchParams.get("Standard") || "true";
   const isCapturing = searchParams.get("Capturing") || "true";
 
   // Set Filters to Search Params
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("Standard", isStandard);
     newSearchParams.set("Capturing", isCapturing);
     setSearchParams(newSearchParams, { replace: true });
-  }, [isStandard, isCapturing, searchParams, setSearchParams]);
+  }, [isCapturing, searchParams, setSearchParams]);
   return (
     <>
-      {/* <SwitchFilter offText="Idle" onText="Capturing" onIcon="I" offIcon="O" /> */}
-      <SwitchFilter
-        offText="Hierarchical"
-        onText="Standard"
-        onIcon="/"
-        offIcon={mindMapIcon}
-      />
+      {/* <CapturingSwitch
+        offText="Idle"
+        onText="Capturing"
+        onIcon="I"
+        offIcon="O"
+      /> */}
+      <StandardSwitch />
       <SelectFilter placeholder="source" options={["active", "passive"]} />
       <SelectFilter
         placeholder="status code"

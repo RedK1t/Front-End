@@ -12,8 +12,11 @@ export default function NavItem({
   isOpen: boolean;
 }) {
   const { pathname } = useLocation();
-  const isActive = to === pathname;
-
+  const isActive =
+    to === "/"
+      ? pathname === to
+      : pathname.split("/")[1].includes(to.split("/")[1]);
+  console.log(pathname.split("/")[1]);
   const isActiveStyles = "bg-red shadow-red/30 rounded-lg shadow-[0_0_20px]";
   return (
     <Link

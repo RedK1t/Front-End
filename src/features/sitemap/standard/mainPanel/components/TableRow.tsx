@@ -1,3 +1,4 @@
+import getMethodColor from "@/utils/getMethodColor";
 import { Check } from "lucide-react";
 import { useState } from "react";
 type TableRowProps = {
@@ -7,6 +8,7 @@ type TableRowProps = {
   method: string;
   path: string;
 };
+
 export default function TableRow({
   lastSeen,
   source,
@@ -30,17 +32,7 @@ export default function TableRow({
       {/* Status */}
       <div className="text-center">{status}</div>
       <div
-        className={`w-16 rounded-[3px] text-center ${
-          method === "GET"
-            ? "bg-green-transparent text-green"
-            : method === "POST"
-              ? "bg-blue-transparent text-blue"
-              : method === "PUT"
-                ? "bg-orange-transparent text-yellow"
-                : method === "DELETE"
-                  ? "bg-dark-red/10 text-light-red"
-                  : ""
-        }`}
+        className={`w-16 rounded-[3px] text-center ${getMethodColor(method)}`}
       >
         {method}
       </div>

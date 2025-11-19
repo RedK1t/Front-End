@@ -7,7 +7,7 @@ type SwitchFilterProps = {
   onIcon: string;
   offIcon: string;
 };
-export default function SwitchFilter({
+export default function CapturingSwitch({
   offText,
   onText,
   onIcon,
