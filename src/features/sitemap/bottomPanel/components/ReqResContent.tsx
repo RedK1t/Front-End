@@ -23,8 +23,11 @@ export default function ReqResContent({
       className={`${type === "Request" ? "border-light-red border-r pr-5" : "pl-5"} flex h-full w-1/2 flex-col gap-2.5 py-5`}
     >
       <p className="normal-text text-white">{type}</p>
-      <div className="bg-gray text-yellowish-white coding-text h-full min-h-[100px] w-full overflow-y-auto rounded-[5px] p-2.5">
-        <p className="whitespace-pre-wrap">{text}</p>
+      <div className="bg-gray text-yellowish-white coding-text h-full min-h-[100px] w-full overflow-y-hidden rounded-[5px] p-2.5">
+        <textarea
+          className="text-yellowish-white h-full w-full resize-none overflow-y-auto bg-transparent whitespace-pre-wrap outline-none"
+          defaultValue={text}
+        />
       </div>
     </div>
   );
