@@ -1,9 +1,13 @@
 import { createPortal } from "react-dom";
 import overviewIcon from "../../assets/overviewIcon.svg";
 import searchIcon from "../../assets/SearchIcon.svg";
-import scannerIcon from "../../assets/scannerIcon.svg";
+import scannerIcon from "../../assets/VulnerabilityScannerIcon.svg";
 import sitemapIcon from "../../assets/sitemapIcon.svg";
-import proxyIcon from "../../assets/proxyIcon.svg";
+import scopeAndFiltersIcon from "../../assets/scopeAndFiltersIcon.svg";
+import interceptorIcon from "../../assets/interceptorIcon.svg";
+import repeaterIcon from "../../assets/RepeaterIcon.svg";
+import intruderIcon from "../../assets/IntruderIcon.svg";
+import proxyIcon from "../../assets/navProxyIcon.svg";
 import reportIcon from "../../assets/reportIcon.svg";
 import toolsIcon from "../../assets/toolsIcon.svg";
 import settingsIcon from "../../assets/settingsIconCropped.svg";
@@ -42,30 +46,63 @@ export default function SideBar() {
     >
       {/* NavItem */}
       <NavItem icon={overviewIcon} text="Overview" to="/" isOpen={isOpen} />
+
       <NavItem
         icon={searchIcon}
         text="Reconnaissance"
         to="/reconnaissance"
         isOpen={isOpen}
       />
-      <NavItem
-        icon={sitemapIcon}
-        text="SiteMap"
-        to="/sitemap/standard"
-        isOpen={isOpen}
-      />
+
       <NavItem
         icon={scannerIcon}
         text="AI Vulnerability Scanner"
         to="/"
         isOpen={isOpen}
       />
-      <NavItem icon={proxyIcon} text="Proxy" to="/" isOpen={isOpen} />
+
+      <NavItem
+        icon={proxyIcon}
+        text="Proxy"
+        to="/proxy"
+        isOpen={isOpen}
+        nested={true}
+      >
+        <NavItem
+          icon={sitemapIcon}
+          text="Sitemap"
+          to="/proxy/sitemap/standard"
+          isOpen={isOpen}
+        />
+        <NavItem
+          icon={scopeAndFiltersIcon}
+          text="Scope and Filters"
+          to="/proxy/scopeAndFilters"
+          isOpen={isOpen}
+        />
+        <NavItem
+          icon={interceptorIcon}
+          text="Interceptor"
+          to="/proxy/interceptor"
+          isOpen={isOpen}
+        />
+        <NavItem
+          icon={repeaterIcon}
+          text="Repeater"
+          to="/proxy/repeater"
+          isOpen={isOpen}
+        />
+      </NavItem>
+
       <NavItem
         icon={reportIcon}
         text="Report Generation"
         to="/"
         isOpen={isOpen}
+      />
+
+      <div
+        className={`${isOpen ? "w-full" : "w-0"} border-t border-white/40`}
       />
       <NavItem
         icon={toolsIcon}
@@ -73,6 +110,7 @@ export default function SideBar() {
         to="/"
         isOpen={isOpen}
       />
+
       <NavItem icon={settingsIcon} text="Settings" to="/" isOpen={isOpen} />
     </div>,
     sidebarRoot,

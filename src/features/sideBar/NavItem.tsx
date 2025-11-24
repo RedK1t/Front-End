@@ -1,41 +1,78 @@
+import { useEffect, useState } from "react";
+import { IoMdArrowDropleft } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
+
+type NavItemProps = {
+  icon: string;
+  text: string;
+  to: string;
+  isOpen: boolean;
+  nested?: boolean;
+  children?: React.ReactNode;
+};
 
 export default function NavItem({
   icon,
   text,
   to,
   isOpen,
-}: {
-  icon: string;
-  text: string;
-  to: string;
-  isOpen: boolean;
-}) {
+  nested = false,
+  children,
+}: NavItemProps) {
+  const [isNestedOpen, setIsNestedOpen] = useState(false);
   const { pathname } = useLocation();
-  const isActive =
-    to === "/"
-      ? pathname === to
-      : pathname.split("/")[1].includes(to.split("/")[1]);
-  console.log(pathname.split("/")[1]);
+  const isActive = nested
+    ? pathname.split("/")[1].includes(to.split("/")[1])
+    : pathname === to;
   const isActiveStyles = "bg-red shadow-red/30 rounded-lg shadow-[0_0_20px]";
-  return (
-    <Link
-      to={to}
-      className={`flex ${isOpen ? "w-full" : "w-fit"} ${isActive && isOpen ? isActiveStyles : ""} hover:bg-red items-center gap-x-3 rounded-lg pr-7 transition-all duration-200`}
-    >
-      {/* NavItem Icon */}
-      <div
-        className={`flex h-10 w-10 items-center justify-center ${isActive ? isActiveStyles : ""}`}
-      >
-        <img src={icon} alt={text} className={`h-4 w-4`} />
-      </div>
 
-      {/* NavItem Text */}
-      <p
-        className={`normal-text text-nowrap transition-all duration-300 ${isOpen ? "max-w-96" : "max-w-0 opacity-0"}`}
+  const handleClick = () => {
+    if (nested) {
+      setIsNestedOpen(!isNestedOpen);
+    }
+  };
+  useEffect(() => {
+    if (!isOpen) {
+      setIsNestedOpen(false);
+    }
+  }, [isOpen]);
+  return (
+    <div className="flex w-full flex-col">
+      <Link
+        to={
+          nested ? { pathname: location.pathname, search: location.search } : to
+        }
+        className={`flex ${isOpen ? "w-full" : "w-fit"} ${isActive && isOpen ? isActiveStyles : ""} hover:bg-red items-center gap-x-3 rounded-lg pr-7 transition-all duration-200`}
+        onClick={handleClick}
       >
-        {text}
-      </p>
-    </Link>
+        {/* NavItem Icon */}
+        <div
+          className={`flex h-10 w-10 items-center justify-center ${isActive ? isActiveStyles : ""}`}
+        >
+          <img src={icon} alt={text} className={`h-4 w-4`} />
+        </div>
+
+        {/* NavItem Text */}
+        <div className="flex items-center gap-x-2">
+          <p
+            className={`normal-text text-nowrap transition-all duration-300 ${isOpen ? "max-w-96" : "max-w-0 opacity-0"}`}
+          >
+            {text}
+          </p>
+          {nested && (
+            <IoMdArrowDropleft
+              className={`h-5 w-5 transition-all duration-300 ${isNestedOpen ? "-rotate-90" : ""}`}
+            />
+          )}
+        </div>
+      </Link>
+      {nested && (
+        <div
+          className={`flex flex-col gap-1 overflow-hidden pl-6 transition-all duration-300 ${isNestedOpen ? "mt-3 max-h-96" : "max-h-0"}`}
+        >
+          {children}
+        </div>
+      )}
+    </div>
   );
 }

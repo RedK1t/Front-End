@@ -20,15 +20,15 @@ const router = createBrowserRouter([
         element: <Reconnaissance />,
       },
       {
-        path: "/sitemap",
+        path: "/proxy/sitemap",
         element: <Sitemap />,
         children: [
           {
-            path: "/sitemap/standard",
+            path: "/proxy/sitemap/standard",
             element: <Standard />,
           },
           {
-            path: "/sitemap/hierarchical",
+            path: "/proxy/sitemap/hierarchical",
             element: <Hierarchical />,
           },
         ],

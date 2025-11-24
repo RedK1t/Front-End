@@ -10,9 +10,9 @@ export default function StandardSwitch() {
   function handleChange() {
     setIsChecked((prev) => !prev);
     if (isChecked) {
-      navigate("/sitemap/hierarchical");
+      navigate("/proxy/sitemap/hierarchical");
     } else {
-      navigate("/sitemap/standard");
+      navigate("/proxy/sitemap/standard");
     }
   }
 
