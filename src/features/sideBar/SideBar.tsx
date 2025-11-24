@@ -92,6 +92,12 @@ export default function SideBar() {
           to="/proxy/repeater"
           isOpen={isOpen}
         />
+        <NavItem
+          icon={intruderIcon}
+          text="Intruder"
+          to="/proxy/intruder"
+          isOpen={isOpen}
+        />
       </NavItem>
 
       <NavItem
