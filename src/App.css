@@ -12,6 +12,7 @@
 @theme {
   --font-quicksand: Quicksand, sans-serif;
   --font-jetbrains-mono: "JetBrains Mono", monospace;
+  --radius-6px: 6px;
 
   --color-red: #CE3232;
   --color-light-red: #FF5050;
@@ -48,6 +49,10 @@
 
   .large-text {
     @apply font-quicksand text-xl font-semibold;
+  }
+
+  .mid-text {
+    @apply font-quicksand text-lg font-bold;
   }
 
   .normal-text {

@@ -77,7 +77,7 @@ export default function SideBar() {
         <NavItem
           icon={scopeAndFiltersIcon}
           text="Scope and Filters"
-          to="/proxy/scopeAndFilters"
+          to="/proxy/scope"
           isOpen={isOpen}
         />
         <NavItem

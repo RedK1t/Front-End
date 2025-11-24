@@ -6,6 +6,7 @@ import AppLayout from "./features/AppLayout";
 import Sitemap from "./features/sitemap/Sitemap";
 import Standard from "./features/sitemap/Standard";
 import Hierarchical from "./features/sitemap/hierarchical/Hierarchical";
+import Scope from "./features/scope/Scope";
 
 const router = createBrowserRouter([
   {
@@ -20,17 +21,23 @@ const router = createBrowserRouter([
         element: <Reconnaissance />,
       },
       {
-        path: "/proxy/sitemap",
-        element: <Sitemap />,
+        path: "/proxy",
         children: [
           {
-            path: "/proxy/sitemap/standard",
-            element: <Standard />,
+            path: "sitemap",
+            element: <Sitemap />,
+            children: [
+              {
+                path: "standard",
+                element: <Standard />,
+              },
+              {
+                path: "hierarchical",
+                element: <Hierarchical />,
+              },
+            ],
           },
-          {
-            path: "/proxy/sitemap/hierarchical",
-            element: <Hierarchical />,
-          },
+          { path: "scope", element: <Scope /> },
         ],
       },
     ],
