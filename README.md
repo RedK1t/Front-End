@@ -1,9 +1,9 @@
 ## Setup Steps
 
-```powershell
-1. npm i
+```sh
+npm i
 ```
 
-```powershell
+```sh
 npm run div
 ```
