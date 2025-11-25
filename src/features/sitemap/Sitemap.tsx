@@ -12,7 +12,7 @@ export default function Sitemap() {
         <PanelResizeHandle />
         <Panel
           minSize={17}
-          maxSize={50}
+          maxSize={70}
           className="border-light-red overflow-y-hidden! border-t"
         >
           <BottomPanel />
