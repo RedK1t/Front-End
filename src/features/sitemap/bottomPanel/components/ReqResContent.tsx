@@ -1,3 +1,5 @@
+import CodeWrapper from "@/components/CodeWrapper";
+
 const defaultText = `GET /api/users/122 HTTP/I.I
 Host: example.com
 Content-Type: application/json
@@ -24,10 +26,7 @@ export default function ReqResContent({
     >
       <p className="normal-text text-white">{type}</p>
       <div className="bg-gray text-yellowish-white coding-text h-full min-h-[100px] w-full overflow-y-hidden rounded-[5px] p-2.5">
-        <textarea
-          className="text-yellowish-white h-full w-full resize-none overflow-y-auto bg-transparent whitespace-pre-wrap outline-none"
-          defaultValue={text}
-        />
+        <CodeWrapper language="json" initialValue={text} />
       </div>
     </div>
   );
