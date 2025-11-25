@@ -36,7 +36,7 @@ export default function CodeWrapper({
     <CodeMirror
       value={value}
       height="100%"
-      className="bg-gray h-full"
+      className="bg-gray text-rem-[0.875] h-full"
       theme="dark"
       extensions={[
         ...getLanguage(),
