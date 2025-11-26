@@ -7,6 +7,7 @@ import Sitemap from "./features/sitemap/Sitemap";
 import Standard from "./features/sitemap/Standard";
 import Hierarchical from "./features/sitemap/hierarchical/Hierarchical";
 import Scope from "./features/scope/Scope";
+import Interceptor from "./features/Interceptor/Interceptor";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
             ],
           },
           { path: "scope", element: <Scope /> },
+          { path: "interceptor", element: <Interceptor /> },
         ],
       },
     ],

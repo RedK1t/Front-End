@@ -43,7 +43,11 @@ Server: ExampleAPI/1.0
 }
 `;
 
-export default function BottomPanel() {
+export default function BottomPanel({
+  editable = false,
+}: {
+  editable?: boolean;
+}) {
   return (
     <div className="flex h-full flex-col">
       {/* <Header /> */}
@@ -51,11 +55,11 @@ export default function BottomPanel() {
       <div className="h-full w-full overflow-y-hidden">
         {/* Div for content */}
         <div className="mx-auto flex h-full w-11/12 items-start justify-between">
-          <ReqResContent type="Request" editableProp={false} />
+          <ReqResContent type="Request" editableProp={editable} />
           <ReqResContent
             type="Response"
             text={responseText}
-            editableProp={false}
+            editableProp={editable}
           />
         </div>
       </div>
