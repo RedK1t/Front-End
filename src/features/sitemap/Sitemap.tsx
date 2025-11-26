@@ -1,5 +1,5 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import BottomPanel from "./bottomPanel/BottomPanel";
+import BottomPanel from "../reqResPanel/BottomPanel";
 import { Outlet } from "react-router-dom";
 
 export default function Sitemap() {
