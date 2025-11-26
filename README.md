@@ -1,3 +1,9 @@
 ## Setup Steps
-1. npm i
-2. npm run div
+
+```sh
+npm i
+```
+
+```sh
+npm run div
+```
