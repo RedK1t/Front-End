@@ -38,7 +38,7 @@ export default function Header({ title, param }: HeaderProps) {
           <img
             src={isOn ? onIcon : offIcon}
             alt={isOn ? "offIcon" : "onIcon"}
-            className="h-9/12 w-9/12 translate-x-px"
+            className="h-9/12 w-9/12"
           />
         </div>
       </button>
