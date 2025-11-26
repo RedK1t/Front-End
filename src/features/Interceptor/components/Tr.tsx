@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import checkIcon from "@/assets/CheckMarkIcon.svg";
-import leftArrowIcon from "@/assets/LeftArrowIcon.svg";
-import rightArrowIcon from "@/assets/RightArrowIcon.svg";
+import leftArrowIcon from "@/assets/leftArrowIcon.svg";
+import rightArrowIcon from "@/assets/rightArrowIcon.svg";
 import Td from "./Td";
 
 type TrProps = {
