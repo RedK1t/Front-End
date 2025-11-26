@@ -3,7 +3,6 @@ import BottomPanel from "../reqResPanel/BottomPanel";
 import Filters from "./components/Filters";
 import Th from "./components/Th";
 import Tr from "./components/Tr";
-import Td from "./components/Td";
 
 export default function Interceptor() {
   return (
@@ -40,64 +39,64 @@ export default function Interceptor() {
                   Params={true}
                 />
                 <Tr
-                  Time="08:50:50 24-11-2025"
+                  Time="08:50:51 24-11-2025"
                   index={1}
                   Type="HTTPS"
-                  Method="GET"
-                  Direction="Request"
-                  Host="www.tesla.com"
-                  URL="https://location-services-prd.tesla.com/geoip/city?id=2"
-                  StatusCode={200}
-                  Length={20234}
-                  Params={true}
+                  Method="POST"
+                  Direction="Response"
+                  Host="api.github.com"
+                  URL="https://api.github.com/repos/owner/repo/issues"
+                  StatusCode={201}
+                  Length={5120}
+                  Params={false}
                 />
                 <Tr
-                  Time="08:50:50 24-11-2025"
+                  Time="08:50:52 24-11-2025"
                   index={2}
-                  Type="HTTPS"
-                  Method="GET"
+                  Type="HTTP"
+                  Method="PUT"
                   Direction="Request"
-                  Host="www.tesla.com"
-                  URL="https://location-services-prd.tesla.com/geoip/city?id=2"
+                  Host="jsonplaceholder.typicode.com"
+                  URL="https://jsonplaceholder.typicode.com/posts/1"
                   StatusCode={200}
-                  Length={20234}
+                  Length={892}
                   Params={true}
                 />
                 <Tr
-                  Time="08:50:50 24-11-2025"
+                  Time="08:50:53 24-11-2025"
                   index={3}
                   Type="HTTPS"
-                  Method="GET"
-                  Direction="Request"
-                  Host="www.tesla.com"
-                  URL="https://location-services-prd.tesla.com/geoip/city?id=2"
-                  StatusCode={200}
-                  Length={20234}
-                  Params={true}
+                  Method="DELETE"
+                  Direction="Response"
+                  Host="api.twitter.com"
+                  URL="https://api.twitter.com/2/tweets/1234567890"
+                  StatusCode={204}
+                  Length={0}
+                  Params={false}
                 />
                 <Tr
-                  Time="08:50:50 24-11-2025"
+                  Time="08:50:54 24-11-2025"
                   index={4}
-                  Type="HTTPS"
+                  Type="WS"
                   Method="GET"
                   Direction="Request"
-                  Host="www.tesla.com"
-                  URL="https://location-services-prd.tesla.com/geoip/city?id=2"
-                  StatusCode={200}
-                  Length={20234}
+                  Host="ws.postman-echo.com"
+                  URL="wss://ws.postman-echo.com/raw"
+                  StatusCode={101}
+                  Length={42}
                   Params={true}
                 />
                 <Tr
-                  Time="08:50:50 24-11-2025"
+                  Time="08:50:55 24-11-2025"
                   index={5}
                   Type="HTTPS"
-                  Method="GET"
-                  Direction="Request"
-                  Host="www.tesla.com"
-                  URL="https://location-services-prd.tesla.com/geoip/city?id=2"
-                  StatusCode={200}
-                  Length={20234}
-                  Params={true}
+                  Method="PATCH"
+                  Direction="Response"
+                  Host="api.spotify.com"
+                  URL="https://api.spotify.com/v1/me/player/play"
+                  StatusCode={204}
+                  Length={0}
+                  Params={false}
                 />
               </tbody>
             </table>

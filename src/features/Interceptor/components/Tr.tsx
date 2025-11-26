@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import checkIcon from "@/assets/CheckMarkIcon.svg";
+import leftArrowIcon from "@/assets/LeftArrowIcon.svg";
+import rightArrowIcon from "@/assets/RightArrowIcon.svg";
 import Td from "./Td";
 
 type TrProps = {
@@ -42,7 +44,19 @@ export default function Tr({
       <Td left={true}>{Time}</Td>
       <Td>{Type}</Td>
       <Td>{Method}</Td>
-      <Td>{Direction}</Td>
+      <Td>
+        {Direction === "Request" ? (
+          <div className="flex items-center gap-1">
+            <img src={leftArrowIcon} alt="Left Arrow" />
+            <p>Request</p>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1">
+            <img src={rightArrowIcon} alt="Right Arrow" />
+            <p>Response</p>
+          </div>
+        )}
+      </Td>
       <Td>{Host}</Td>
       <Td>{URL}</Td>
       <Td>{StatusCode}</Td>
