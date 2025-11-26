@@ -46,9 +46,9 @@ Server: ExampleAPI/1.0
 export default function BottomPanel() {
   return (
     <div className="flex h-full flex-col">
-      <Header />
+      {/* <Header /> */}
       {/* Div for border */}
-      <div className="border-light-red h-full w-full overflow-y-hidden border-t">
+      <div className="h-full w-full overflow-y-hidden">
         {/* Div for content */}
         <div className="mx-auto flex h-full w-11/12 items-start justify-between">
           <ReqResContent type="Request" editableProp={false} />
