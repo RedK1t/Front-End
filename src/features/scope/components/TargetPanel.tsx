@@ -4,6 +4,7 @@ import { FaMinus, FaPlus } from "react-icons/fa";
 import ScopeItem from "./ScopeItem";
 import Header from "./Header";
 import Button from "./Button";
+import { useSearchParams } from "react-router-dom";
 
 export default function TargetPanel() {
   const [isInclude, setIsInclude] = useState<string[]>([
@@ -20,6 +21,8 @@ export default function TargetPanel() {
     ".*apple\\.com",
   ]);
   const [input, setInput] = useState("");
+  const [searchParams] = useSearchParams();
+  const isOn = searchParams.get("isScopeOn") === "true";
 
   // handle add button click
   function handleAdd() {
@@ -63,66 +66,71 @@ export default function TargetPanel() {
       {/* header */}
       <Header title="Target Scope" param="isScopeOn" />
       {/* description */}
-      <p className="normal-text text-yellowish-white">
-        Only items matching these rules will be intercepted and logged,
-        Wildcards like * are supported, also RegEx is Supported.
-      </p>
-      {/* input row */}
-      <div className="flex items-center justify-between">
-        <input
-          type="text"
-          placeholder="fawry"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="bg-gray rounded-6px w-1/2 px-4 py-2 outline-0"
-        />
-        <div className="flex items-center gap-x-5">
-          {/* buttons */}
-          <Button
-            onClick={handleAdd}
-            className="border-red text-yellowish-white large-text hover:shadow-light-red/50 shadow-light-red/30 rounded-6px flex cursor-pointer items-center gap-x-1.5 border bg-transparent px-3 py-2 font-bold shadow-[0_0_15px] transition-shadow"
-          >
-            <FaPlus className="h-5 w-5" />
-            Include
-          </Button>
-          <Button
-            onClick={handleExclude}
-            className="border-red text-yellowish-white large-text hover:shadow-light-red/50 shadow-light-red/30 rounded-6px flex cursor-pointer items-center gap-x-1.5 border bg-transparent px-3 py-2 font-bold shadow-[0_0_15px] transition-shadow"
-          >
-            <FaMinus className="h-5 w-5" />
-            Exclude
-          </Button>
+      <div className="relative flex h-full w-full flex-col gap-y-5">
+        <p className="normal-text text-yellowish-white">
+          Only items matching these rules will be intercepted and logged,
+          Wildcards like * are supported, also RegEx is Supported.
+        </p>
+        {/* input row */}
+        <div className="flex items-center justify-between">
+          <input
+            type="text"
+            placeholder="fawry"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className="bg-gray rounded-6px w-1/2 px-4 py-2 outline-0"
+          />
+          <div className="flex items-center gap-x-5">
+            {/* buttons */}
+            <Button
+              onClick={handleAdd}
+              className="border-red text-yellowish-white large-text hover:shadow-light-red/50 shadow-light-red/30 rounded-6px flex cursor-pointer items-center gap-x-1.5 border bg-transparent px-3 py-2 font-bold shadow-[0_0_15px] transition-shadow"
+            >
+              <FaPlus className="h-5 w-5" />
+              Include
+            </Button>
+            <Button
+              onClick={handleExclude}
+              className="border-red text-yellowish-white large-text hover:shadow-light-red/50 shadow-light-red/30 rounded-6px flex cursor-pointer items-center gap-x-1.5 border bg-transparent px-3 py-2 font-bold shadow-[0_0_15px] transition-shadow"
+            >
+              <FaMinus className="h-5 w-5" />
+              Exclude
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {/* scope list */}
-      <div className="bg-gray rounded-6px flex h-full w-full gap-x-5 overflow-auto px-6 py-3">
-        <div className="flex h-full w-1/2 flex-col items-center gap-3">
-          {/* include list */}
-          <p className="mid-text text-yellowish-white">Include</p>
-          <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto">
-            {isInclude.map((scope) => (
-              <ScopeItem
-                key={scope}
-                scope={scope}
-                deleteScope={deleteInclude}
-              />
-            ))}
+        {/* scope list */}
+        <div className="bg-gray rounded-6px flex h-full w-full gap-x-5 overflow-auto px-6 py-3">
+          <div className="flex h-full w-1/2 flex-col items-center gap-3">
+            {/* include list */}
+            <p className="mid-text text-yellowish-white">Include</p>
+            <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto">
+              {isInclude.map((scope) => (
+                <ScopeItem
+                  key={scope}
+                  scope={scope}
+                  deleteScope={deleteInclude}
+                />
+              ))}
+            </div>
+          </div>
+          {/* exclude list */}
+          <div className="flex h-full w-1/2 flex-col items-center gap-3 overflow-auto">
+            <p className="mid-text text-yellowish-white">Exclude</p>
+            <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto">
+              {isExclude.map((scope) => (
+                <ScopeItem
+                  key={scope}
+                  scope={scope}
+                  deleteScope={deleteExclude}
+                />
+              ))}
+            </div>
           </div>
         </div>
-        {/* exclude list */}
-        <div className="flex h-full w-1/2 flex-col items-center gap-3 overflow-auto">
-          <p className="mid-text text-yellowish-white">Exclude</p>
-          <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto">
-            {isExclude.map((scope) => (
-              <ScopeItem
-                key={scope}
-                scope={scope}
-                deleteScope={deleteExclude}
-              />
-            ))}
-          </div>
-        </div>
+        <div
+          className={`absolute top-0 left-0 transition-all duration-300 ${isOn ? "h-0 w-full" : "h-full w-full bg-black/50"}`}
+        ></div>
       </div>
     </div>
   );

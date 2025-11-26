@@ -25,7 +25,7 @@ export default function Header({ title, param }: HeaderProps) {
       <p className="heading-text">{title}</p>
       <button
         onClick={() => setIsOn(!isOn)}
-        className={`bg-gray small-text text-yellowish-white rounded-6px border-light-red flex w-16 items-center justify-between border py-0.5 pr-0.5 pl-1.5`}
+        className={`bg-gray small-text text-yellowish-white rounded-6px border-light-red flex w-16 cursor-pointer items-center justify-between border py-0.5 pr-0.5 pl-1.5`}
       >
         <p
           className={`transition-transform ${isOn ? "" : "translate-x-[160%]"}`}
