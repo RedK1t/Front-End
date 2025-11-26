@@ -21,7 +21,7 @@ export default function Header({ title, param }: HeaderProps) {
   }, [isOn, setSearchParams, searchParams, param]);
 
   return (
-    <div className="border-dark-yellowish-white flex items-center justify-between border-b">
+    <div className="border-dark-yellowish-white text-yellowish-white flex items-center justify-between border-b">
       <p className="heading-text">{title}</p>
       <button
         onClick={() => setIsOn(!isOn)}
