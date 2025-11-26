@@ -1,4 +1,4 @@
-import Header from "./components/Header";
+// import Header from "./components/Header";
 import ReqResContent from "./components/ReqResContent";
 
 const responseText = `HTTP/1.1 201 Created
