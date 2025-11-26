@@ -10,19 +10,19 @@ const httpMode: StreamParser<{ inBody: boolean }> = {
   },
 
   token(stream, state) {
-    if (stream.match(/"([^"]+)"\s*:/)) return "keyword";
+    if (stream.match(/"([^"]+)"\s*:/)) return "keyword"; // ͼp
     if (stream.match(/"((?:\\.|[^"\\])*)"(?=,|})/)) {
-      return "def";
+      return "def"; // ͼt
     }
-    if (stream.match(/\s*(?:"([^"]*)")(?=\s|$)/)) return "def";
+    if (stream.match(/\s*(?:"([^"]*)")(?=\s|$)/)) return "def"; // ͼt
 
-    if (stream.match(/\s+\d+(?:\.\d+)?\b/)) return "number";
-    if (stream.match(/\s+(true|false)\b/)) return "number";
+    if (stream.match(/\s+\d+(?:\.\d+)?\b/)) return "number"; // ͼu
+    if (stream.match(/\s+(true|false)\b/)) return "number"; // ͼu
 
     // ----- Request line -----
     if (stream.sol()) {
       if (stream.match(/(GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\b/)) {
-        return "keyword";
+        return "keyword"; // ͼp
       }
 
       if (stream.match(/^\s*$/)) {
@@ -33,14 +33,14 @@ const httpMode: StreamParser<{ inBody: boolean }> = {
     }
 
     if (stream.match(/HTTP\/\d\.\d/)) {
-      return "keyword";
+      return "keyword"; // ͼp
     }
 
     // URL
-    if (stream.match(/\s\/\S*\s/)) return "link";
+    if (stream.match(/\s\/\S*\s/)) return "link"; // ͼ10
 
     // Header keys
-    if (stream.match(/^[A-Za-z0-9-]+(?=:\s)/)) return "propertyName";
+    if (stream.match(/^[A-Za-z0-9-]+(?=:\s)/)) return "propertyName"; // ͼq
 
     stream.next();
     return null;

@@ -3,7 +3,7 @@ import TableRow from "./TableRow";
 
 export default function EndpointsTable() {
   return (
-    <div className="grid w-full grid-cols-6 place-items-center gap-y-6 py-2">
+    <div className="text-yellowish-white grid w-full grid-cols-6 place-items-center gap-y-5 py-2">
       <Filters />
       <TableRow
         lastSeen="Last Seen"

@@ -10,6 +10,7 @@ import { http } from "./httpLanguage"; // This import is correct
 export default function CodeWrapper({
   language = "javascript",
   initialValue = "",
+  editableProp = true,
 }) {
   const [value, setValue] = useState(initialValue);
 
@@ -66,6 +67,7 @@ export default function CodeWrapper({
         ),
         // Custom highlight extension applied last
       ]}
+      editable={editableProp}
       onChange={(val) => setValue(val)}
       basicSetup={{
         autocompletion: true,

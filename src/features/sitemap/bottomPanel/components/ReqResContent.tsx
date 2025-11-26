@@ -53,11 +53,13 @@ Content-Length: 421
 type ReqResContentProps = {
   text?: string;
   type: "Request" | "Response";
+  editableProp?: boolean;
 };
 
 export default function ReqResContent({
   text = defaultText,
   type,
+  editableProp = true,
 }: ReqResContentProps) {
   return (
     <div
@@ -65,7 +67,11 @@ export default function ReqResContent({
     >
       <p className="normal-text text-white">{type}</p>
       <div className="bg-gray text-yellowish-white coding-text h-full min-h-[100px] w-full overflow-y-hidden rounded-[5px] p-2.5">
-        <CodeWrapper language="http" initialValue={text} />
+        <CodeWrapper
+          language="http"
+          initialValue={text}
+          editableProp={editableProp}
+        />
       </div>
     </div>
   );
