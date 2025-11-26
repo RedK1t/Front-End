@@ -1,6 +1,7 @@
 import getMethodColor from "@/utils/getMethodColor";
 import { Check } from "lucide-react";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 type TableRowProps = {
   lastSeen: string;
   source: string;
@@ -17,28 +18,43 @@ export default function TableRow({
   path,
 }: TableRowProps) {
   const [isChecked, setIsChecked] = useState<boolean>(false);
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selected = searchParams.get("selected") === `${method}-${path}`;
+  function handleSelect() {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("selected", `${method}-${path}`);
+    setSearchParams(newSearchParams, { replace: true });
+  }
   return (
-    <>
-      <div className="text-center">{lastSeen}</div>
+    <div
+      onClick={method === "Method" ? undefined : handleSelect}
+      className={`rounded-6px flex w-full ${method === "Method" ? "" : "cursor-pointer"} items-center justify-between px-4 py-2 text-center ${selected ? "bg-dark-red/20" : ""}`}
+    >
+      <div className="w-1/5 text-center">{lastSeen}</div>
 
       {/*  Source */}
-      <div
-        className={`w-14 rounded-[5px] text-center ${source === "Active" ? "bg-cyan-transparent text-cyan" : source === "Passive" ? "bg-orange-transparent text-yellow" : ""}`}
-      >
-        {source}
+      <div className="flex w-1/5 items-center justify-center">
+        <div
+          className={`w-14 rounded-[5px] text-center ${source === "Active" ? "bg-cyan-transparent text-cyan" : source === "Passive" ? "bg-orange-transparent text-yellow" : ""}`}
+        >
+          {source}
+        </div>
       </div>
 
       {/* Status */}
-      <div className="text-center">{status}</div>
-      <div
-        className={`w-16 rounded-[3px] text-center ${getMethodColor(method)}`}
-      >
-        {method}
+      <div className="w-1/5 text-center">{status}</div>
+
+      {/* Method */}
+      <div className="flex w-1/5 items-center justify-center">
+        <div
+          className={`w-16 rounded-[3px] text-center ${getMethodColor(method)}`}
+        >
+          {method}
+        </div>
       </div>
 
       {/* Path */}
-      <div className="text-center">{path}</div>
+      <div className="w-1/5 text-center">{path}</div>
 
       {/* Checkbox */}
       <div className="text-center">
@@ -49,6 +65,6 @@ export default function TableRow({
           {isChecked ? <Check /> : ""}
         </div>
       </div>
-    </>
+    </div>
   );
 }
