@@ -7,7 +7,7 @@ export default function Standard() {
   return (
     <PanelGroup autoSaveId="sitemap-horizontal" direction="horizontal">
       <Panel
-        className="border-light-red overflow-y-auto! border-r"
+        className="border-light-red overflow-y-hidden! border-r"
         minSize={65}
       >
         <MainPanel />
