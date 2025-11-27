@@ -22,7 +22,7 @@ export default function Filters() {
           onText="Interceptor On"
           offText="Interceptor Off"
         />
-        <SwitchButton
+        {/* <SwitchButton
           param="forward"
           imgTransform={285}
           textTransform={40}
@@ -31,8 +31,20 @@ export default function Filters() {
           offIcon={forwardAllIcon}
           onText="Forward"
           offText="Forward All"
-        />
-        <SwitchButton
+        /> */}
+        <button
+          className={`bg-red/60 small-text text-yellowish-white rounded-6px flex w-fit cursor-pointer items-center justify-between gap-2 px-3 py-2`}
+        >
+          Forward
+          <img src={forwardIcon} alt="forwardIcon" className="h-4 w-4" />
+        </button>
+        <button
+          className={`bg-gray small-text text-yellowish-white rounded-6px flex w-fit cursor-pointer items-center justify-between gap-2 px-3 py-2`}
+        >
+          Forward All
+          <img src={forwardAllIcon} alt="forwardAllIcon" className="h-4 w-4" />
+        </button>
+        {/* <SwitchButton
           param="drop"
           imgTransform={225}
           textTransform={50}
@@ -41,9 +53,21 @@ export default function Filters() {
           offIcon={dropAllIcon}
           onText="Drop"
           offText="Drop All"
-        />
+          /> */}
       </div>
-      <div className="flex items-center gap-x-1">
+      <div className="flex items-center gap-x-2">
+        <button
+          className={`bg-red/60 small-text text-yellowish-white rounded-6px flex w-fit cursor-pointer items-center justify-between gap-2 px-3 py-2`}
+        >
+          Drop
+          <img src={dropIcon} alt="dropIcon" className="h-4 w-4" />
+        </button>
+        <button
+          className={`bg-gray small-text text-yellowish-white rounded-6px flex w-fit cursor-pointer items-center justify-between gap-2 px-3 py-2`}
+        >
+          Drop All
+          <img src={dropAllIcon} alt="dropAllIcon" className="h-4 w-4" />
+        </button>
         <button
           className={`bg-gray small-text text-yellowish-white rounded-6px flex w-32 cursor-pointer items-center justify-between px-3 py-2`}
         >
