@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 type SwitchButtonProps = {
@@ -25,15 +25,16 @@ export default function SwitchButton({
   const [searchParams, setSearchParams] = useSearchParams();
   const isOnParam = searchParams.get(param);
   const [isOn, setIsOn] = useState(isOnParam === "true");
-  useEffect(() => {
+  function handleClick() {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set(param, isOn.toString());
     setSearchParams(newSearchParams);
-  }, [isOn, setSearchParams, searchParams, param]);
+    setIsOn(!isOn);
+  }
 
   return (
     <button
-      onClick={() => setIsOn(!isOn)}
+      onClick={handleClick}
       className={`bg-gray small-text text-yellowish-white rounded-6px flex cursor-pointer items-center justify-between py-0.5 pr-0.5 pl-1.5 ${buttonClassName}`}
     >
       <p
