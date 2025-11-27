@@ -1,4 +1,3 @@
-import React from "react";
 import Th from "./Th";
 import { useSearchParams } from "react-router-dom";
 import Tr from "./Tr";
