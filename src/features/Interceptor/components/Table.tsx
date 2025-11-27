@@ -1,6 +1,7 @@
 import Th from "./Th";
 import { useSearchParams } from "react-router-dom";
 import Tr from "./Tr";
+import { useEffect } from "react";
 
 type TableRowProps = {
   Time: string;
@@ -33,9 +34,22 @@ const tableRows: TableRowProps[] = Array.from({ length: 20 }, () => ({
 }));
 
 export default function Table() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const sort = searchParams.get("sort");
-  const sortedTable = tableRows.sort((a, b) => {
+  const search = searchParams.get("search");
+  const filteredTable = tableRows.filter((row) => {
+    return Object.values(row).some((value) =>
+      String(value)
+        .toLowerCase()
+        .includes(search?.toLowerCase() || ""),
+    );
+  });
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("length", String(filteredTable.length));
+    setSearchParams(newSearchParams);
+  }, [filteredTable.length, searchParams, setSearchParams]);
+  const sortedTable = filteredTable.sort((a, b) => {
     if (sort) {
       const key = sort.split("-")[0] as keyof TableRowProps;
       const aVal = a[key];

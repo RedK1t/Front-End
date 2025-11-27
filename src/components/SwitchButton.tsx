@@ -27,9 +27,10 @@ export default function SwitchButton({
   const [isOn, setIsOn] = useState(isOnParam === "true");
   function handleClick() {
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set(param, isOn.toString());
-    setSearchParams(newSearchParams);
     setIsOn(!isOn);
+    const newIsOn = !isOn;
+    newSearchParams.set(param, newIsOn.toString());
+    setSearchParams(newSearchParams);
   }
 
   return (
