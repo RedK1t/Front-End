@@ -55,9 +55,9 @@ export default function BottomPanel({
       <div className="h-full w-full overflow-y-hidden">
         {/* Div for content */}
         <div className="mx-auto flex h-full w-11/12 items-start justify-between">
-          <ReqResContent type="Request" editableProp={editable} />
+          <ReqResContent type="request" editableProp={editable} />
           <ReqResContent
-            type="Response"
+            type="response"
             text={responseText}
             editableProp={editable}
           />

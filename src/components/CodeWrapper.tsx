@@ -6,14 +6,22 @@ import { javascript } from "@codemirror/lang-javascript";
 import { json } from "@codemirror/lang-json";
 import { EditorView } from "@codemirror/view";
 import { http } from "./httpLanguage"; // This import is correct
+import { useSearchParams } from "react-router-dom";
 
 export default function CodeWrapper({
   language = "javascript",
   initialValue = "",
   editableProp = true,
+  type = "request",
+}: {
+  language?: "html" | "css" | "javascript" | "js" | "json" | "http";
+  initialValue?: string;
+  editableProp?: boolean;
+  type?: "request" | "response";
 }) {
   const [value, setValue] = useState(initialValue);
-
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get(`${type}query`) || undefined;
   const getLanguage = () => {
     switch (language) {
       case "html":
@@ -26,7 +34,7 @@ export default function CodeWrapper({
       case "json":
         return [json()];
       case "http":
-        return [http()]; // Only the language extension here
+        return [http(query)]; // Only the language extension here
 
       default:
         return [javascript()];
@@ -48,6 +56,7 @@ export default function CodeWrapper({
             ".cm-scroller": { backgroundColor: "var(--color-gray)" },
             ".cm-editor": { backgroundColor: "var(--color-gray)" },
             ".ͼp": { color: "#f8c555" },
+            ".ͼ12": { backgroundColor: "#f8c555", color: "#000" },
             ".ͼu": { color: "#f08d49" },
             ".ͼt": { color: "#7ec699" },
             ".ͼ10": { color: "#67cdcc", textDecoration: "none" },

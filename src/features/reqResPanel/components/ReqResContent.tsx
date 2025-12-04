@@ -1,4 +1,9 @@
 import CodeWrapper from "@/components/CodeWrapper";
+import { Input } from "@/components/ui/input";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { MdCancel } from "react-icons/md";
+import { useSearchParams } from "react-router-dom";
 
 const defaultText = `POST /api/v1/orders HTTP/1.1
 Host: api.example.com
@@ -52,7 +57,7 @@ Content-Length: 421
 
 type ReqResContentProps = {
   text?: string;
-  type: "Request" | "Response";
+  type: "request" | "response";
   editableProp?: boolean;
 };
 
@@ -61,17 +66,107 @@ export default function ReqResContent({
   type,
   editableProp = true,
 }: ReqResContentProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
+  const [count, setCount] = useState(0);
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    // wait until the classes are loaded
+    setTimeout(() => {
+      if (ref.current) {
+        // Search ONLY inside this div
+        const elements = ref.current.querySelectorAll(".ͼ12");
+        setCount(elements.length);
+        elements[0]?.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 200);
+  }, [query]);
+
+  function handleOnChange(e: ChangeEvent<HTMLInputElement>) {
+    setQuery(e.target.value);
+    const newURL = new URLSearchParams(searchParams);
+    if (e.target.value === "") {
+      newURL.delete(`${type}query`);
+    } else {
+      newURL.set(`${type}query`, e.target.value);
+    }
+    setSearchParams(newURL);
+  }
+
+  function handleClear() {
+    setQuery("");
+    const newURL = new URLSearchParams(searchParams);
+    newURL.delete(`${type}query`);
+    setSearchParams(newURL);
+  }
+
+  function handlePrev() {
+    if (index > 0) {
+      setIndex(index - 1);
+      const elements = ref.current?.querySelectorAll(".ͼ12");
+      elements?.[index - 1]?.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  function handleNext() {
+    if (index < count - 1) {
+      setIndex(index + 1);
+      const elements = ref.current?.querySelectorAll(".ͼ12");
+      elements?.[index + 1]?.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
   return (
     <div
-      className={`${type === "Request" ? "border-light-red border-r pr-5" : "pl-5"} flex h-full w-1/2 flex-col gap-2.5 py-5`}
+      className={`${type === "request" ? "border-light-red border-r pr-5" : "pl-5"} flex h-full w-1/2 flex-col gap-2.5 py-5`}
     >
+      {/* header */}
       <p className="normal-text text-white">{type}</p>
-      <div className="bg-gray text-yellowish-white coding-text h-full min-h-[100px] w-full overflow-y-hidden rounded-[5px] p-2.5">
+
+      {/* code */}
+      <div
+        ref={ref}
+        className="bg-gray text-yellowish-white coding-text h-full min-h-[100px] w-full overflow-y-hidden rounded-[5px] p-2.5"
+      >
         <CodeWrapper
           language="http"
           initialValue={text}
           editableProp={editableProp}
+          type={type}
         />
+      </div>
+
+      {/* footer */}
+      <div className="flex items-center gap-2.5">
+        <div className="bg-gray rounded-6px flex w-full items-center pr-2.5">
+          <Input
+            placeholder="Search"
+            className="bg-gray rounded-6px h-9 border-0 focus-visible:border-0 focus-visible:ring-0"
+            onChange={handleOnChange}
+            value={query}
+          />
+          <MdCancel
+            onClick={handleClear}
+            className="text-yellowish-white h-5 w-5 cursor-pointer"
+          />
+        </div>
+        <button
+          onClick={handlePrev}
+          className="rounded-6px bg-gray flex h-full w-12 cursor-pointer items-center justify-center"
+        >
+          <FaArrowLeft />
+        </button>
+        <button
+          onClick={handleNext}
+          className="rounded-6px bg-gray flex h-full w-12 cursor-pointer items-center justify-center"
+        >
+          <FaArrowRight />
+        </button>
+        <p className="normal-text ml-2.5 text-nowrap text-white">
+          {count} matches found
+        </p>
       </div>
     </div>
   );
