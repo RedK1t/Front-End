@@ -27,7 +27,13 @@ export default function SubdomainRow({ subdomain, ip }: SubdomainRowProps) {
           >
             Ports
           </button>
-          <img src={openIcon} alt="open icon" className="h-6 w-6" />
+          <a
+            href={`https://${subdomain}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={openIcon} alt="open icon" className="h-6 w-6" />
+          </a>
         </div>
       </div>
 

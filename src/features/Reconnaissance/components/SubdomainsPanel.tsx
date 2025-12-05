@@ -1,9 +1,12 @@
 import { useSearchParams } from "react-router-dom";
 import exportIcon from "../../../assets/ExportIcon.svg";
 import SubdomainRow from "./SubdomainRow";
+import useSubdomains from "../hooks/useSubdomains";
 
 export default function SubdomainsPanel() {
   const [searchParams] = useSearchParams();
+  const { progress, subdomains, numberOfResults, elapsedTime } =
+    useSubdomains("facebook.com");
   const filter = searchParams.get("subdomain");
   return (
     /*  Panel */
@@ -30,15 +33,47 @@ export default function SubdomainsPanel() {
         </div>
       </div>
 
+      <div className="flex h-fit w-full items-center overflow-hidden">
+        <div
+          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${progress !== 100 ? "w-0 overflow-hidden opacity-0" : "w-full opacity-100"}`}
+        >
+          <div className="normal-text text-yellowish-white flex items-center gap-1">
+            <p>found</p>
+            <span className="text-red">{numberOfResults}</span>
+            <p>subdomains in</p>
+            <span className="text-red">{elapsedTime}</span>
+            <p>seconds</p>
+          </div>
+        </div>
+        <div
+          className={`flex h-fit items-center justify-between gap-2 transition-all duration-1000 ease-in-out ${progress === 100 ? "w-0 overflow-hidden opacity-0" : "w-full opacity-100"}`}
+        >
+          <p className="normal-text text-yellowish-white">progress:</p>
+          <div className="bg-red/40 h-2 w-full rounded-full">
+            <div
+              className="bg-red h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${progress}%`,
+                boxShadow: "0 0 20px 1px rgba(250, 1, 12, 0.3)",
+              }}
+            ></div>
+          </div>
+          <p className="normal-text text-yellowish-white">
+            {+progress.toFixed(0)}%
+          </p>
+        </div>
+      </div>
+
       {/*  Subdomains List */}
-      <div className="flex flex-col gap-3 overflow-y-auto py-3">
+      <div className="flex h-full flex-col gap-3 overflow-y-auto py-3">
         {/*  Subdomain Item */}
-        <SubdomainRow subdomain="www.targetcorp.com" ip="104.16.123.45" />
-        <SubdomainRow subdomain="api.targetcorp.com" ip="104.16.123.46" />
-        <SubdomainRow subdomain="admin.targetcorp.com" ip="104.16.123.47" />
-        <SubdomainRow subdomain="blog.targetcorp.com" ip="104.16.123.48" />
-        <SubdomainRow subdomain="cdn.targetcorp.com" ip="104.16.123.49" />
-        <SubdomainRow subdomain="dev.targetcorp.com" ip="104.16.123.50" />
+        {subdomains.map((subdomain) => (
+          <SubdomainRow
+            key={subdomain.host}
+            subdomain={subdomain.host}
+            ip={subdomain.ips.join(", ")}
+          />
+        ))}
       </div>
     </div>
   );
