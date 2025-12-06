@@ -13,7 +13,7 @@ export default function Filters() {
     if (!searchParams.has("dig") || !searchParams.has("subdomain")) {
       setSearchParams(newParams, { replace: true });
     }
-  }, []);
+  }, [searchParams, setSearchParams]);
   return (
     <div className="mx-auto flex w-11/12 items-center justify-between pt-11">
       {/* Dig Filter */}
@@ -37,11 +37,11 @@ export default function Filters() {
         <FilterTab paramName="subdomain" paramData="all">
           All
         </FilterTab>
-        <FilterTab paramName="subdomain" paramData="active">
-          Active
+        <FilterTab paramName="subdomain" paramData="web">
+          Web
         </FilterTab>
-        <FilterTab paramName="subdomain" paramData="inactive">
-          Inactive
+        <FilterTab paramName="subdomain" paramData="other">
+          Other
         </FilterTab>
       </div>
     </div>

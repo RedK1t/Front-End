@@ -1,33 +1,45 @@
+import type { subdomainData } from "@/types/types";
 import { useEffect, useState } from "react";
 
 export default function useSubdomains(domain: string) {
-  type subdomainData = {
-    host: string;
-    ips: string[];
-  };
-  const [subdomains, setSubdomains] = useState<subdomainData[]>([]);
+  const [httpSubdomains, setHttpSubdomains] = useState<subdomainData[]>([]);
+  const [dnsSubdomains, setDnsSubdomains] = useState<subdomainData[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [numberOfResults, setNumberOfResults] = useState<number>(0);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const url = import.meta.env.VITE_subdomains_websocket_url;
-  type progressProps = {
+  type progressMessage = {
     type: "progress";
 
     percentage: number;
     completed: number;
     total: number;
   };
-  type subdomainProps = {
-    type: "subdomain";
-    host: string;
+  type httpValidatedMessage = {
+    type: "http_validated";
+
+    subdomain: string;
+    url: string;
+    status: number;
     ips: string[];
   };
-  type completeProps = {
+  type dnsOnlyMessage = {
+    type: "dns_only";
+
+    subdomain: string;
+    ips: string[];
+  };
+  type completeMessage = {
     type: "complete";
+
     count: number;
     elapsed_time: number;
   };
-  type data = progressProps | subdomainProps | completeProps;
+  type data =
+    | progressMessage
+    | httpValidatedMessage
+    | dnsOnlyMessage
+    | completeMessage;
   useEffect(() => {
     const ws = new WebSocket(url);
 
@@ -46,11 +58,21 @@ export default function useSubdomains(domain: string) {
 
     ws.onmessage = (event: MessageEvent) => {
       const data: data = JSON.parse(event.data);
+      console.log(event.data);
       if (data.type === "progress") {
         setProgress(data.percentage);
       }
-      if (data.type === "subdomain") {
-        setSubdomains((prev) => [...prev, { host: data.host, ips: data.ips }]);
+      if (data.type === "http_validated") {
+        setHttpSubdomains((prev) => [
+          ...prev,
+          { host: data.subdomain, ips: data.ips },
+        ]);
+      }
+      if (data.type === "dns_only") {
+        setDnsSubdomains((prev) => [
+          ...prev,
+          { host: data.subdomain, ips: data.ips },
+        ]);
       }
       if (data.type === "complete") {
         setNumberOfResults(data.count);
@@ -70,7 +92,13 @@ export default function useSubdomains(domain: string) {
     return () => {
       ws.close();
     };
-  }, [url]);
+  }, [url, domain]);
 
-  return { progress, subdomains, numberOfResults, elapsedTime };
+  return {
+    progress,
+    httpSubdomains,
+    dnsSubdomains,
+    numberOfResults,
+    elapsedTime,
+  };
 }

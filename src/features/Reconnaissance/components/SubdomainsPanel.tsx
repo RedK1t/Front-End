@@ -5,8 +5,13 @@ import useSubdomains from "../hooks/useSubdomains";
 
 export default function SubdomainsPanel() {
   const [searchParams] = useSearchParams();
-  const { progress, subdomains, numberOfResults, elapsedTime } =
-    useSubdomains("facebook.com");
+  const {
+    progress,
+    dnsSubdomains,
+    httpSubdomains,
+    numberOfResults,
+    elapsedTime,
+  } = useSubdomains("google.com");
   const filter = searchParams.get("subdomain");
   return (
     /*  Panel */
@@ -15,13 +20,6 @@ export default function SubdomainsPanel() {
       <div className="flex w-full items-center justify-between">
         <div className="flex flex-col gap-1">
           <p className="large-text text-white">Discovered Subdomains</p>
-          <p className="normal-text text-yellowish-white">
-            {filter === "all"
-              ? "X subdomains (X Active)"
-              : filter === "active"
-                ? "X active subdomains"
-                : "X inactive subdomains"}
-          </p>
         </div>
 
         {/*  Header Buttons */}
@@ -35,10 +33,10 @@ export default function SubdomainsPanel() {
 
       <div className="flex h-fit w-full items-center overflow-hidden">
         <div
-          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${progress !== 100 ? "w-0 overflow-hidden opacity-0" : "w-full opacity-100"}`}
+          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${progress === 100 && filter === "all" ? "w-full opacity-100" : "w-0 overflow-hidden opacity-0"}`}
         >
           <div className="normal-text text-yellowish-white flex items-center gap-1">
-            <p>found</p>
+            <p>Found</p>
             <span className="text-red">{numberOfResults}</span>
             <p>subdomains in</p>
             <span className="text-red">{elapsedTime}</span>
@@ -46,9 +44,27 @@ export default function SubdomainsPanel() {
           </div>
         </div>
         <div
+          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${progress === 100 && filter === "web" ? "w-full opacity-100" : "w-0 overflow-hidden opacity-0"}`}
+        >
+          <div className="normal-text text-yellowish-white flex items-center gap-1">
+            <p>Found</p>
+            <span className="text-red">{httpSubdomains?.length}</span>
+            <p>subdomains</p>
+          </div>
+        </div>
+        <div
+          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${progress === 100 && filter === "other" ? "w-full opacity-100" : "w-0 overflow-hidden opacity-0"}`}
+        >
+          <div className="normal-text text-yellowish-white flex items-center gap-1">
+            <p>Found</p>
+            <span className="text-red">{dnsSubdomains?.length}</span>
+            <p>subdomains</p>
+          </div>
+        </div>
+        <div
           className={`flex h-fit items-center justify-between gap-2 transition-all duration-1000 ease-in-out ${progress === 100 ? "w-0 overflow-hidden opacity-0" : "w-full opacity-100"}`}
         >
-          <p className="normal-text text-yellowish-white">progress:</p>
+          <p className="normal-text text-yellowish-white">Progress:</p>
           <div className="bg-red/40 h-2 w-full rounded-full">
             <div
               className="bg-red h-full rounded-full transition-all duration-500"
@@ -67,13 +83,40 @@ export default function SubdomainsPanel() {
       {/*  Subdomains List */}
       <div className="flex h-full flex-col gap-3 overflow-y-auto py-3">
         {/*  Subdomain Item */}
-        {subdomains.map((subdomain) => (
-          <SubdomainRow
-            key={subdomain.host}
-            subdomain={subdomain.host}
-            ip={subdomain.ips.join(", ")}
-          />
-        ))}
+        {filter === "all" && (
+          <>
+            {httpSubdomains.map((subdomain) => (
+              <SubdomainRow
+                key={subdomain.host}
+                subdomain={subdomain.host}
+                ip={subdomain.ips.join(", ")}
+              />
+            ))}
+            {dnsSubdomains.map((subdomain) => (
+              <SubdomainRow
+                key={subdomain.host}
+                subdomain={subdomain.host}
+                ip={subdomain.ips.join(", ")}
+              />
+            ))}
+          </>
+        )}
+        {filter === "web" &&
+          httpSubdomains?.map((subdomain) => (
+            <SubdomainRow
+              key={subdomain.host}
+              subdomain={subdomain.host}
+              ip={subdomain.ips.join(", ")}
+            />
+          ))}
+        {filter === "other" &&
+          dnsSubdomains?.map((subdomain) => (
+            <SubdomainRow
+              key={subdomain.host}
+              subdomain={subdomain.host}
+              ip={subdomain.ips.join(", ")}
+            />
+          ))}
       </div>
     </div>
   );
