@@ -5,8 +5,15 @@ import PortItem from "./PortItem";
 type SubdomainRowProps = {
   subdomain: string;
   ip: string;
+  status?: number;
+  url?: string;
 };
-export default function SubdomainRow({ subdomain, ip }: SubdomainRowProps) {
+export default function SubdomainRow({
+  subdomain,
+  ip,
+  status,
+  url,
+}: SubdomainRowProps) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     // Subdomain Item
@@ -14,26 +21,38 @@ export default function SubdomainRow({ subdomain, ip }: SubdomainRowProps) {
       {/*  Subdomain  */}
       <div className="flex items-center justify-between">
         {/* Subdomain Name & IP */}
-        <div className="flex flex-col gap-1">
-          <p className="normal-text text-red">{subdomain}</p>
-          <p className="normal-text text-yellowish-white">{ip}</p>
+        <div className="flex max-w-10/12 flex-col gap-1">
+          <div className="flex w-48 items-center justify-between">
+            <p className="normal-text text-red">{subdomain}</p>
+            {status && (
+              <p
+                className={`small-text border-green/50 ${status === 200 ? "text-green/80" : "text-red"}`}
+              >
+                {status}
+              </p>
+            )}
+          </div>
+          <p className="normal-text text-yellowish-white text-wrap">{ip}</p>
         </div>
 
         {/* Subdomain Actions */}
-        <div className="flex items-center gap-8">
+        <div className="flex w-2/12 items-center justify-between">
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="small-text border-dark-red/50 shadow-dark-red/30 hover:shadow-dark-red/50 cursor-pointer rounded-md border bg-black px-2 py-1 shadow-[0_0_15px] outline-0"
           >
             Ports
           </button>
-          <a
-            href={`https://${subdomain}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src={openIcon} alt="open icon" className="h-6 w-6" />
-          </a>
+          {url && (
+            <a
+              href={url}
+              className="h-6 w-6"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={openIcon} alt="open icon" className="h-6 w-6" />
+            </a>
+          )}
         </div>
       </div>
 

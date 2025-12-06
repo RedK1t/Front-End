@@ -1,9 +1,19 @@
-import type { subdomainData } from "@/types/types";
 import { useEffect, useState } from "react";
 
+type httpValidatedData = {
+  subdomain: string;
+  url: string;
+  status: number;
+  ips: string[];
+};
+
+type dnsOnlyData = {
+  subdomain: string;
+  ips: string[];
+};
 export default function useSubdomains(domain: string) {
-  const [httpSubdomains, setHttpSubdomains] = useState<subdomainData[]>([]);
-  const [dnsSubdomains, setDnsSubdomains] = useState<subdomainData[]>([]);
+  const [httpSubdomains, setHttpSubdomains] = useState<httpValidatedData[]>([]);
+  const [dnsSubdomains, setDnsSubdomains] = useState<dnsOnlyData[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [numberOfResults, setNumberOfResults] = useState<number>(0);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
@@ -65,13 +75,18 @@ export default function useSubdomains(domain: string) {
       if (data.type === "http_validated") {
         setHttpSubdomains((prev) => [
           ...prev,
-          { host: data.subdomain, ips: data.ips },
+          {
+            subdomain: data.subdomain,
+            url: data.url,
+            status: data.status,
+            ips: data.ips,
+          },
         ]);
       }
       if (data.type === "dns_only") {
         setDnsSubdomains((prev) => [
           ...prev,
-          { host: data.subdomain, ips: data.ips },
+          { subdomain: data.subdomain, ips: data.ips },
         ]);
       }
       if (data.type === "complete") {

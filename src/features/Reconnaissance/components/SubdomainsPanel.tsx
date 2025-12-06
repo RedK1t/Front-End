@@ -11,7 +11,7 @@ export default function SubdomainsPanel() {
     httpSubdomains,
     numberOfResults,
     elapsedTime,
-  } = useSubdomains("google.com");
+  } = useSubdomains("te.eg");
   const filter = searchParams.get("subdomain");
   return (
     /*  Panel */
@@ -87,15 +87,17 @@ export default function SubdomainsPanel() {
           <>
             {httpSubdomains.map((subdomain) => (
               <SubdomainRow
-                key={subdomain.host}
-                subdomain={subdomain.host}
+                key={subdomain.subdomain}
+                subdomain={subdomain.subdomain}
                 ip={subdomain.ips.join(", ")}
+                status={subdomain.status}
+                url={subdomain.url}
               />
             ))}
             {dnsSubdomains.map((subdomain) => (
               <SubdomainRow
-                key={subdomain.host}
-                subdomain={subdomain.host}
+                key={subdomain.subdomain}
+                subdomain={subdomain.subdomain}
                 ip={subdomain.ips.join(", ")}
               />
             ))}
@@ -104,16 +106,18 @@ export default function SubdomainsPanel() {
         {filter === "web" &&
           httpSubdomains?.map((subdomain) => (
             <SubdomainRow
-              key={subdomain.host}
-              subdomain={subdomain.host}
+              key={subdomain.subdomain}
+              subdomain={subdomain.subdomain}
               ip={subdomain.ips.join(", ")}
+              status={subdomain.status}
+              url={subdomain.url}
             />
           ))}
         {filter === "other" &&
           dnsSubdomains?.map((subdomain) => (
             <SubdomainRow
-              key={subdomain.host}
-              subdomain={subdomain.host}
+              key={subdomain.subdomain}
+              subdomain={subdomain.subdomain}
               ip={subdomain.ips.join(", ")}
             />
           ))}
