@@ -101,7 +101,9 @@ export default function DomainInfoPanel() {
 
             return (
               <>
-                {Object.entries(longestWhoisEntry).map(([key, value]) => {
+                {Object.entries(
+                  longestWhoisEntry as Record<string, unknown>,
+                ).map(([key, value]) => {
                   if (!value || key === "text" || key.includes(">>>")) return;
                   return (
                     <InfoRow
