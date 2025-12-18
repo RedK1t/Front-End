@@ -2,9 +2,13 @@ import { useSearchParams } from "react-router-dom";
 import copyIcon from "../../../assets/copyIcon.svg";
 import exportIcon from "../../../assets/ExportIcon.svg";
 import InfoRow from "./InfoRow";
+import useWhoisDnsRecords from "../hooks/useWhoisDnsRecords";
 
 export default function DomainInfoPanel() {
   const [searchParams] = useSearchParams();
+  const domain = searchParams.get("domain");
+  const { data, error, isLoading } = useWhoisDnsRecords(domain || "");
+  console.log(data);
   const filter = searchParams.get("dig");
   return (
     /*  Panel */
@@ -28,15 +32,88 @@ export default function DomainInfoPanel() {
 
       {/*  Domain Info */}
       <div className="flex flex-col gap-3 overflow-y-auto">
-        <InfoRow label="Domain Name" value="Example.com" />
-        <InfoRow label="Registrar" value="GoDaddy, LLC" />
-        <InfoRow label="Creation Date" value="2005-03-15" />
-        <InfoRow label="Expiration Date" value="2026-03-15" />
-        <InfoRow label="Last Updated" value="2023-11-02" />
-        <InfoRow
-          label="Name Servers"
-          value="ns1.example.com, ns2.example.com"
-        />
+        {isLoading && (
+          <div className="flex justify-center">
+            <span className="loading bg-red loading-spinner h-12 w-12"></span>
+          </div>
+        )}
+        {error && <p className="text-red text-center">{error.message}</p>}
+        {!data?.success && (
+          <p className="text-red text-center">{data?.error}</p>
+        )}
+        {data?.success && filter === "Dns" && (
+          <>
+            <InfoRow
+              label="A"
+              value={data.dns?.records?.A?.join("\n") || "-"}
+            />
+
+            <InfoRow
+              label="AAAA"
+              value={data.dns?.records?.AAAA?.join("\n") || "-"}
+            />
+            <InfoRow
+              label="MX"
+              value={
+                data.dns?.records?.MX?.map(
+                  (mx) => `Priority ${mx.priority} - ${mx.exchange}`,
+                ).join("\n") || "\n"
+              }
+            />
+            <InfoRow
+              label="NS"
+              value={data.dns?.records?.NS?.join("\n") || "-"}
+            />
+            <InfoRow
+              label="TXT"
+              value={data.dns?.records?.TXT.flat().flat().join("\n") || "\n"}
+            />
+          </>
+        )}
+        {data?.success &&
+          filter === "Whois" &&
+          (() => {
+            const whoisData = data.whois;
+            if (!whoisData || Object.keys(whoisData).length === 0) {
+              return (
+                <p className="text-red text-center">No Whois data available.</p>
+              );
+            }
+
+            // Get all inner objects from whoisData
+            const innerWhoisObjects = Object.values(whoisData);
+
+            // Find the inner object with the most keys (the 'longest' one)
+            const longestWhoisEntry = innerWhoisObjects.reduce(
+              (prev, current) => {
+                // Ensure prev and current are objects before checking keys
+                const prevKeys =
+                  typeof prev === "object" && prev !== null
+                    ? Object.keys(prev).length
+                    : 0;
+                const currentKeys =
+                  typeof current === "object" && current !== null
+                    ? Object.keys(current).length
+                    : 0;
+                return prevKeys > currentKeys ? prev : current;
+              },
+            );
+
+            return (
+              <>
+                {Object.entries(longestWhoisEntry).map(([key, value]) => {
+                  if (!value || key === "text" || key.includes(">>>")) return;
+                  return (
+                    <InfoRow
+                      key={key}
+                      label={key}
+                      value={String(value).replace(/,/g, "\n")}
+                    />
+                  );
+                })}
+              </>
+            );
+          })()}
       </div>
     </div>
   );

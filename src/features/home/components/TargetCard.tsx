@@ -3,6 +3,7 @@ import plusIcon from "../../../assets/PlusIcon.svg";
 import shareIcon from "../../../assets/ShareIcon.svg";
 import searchIcon from "../../../assets/SearchIcon.svg";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const LOGO_DEV_PUBLIC_KEY = "pk_e6MtMO_tQm6SnFDQtPovWg";
 
@@ -29,6 +30,7 @@ function CompanyLogo({ domain }: { domain: string }) {
   );
 }
 export default function TargetCard(props: TargetCardProps) {
+  const [domainInput, setDomainInput] = useState("");
   function openModal() {
     const modal = document.getElementById(
       "addTargetModal",
@@ -70,7 +72,9 @@ export default function TargetCard(props: TargetCardProps) {
                 <input
                   type="text"
                   placeholder="tesla.com"
-                  className="placeholder:large- placeholder:text-dark-yellowish-white w-full rounded-md bg-black p-3 outline-0"
+                  className="placeholder:large-text placeholder:text-dark-yellowish-white w-full rounded-md bg-black p-3 outline-0"
+                  value={domainInput}
+                  onChange={(e) => setDomainInput(e.target.value)}
                 />
               </div>
             </div>
@@ -82,7 +86,7 @@ export default function TargetCard(props: TargetCardProps) {
                 Share
               </button>
               <Link
-                to="/reconnaissance"
+                to={`/reconnaissance?domain=${domainInput}`}
                 className="border-dark-red shadow-dark-red/20 bg-dark-red normal-text flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 shadow-[0_0_15px]"
               >
                 <img src={searchIcon} alt="Search Icon" className="h-5 w-5" />

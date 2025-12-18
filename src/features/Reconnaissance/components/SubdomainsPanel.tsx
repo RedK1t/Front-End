@@ -5,13 +5,15 @@ import useSubdomains from "../hooks/useSubdomains";
 
 export default function SubdomainsPanel() {
   const [searchParams] = useSearchParams();
+  const domain = searchParams.get("domain");
+
   const {
     progress,
     dnsSubdomains,
     httpSubdomains,
     numberOfResults,
     elapsedTime,
-  } = useSubdomains("te.eg");
+  } = useSubdomains(domain || "");
   const filter = searchParams.get("subdomain");
   return (
     /*  Panel */

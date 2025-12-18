@@ -8,6 +8,16 @@ import Standard from "./features/sitemap/Standard";
 import Hierarchical from "./features/sitemap/hierarchical/Hierarchical";
 import Scope from "./features/scope/Scope";
 import Interceptor from "./features/Interceptor/Interceptor";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -49,7 +59,11 @@ const router = createBrowserRouter([
 export default function App() {
   return (
     <>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </>
   );
 }
