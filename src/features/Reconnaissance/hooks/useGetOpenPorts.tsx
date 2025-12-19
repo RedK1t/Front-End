@@ -31,7 +31,7 @@ export default function useGetOpenPorts(target: string) {
   const { data, isLoading, error } = useQuery<Data>({
     queryKey: ["openPorts", target],
     queryFn: async () => {
-      const response = await fetch("http://localhost:9000/scan", {
+      const response = await fetch(import.meta.env.VITE_openPorts_REST_url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
