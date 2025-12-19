@@ -3,11 +3,19 @@ import copyIcon from "../../../assets/copyIcon.svg";
 import exportIcon from "../../../assets/ExportIcon.svg";
 import InfoRow from "./InfoRow";
 import useWhoisDnsRecords from "../hooks/useWhoisDnsRecords";
+import useGetCrt from "../hooks/useGetCrt";
+import CrtRow from "./CrtRow";
 
 export default function DomainInfoPanel() {
   const [searchParams] = useSearchParams();
   const domain = searchParams.get("domain");
   const { data, error, isLoading } = useWhoisDnsRecords(domain || "");
+  const {
+    data: crtData,
+    isLoading: crtIsLoading,
+    error: crtError,
+  } = useGetCrt(domain || "");
+
   console.log(data);
   const filter = searchParams.get("dig");
   return (
@@ -32,7 +40,7 @@ export default function DomainInfoPanel() {
 
       {/*  Domain Info */}
       <div className="flex flex-col gap-3 overflow-y-auto">
-        {isLoading && (
+        {isLoading && (filter === "Dns" || filter === "Whois") && (
           <div className="flex justify-center">
             <span className="loading bg-red loading-spinner h-12 w-12"></span>
           </div>
@@ -116,6 +124,29 @@ export default function DomainInfoPanel() {
               </>
             );
           })()}
+        {crtIsLoading && filter === "Ssl" && (
+          <div className="flex justify-center">
+            <span className="loading bg-red loading-spinner h-12 w-12"></span>
+          </div>
+        )}
+        {crtError && filter === "Ssl" && (
+          <p className="text-red text-center">{crtError.message}</p>
+        )}
+        {crtData && filter === "Ssl" && (
+          <>
+            {Array.from(
+              new Map(
+                crtData.map((item) => [item.issuer_ca_id, item]),
+              ).values(),
+            ).map((item) => (
+              <CrtRow
+                key={item.id}
+                issuerCaId={item.issuer_ca_id}
+                issuer_name={item.issuer_name}
+              />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

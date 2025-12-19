@@ -13,10 +13,10 @@ export default function PortItem({
   serviceVersion,
 }: PortItemProps) {
   return (
-    <div className="normal-text bg-gray text-yellowish-white flex w-full items-center justify-between rounded-md px-8 py-3 text-wrap">
+    <div className="normal-text bg-gray text-yellowish-white flex w-full items-center justify-between rounded-md px-8 py-3 text-wrap break-all">
       <p className="w-10 text-left">{port}</p>
       <p className="text-red w-2 text-center">|</p>
-      <p className="w-20 text-center">{service}</p>
+      <p className="w-32 text-center">{service}</p>
       <p className="text-red w-2 text-center">|</p>
       <p className="w-12 text-center">{state}</p>
       <p className="text-red w-2 text-center">|</p>
