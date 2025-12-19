@@ -1,6 +1,7 @@
 import { useState } from "react";
 import openIcon from "../../../assets/openIcon.svg";
 import PortItem from "./PortItem";
+import useGetOpenPorts from "../hooks/useGetOpenPorts";
 
 type SubdomainRowProps = {
   subdomain: string;
@@ -15,6 +16,8 @@ export default function SubdomainRow({
   url,
 }: SubdomainRowProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { data, isLoading, error } = useGetOpenPorts(subdomain);
+  console.log(error);
   return (
     // Subdomain Item
     <div className="flex flex-col rounded-md bg-black px-4 py-2">
@@ -58,15 +61,27 @@ export default function SubdomainRow({
 
       {/*  Ports */}
       <div
-        className={`flex flex-wrap items-center justify-center gap-2 overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-[1500px] py-3" : "max-h-0 py-0"}`}
+        className={`flex flex-col flex-wrap items-center justify-center gap-2 overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-[1500px] py-3" : "max-h-0 py-0"}`}
       >
         {/* Port */}
-        <PortItem port="80" protocol="HTTP" />
-        <PortItem port="443" protocol="HTTPS" />
-        <PortItem port="22" protocol="SSH" />
-        <PortItem port="3306" protocol="MySQL" />
-        <PortItem port="5432" protocol="PostgreSQL" />
-        <PortItem port="21" protocol="FTP" />
+        {isLoading && (
+          <div className="flex justify-center">
+            <span className="loading bg-red loading-spinner h-12 w-12"></span>
+          </div>
+        )}
+        {!isLoading &&
+          data &&
+          data.state === "up" &&
+          data.ports.map((portData) => (
+            <PortItem
+              key={portData.port}
+              port={portData.port}
+              protocol={portData.protocol}
+              state={portData.state}
+              service={portData.service}
+              serviceVersion={portData.service_version}
+            />
+          ))}
       </div>
     </div>
   );
