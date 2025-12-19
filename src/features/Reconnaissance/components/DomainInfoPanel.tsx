@@ -51,31 +51,47 @@ export default function DomainInfoPanel() {
         )}
         {data?.success && filter === "Dns" && (
           <>
-            <InfoRow
-              label="A"
-              value={data.dns?.records?.A?.join("\n") || "-"}
-            />
-
-            <InfoRow
-              label="AAAA"
-              value={data.dns?.records?.AAAA?.join("\n") || "-"}
-            />
-            <InfoRow
-              label="MX"
-              value={
-                data.dns?.records?.MX?.map(
-                  (mx) => `Priority ${mx.priority} - ${mx.exchange}`,
-                ).join("\n") || "\n"
-              }
-            />
-            <InfoRow
-              label="NS"
-              value={data.dns?.records?.NS?.join("\n") || "-"}
-            />
-            <InfoRow
-              label="TXT"
-              value={data.dns?.records?.TXT.flat().flat().join("\n") || "\n"}
-            />
+            {data.dns?.records.MX && (
+              <InfoRow
+                label="MX"
+                value={
+                  data.dns?.records.MX
+                    ? data.dns.records.MX.map(
+                        (mx) => `Priority: ${mx.priority} - ${mx.exchange}`,
+                      ).join("\n")
+                    : "-"
+                }
+              />
+            )}
+            {data.dns?.records.SRV && (
+              <InfoRow
+                label="SRV"
+                value={
+                  data.dns?.records.SRV
+                    ? data.dns.records.SRV.map(
+                        (srv) =>
+                          `Priority: ${srv.priority} - Weight: ${srv.weight} - Port: ${srv.port} - Target: ${srv.name}`,
+                      ).join("\n")
+                    : "-"
+                }
+              />
+            )}
+            {data.dns &&
+              Object.entries(data.dns.records)
+                .filter(
+                  ([type, records]) =>
+                    records !== null &&
+                    !["MX", "SRV"].includes(type) &&
+                    Array.isArray(records) &&
+                    records.every((item) => typeof item === "string"),
+                )
+                .map(([type, records]) => (
+                  <InfoRow
+                    key={type}
+                    label={type}
+                    value={(records as string[]).join("\n")}
+                  />
+                ))}
           </>
         )}
         {data?.success &&
