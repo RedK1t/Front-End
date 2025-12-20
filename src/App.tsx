@@ -10,6 +10,7 @@ import Scope from "./features/scope/Scope";
 import Interceptor from "./features/Interceptor/Interceptor";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import ErrorFallback from "./features/ErrorFallback";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,6 +23,7 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     path: "/",
+    ErrorBoundary: ErrorFallback,
     element: <Home />,
   },
   {

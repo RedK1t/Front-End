@@ -7,7 +7,7 @@ type CrtRowProps = {
 export default function CrtRow({ issuerCaId, issuer_name }: CrtRowProps) {
   return (
     <div className="flex w-full justify-between gap-3 rounded-md bg-black p-3 text-wrap">
-      <p className="normal-text">{issuer_name}</p>
+      <p className="normal-text text-yellowish-white">{issuer_name}</p>
       <div className="flex items-center gap-2">
         <p className="normal-text text-red text-end whitespace-pre-wrap">
           {issuerCaId}
