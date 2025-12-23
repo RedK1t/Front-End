@@ -5,10 +5,11 @@ import InfoRow from "./InfoRow";
 import useWhoisDnsRecords from "../hooks/useWhoisDnsRecords";
 import useGetCrt from "../hooks/useGetCrt";
 import CrtRow from "./CrtRow";
+import { useDomain } from "@/context/DomainContext";
 
 export default function DomainInfoPanel() {
   const [searchParams] = useSearchParams();
-  const domain = searchParams.get("domain");
+  const { domain } = useDomain();
   const { data, error, isLoading } = useWhoisDnsRecords(domain || "");
   const {
     data: crtData,

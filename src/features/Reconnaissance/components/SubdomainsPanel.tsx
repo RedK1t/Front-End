@@ -2,10 +2,11 @@ import { useSearchParams } from "react-router-dom";
 import exportIcon from "../../../assets/ExportIcon.svg";
 import SubdomainRow from "./SubdomainRow";
 import useSubdomains from "../hooks/useSubdomains";
+import { useDomain } from "@/context/DomainContext";
 
 export default function SubdomainsPanel() {
   const [searchParams] = useSearchParams();
-  const domain = searchParams.get("domain");
+  const { domain } = useDomain();
 
   const {
     progress,

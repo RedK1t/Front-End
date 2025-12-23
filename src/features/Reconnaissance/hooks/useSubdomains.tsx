@@ -1,119 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useSubdomainContext } from "../../../context/SubdomainContext";
 
-type httpValidatedData = {
-  subdomain: string;
-  url: string;
-  status: number;
-  ips: string[];
-};
-
-type dnsOnlyData = {
-  subdomain: string;
-  ips: string[];
-};
 export default function useSubdomains(domain: string) {
-  const [httpSubdomains, setHttpSubdomains] = useState<httpValidatedData[]>([]);
-  const [dnsSubdomains, setDnsSubdomains] = useState<dnsOnlyData[]>([]);
-  const [progress, setProgress] = useState<number>(0);
-  const [numberOfResults, setNumberOfResults] = useState<number>(0);
-  const [elapsedTime, setElapsedTime] = useState<number>(0);
-  const url = import.meta.env.VITE_subdomains_websocket_url;
-  type progressMessage = {
-    type: "progress";
-
-    percentage: number;
-    completed: number;
-    total: number;
+  const { scanData, startScan } = useSubdomainContext();
+  const data = scanData[domain] || {
+    httpSubdomains: [],
+    dnsSubdomains: [],
+    progress: 0,
+    numberOfResults: 0,
+    elapsedTime: 0,
+    isScanning: false,
   };
-  type httpValidatedMessage = {
-    type: "http_validated";
 
-    subdomain: string;
-    url: string;
-    status: number;
-    ips: string[];
-  };
-  type dnsOnlyMessage = {
-    type: "dns_only";
-
-    subdomain: string;
-    ips: string[];
-  };
-  type completeMessage = {
-    type: "complete";
-
-    count: number;
-    elapsed_time: number;
-  };
-  type data =
-    | progressMessage
-    | httpValidatedMessage
-    | dnsOnlyMessage
-    | completeMessage;
   useEffect(() => {
-    const ws = new WebSocket(url);
+    // Only start scan if we don't have data and aren't already scanning
+    if (
+      domain &&
+      !data.isScanning &&
+      data.progress === 0 &&
+      data.numberOfResults === 0
+    ) {
+      startScan(domain);
+    }
+  }, [domain, data.isScanning, data.progress, data.numberOfResults, startScan]);
 
-    ws.onopen = () => {
-      console.log("WebSocket connected");
-      ws.send(
-        JSON.stringify({
-          domain: domain,
-          wordlist_preset: "2",
-          passive: true,
-          timeout: 5.0,
-          threads: 50,
-        }),
-      );
-    };
-
-    ws.onmessage = (event: MessageEvent) => {
-      const data: data = JSON.parse(event.data);
-      console.log(event.data);
-      if (data.type === "progress") {
-        setProgress(data.percentage);
-      }
-      if (data.type === "http_validated") {
-        setHttpSubdomains((prev) => [
-          ...prev,
-          {
-            subdomain: data.subdomain,
-            url: data.url,
-            status: data.status,
-            ips: data.ips,
-          },
-        ]);
-      }
-      if (data.type === "dns_only") {
-        setDnsSubdomains((prev) => [
-          ...prev,
-          { subdomain: data.subdomain, ips: data.ips },
-        ]);
-      }
-      if (data.type === "complete") {
-        setNumberOfResults(data.count);
-        setElapsedTime(data.elapsed_time);
-      }
-    };
-
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    ws.onclose = () => {
-      console.log("WebSocket disconnected");
-    };
-
-    // Cleanup function: close the WebSocket when the component unmounts
-    return () => {
-      ws.close();
-    };
-  }, [url, domain]);
-
-  return {
-    progress,
-    httpSubdomains,
-    dnsSubdomains,
-    numberOfResults,
-    elapsedTime,
-  };
+  return data;
 }

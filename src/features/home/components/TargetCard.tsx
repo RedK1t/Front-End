@@ -2,8 +2,9 @@ import uparrowIcon from "../../../assets/uparrowIcon.svg";
 import plusIcon from "../../../assets/PlusIcon.svg";
 import shareIcon from "../../../assets/ShareIcon.svg";
 import searchIcon from "../../../assets/SearchIcon.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useDomain } from "@/context/DomainContext";
 
 const LOGO_DEV_PUBLIC_KEY = "pk_e6MtMO_tQm6SnFDQtPovWg";
 
@@ -31,6 +32,8 @@ function CompanyLogo({ domain }: { domain: string }) {
 }
 export default function TargetCard(props: TargetCardProps) {
   const [domainInput, setDomainInput] = useState("");
+  const { setDomain } = useDomain();
+  const navigate = useNavigate();
   function openModal() {
     const modal = document.getElementById(
       "addTargetModal",
@@ -71,6 +74,13 @@ export default function TargetCard(props: TargetCardProps) {
                 <p className="heading-text text-light-red">Main Domain</p>
                 <input
                   type="text"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      setDomain(domainInput);
+                      navigate(`/reconnaissance`);
+                    }
+                  }}
                   placeholder="tesla.com"
                   className="placeholder:large-text placeholder:text-dark-yellowish-white w-full rounded-md bg-black p-3 outline-0"
                   value={domainInput}
@@ -86,7 +96,8 @@ export default function TargetCard(props: TargetCardProps) {
                 Share
               </button>
               <Link
-                to={`/reconnaissance?domain=${domainInput}`}
+                to={`/reconnaissance`}
+                onClick={() => setDomain(domainInput)}
                 className="border-dark-red shadow-dark-red/20 bg-dark-red normal-text flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2 shadow-[0_0_15px]"
               >
                 <img src={searchIcon} alt="Search Icon" className="h-5 w-5" />

@@ -11,6 +11,8 @@ import Interceptor from "./features/Interceptor/Interceptor";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ErrorFallback from "./features/ErrorFallback";
+import { SubdomainProvider } from "./context/SubdomainContext";
+import { DomainProvider } from "./context/DomainContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,8 +65,11 @@ export default function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
-
-        <RouterProvider router={router} />
+        <DomainProvider>
+          <SubdomainProvider>
+            <RouterProvider router={router} />
+          </SubdomainProvider>
+        </DomainProvider>
       </QueryClientProvider>
     </>
   );
