@@ -1,4 +1,5 @@
 export type GraphEndPoint = {
+  id: string;
   path: string;
   method: "GET" | "POST" | "PUT" | "DELETE" | null;
   children: GraphEndPoint[] | [];

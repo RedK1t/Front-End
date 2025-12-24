@@ -34,7 +34,7 @@ export default function FolderItem({
         {/* Folder Row */}
         <div
           onClick={handleSelect}
-          className={`text-yellowish-white normal-text flex cursor-pointer items-center justify-end gap-1 rounded py-1 pl-12 ${isSelected ? "bg-red/30" : ""}`}
+          className={`text-yellowish-white normal-text flex cursor-pointer items-center justify-end gap-1 rounded py-1 pl-8 ${isSelected ? "bg-red/30" : ""}`}
         >
           <p>{folderName}</p>
           <FolderIcon className="text-yellow h-4 w-4" />

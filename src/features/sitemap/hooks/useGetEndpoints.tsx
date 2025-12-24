@@ -54,6 +54,7 @@ function flatEndpoints(endpoints: endpoint[]): FlatEndpoint[] {
 
 export function transformToGraphType(endpoints: endpoint[]): GraphEndPoint[] {
   return endpoints.map((ep) => ({
+    id: ep.id,
     path: ep.url,
     method: ep.method as "GET" | "POST" | "PUT" | "DELETE" | null,
     children: ep.children ? transformToGraphType(ep.children) : [],

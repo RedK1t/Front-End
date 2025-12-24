@@ -25,13 +25,13 @@ export default function Filters() {
         onIcon="I"
         offIcon="O"
       /> */}
-      <div className="flex w-1/5 items-center justify-center">
+      <div className="flex w-1/6 items-center justify-center">
         <StandardSwitch />
       </div>
-      <div className="flex w-1/5 items-center justify-center">
+      <div className="flex w-1/6 items-center justify-center">
         <SelectFilter placeholder="source" options={["Active", "Passive"]} />
       </div>
-      <div className="flex w-1/5 items-center justify-center">
+      <div className="flex w-1/6 items-center justify-center">
         <SelectFilter
           placeholder="statusCode"
           options={[
@@ -48,13 +48,13 @@ export default function Filters() {
           ]}
         />
       </div>
-      <div className="flex w-1/5 items-center justify-center">
+      <div className="flex w-1/6 items-center justify-center">
         <SelectFilter
           placeholder="method"
           options={["GET", "POST", "PUT", "DELETE"]}
         />
       </div>
-      <div className="flex w-1/5 items-center justify-center">
+      <div className="flex w-2/6 items-center justify-center">
         <Input
           placeholder="Search for Endpoints"
           className="small-text bg-gray col-span-2 max-w-[250px] border-0"

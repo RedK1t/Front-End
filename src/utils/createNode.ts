@@ -17,7 +17,7 @@ export function createNode(
   arr: NodeType[],
 ) {
   arr.push({
-    id: `${element.path}`,
+    id: `${element.id}`,
     position: { x: x * level, y: y * yLevel },
     data: {
       endpoint: `${level === 0 ? "" : "/"}${element.path.split("/").pop()}`,

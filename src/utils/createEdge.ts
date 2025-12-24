@@ -8,8 +8,8 @@ export function createEdge(child: GraphEndPoint, edges: EdgeType[]) {
     for (let index = 0; index < child.children.length; index++) {
       edges.push({
         id: `${child.path}-${child.children[index].path}`,
-        source: `${child.path}`,
-        target: `${child.children[index].path}`,
+        source: `${child.id}`,
+        target: `${child.children[index].id}`,
       });
     }
     child.children.forEach((child) => {

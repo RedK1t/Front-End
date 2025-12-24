@@ -19,10 +19,6 @@ const nodeTypes = {
   endpointNode: Node,
 };
 
-// create empty array to store nodes and push nodes to it
-
-// create empty array to store edges and push edges to it
-
 export default function GraphPanel() {
   const { domain } = useDomain();
   const { graphEndpoints } = useGetEndpoints(domain || "");
@@ -52,7 +48,7 @@ export default function GraphPanel() {
       nodeTypes={nodeTypes}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
-      defaultViewport={{ x: 250, y: 300, zoom: 0 }}
+      defaultViewport={{ x: 100, y: 120, zoom: 1 }}
     >
       <Background />
     </ReactFlow>

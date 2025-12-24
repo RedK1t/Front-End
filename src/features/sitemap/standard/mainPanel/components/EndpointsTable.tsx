@@ -36,15 +36,12 @@ export default function EndpointsTable() {
         endpoint.path.includes(folder) &&
         endpoint.path.includes(search) &&
         (method === "" || endpoint.method === method) &&
-        (statusCode === "" || endpoint.status === +statusCode) &&
+        (statusCode === "" || String(endpoint.status) === statusCode) &&
         (source === "" || endpoint.source === source),
     )
     .map((endpoint) => ({
       ...endpoint,
-      path:
-        endpoint.path.split("//")[1].replace(folder, "") === ""
-          ? "/"
-          : endpoint.path.split("//")[1].replace(folder, ""),
+      path: endpoint.path.split("/").slice(3).join("/") || "/",
     }));
   return (
     <div className="text-yellowish-white flex h-full w-full flex-col gap-y-2 overflow-hidden py-2">

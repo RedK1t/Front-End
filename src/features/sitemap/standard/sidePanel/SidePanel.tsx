@@ -14,7 +14,10 @@ export default function SidePanel() {
   }
   function createFolder(endpoints: endpoint[], depth: number = 0) {
     return endpoints.map((endpoint) => {
-      if (endpoint.children === undefined || endpoint.children.length === 0)
+      if (
+        depth !== 0 &&
+        (endpoint.children === undefined || endpoint.children.length === 0)
+      )
         return;
       return (
         <FolderItem
@@ -29,7 +32,7 @@ export default function SidePanel() {
     });
   }
   return (
-    <div className="mx-auto flex w-11/12 flex-col justify-end overflow-hidden py-5">
+    <div className="mx-auto flex w-full flex-col justify-end gap-y-1 overflow-hidden py-5">
       {createFolder(endpoints || [])}
     </div>
   );
