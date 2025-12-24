@@ -16,8 +16,7 @@ export default function SubdomainRow({
   url,
 }: SubdomainRowProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { data, isLoading, error } = useGetOpenPorts(subdomain);
-  console.log(error);
+  const { data, isLoading } = useGetOpenPorts(subdomain);
   return (
     // Subdomain Item
     <div className="flex flex-col rounded-md bg-black px-4 py-2">

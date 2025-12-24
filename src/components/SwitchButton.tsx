@@ -30,7 +30,7 @@ export default function SwitchButton({
     setIsOn(!isOn);
     const newIsOn = !isOn;
     newSearchParams.set(param, newIsOn.toString());
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams, { replace: true });
   }
 
   return (

@@ -15,7 +15,7 @@ export default function HttpHistoryHeader() {
     setSearchString(e.target.value);
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("search", e.target.value);
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams, { replace: true });
   }
   function handleNext() {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -24,7 +24,7 @@ export default function HttpHistoryHeader() {
     } else {
       newSearchParams.set("selected", String(Number(selected) + 1));
     }
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams, { replace: true });
   }
   function handlePrev() {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -33,7 +33,7 @@ export default function HttpHistoryHeader() {
     } else {
       newSearchParams.set("selected", String(Number(selected) - 1));
     }
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams, { replace: true });
   }
   return (
     <div

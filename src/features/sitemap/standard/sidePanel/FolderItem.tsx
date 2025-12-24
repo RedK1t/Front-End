@@ -21,9 +21,11 @@ export default function FolderItem({
   const isSelected = searchParams.get("folder") === id;
 
   // Set Filter to Search Params
-  function handleSelect() {
+  function handleSelect(e: React.MouseEvent) {
+    e.stopPropagation();
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("folder", id);
+    newSearchParams.delete("selected");
     setSearchParams(newSearchParams, { replace: true });
   }
   return (

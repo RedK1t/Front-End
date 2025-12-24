@@ -15,17 +15,17 @@ export default function Th({ children, left, right }: ThProps) {
     if (sort?.includes(`${children}`)) {
       if (sort.includes(`asc`)) {
         newSearchParams.set("sort", `${children}-desc`);
-        setSearchParams(newSearchParams);
+        setSearchParams(newSearchParams, { replace: true });
         return;
       }
       if (sort.includes(`desc`)) {
         newSearchParams.set("sort", `${children}-asc`);
-        setSearchParams(newSearchParams);
+        setSearchParams(newSearchParams, { replace: true });
         return;
       }
     }
     newSearchParams.set("sort", `${children}-asc`);
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams, { replace: true });
   }
   return (
     <th

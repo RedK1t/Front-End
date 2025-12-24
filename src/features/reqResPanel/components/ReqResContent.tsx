@@ -92,14 +92,14 @@ export default function ReqResContent({
     } else {
       newURL.set(`${type}query`, e.target.value);
     }
-    setSearchParams(newURL);
+    setSearchParams(newURL, { replace: true });
   }
 
   function handleClear() {
     setQuery("");
     const newURL = new URLSearchParams(searchParams);
     newURL.delete(`${type}query`);
-    setSearchParams(newURL);
+    setSearchParams(newURL, { replace: true });
   }
 
   function handlePrev() {

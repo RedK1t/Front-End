@@ -1,6 +1,9 @@
-import type { EdgeType, endPoint } from "@/features/sitemap/types/graphTypes";
+import type {
+  EdgeType,
+  GraphEndPoint,
+} from "@/features/sitemap/types/graphTypes";
 
-export function createEdge(child: endPoint, edges: EdgeType[]) {
+export function createEdge(child: GraphEndPoint, edges: EdgeType[]) {
   if (child.children.length > 0) {
     for (let index = 0; index < child.children.length; index++) {
       edges.push({
@@ -10,7 +13,7 @@ export function createEdge(child: endPoint, edges: EdgeType[]) {
       });
     }
     child.children.forEach((child) => {
-      createEdge(child as endPoint, edges);
+      createEdge(child as GraphEndPoint, edges);
     });
   }
 }

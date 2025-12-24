@@ -1,8 +1,17 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import BottomPanel from "../reqResPanel/BottomPanel";
-import { Outlet } from "react-router-dom";
+import { Outlet, useSearchParams } from "react-router-dom";
+import useGetEndpoints from "./hooks/useGetEndpoints";
+import { useDomain } from "@/context/DomainContext";
 
 export default function Sitemap() {
+  const { domain } = useDomain();
+  const [searchParams] = useSearchParams();
+  const selectedEndpoint = searchParams.get("selected") || "";
+  const { flattenedEndpoints } = useGetEndpoints(domain || "");
+  const selectedEndpointData = flattenedEndpoints.find(
+    (endpoint) => endpoint.id === selectedEndpoint,
+  );
   return (
     <div className="h-dvh w-full">
       <PanelGroup autoSaveId="sitemap" direction="vertical">
@@ -15,7 +24,11 @@ export default function Sitemap() {
           maxSize={70}
           className="border-light-red overflow-y-hidden! border-t"
         >
-          <BottomPanel />
+          <BottomPanel
+            editable={true}
+            requestText={selectedEndpointData?.request}
+            responseText={selectedEndpointData?.response}
+          />
         </Panel>
       </PanelGroup>
     </div>

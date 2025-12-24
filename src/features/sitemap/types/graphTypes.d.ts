@@ -1,7 +1,7 @@
-export type endPoint = {
+export type GraphEndPoint = {
   path: string;
   method: "GET" | "POST" | "PUT" | "DELETE" | null;
-  children: endPoint[] | [];
+  children: GraphEndPoint[] | [];
 };
 
 export type NodeType = {

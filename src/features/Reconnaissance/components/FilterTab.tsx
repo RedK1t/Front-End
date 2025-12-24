@@ -21,7 +21,7 @@ export default function FilterTab({
   function handleClick() {
     const newParams = new URLSearchParams(searchParams);
     newParams.set(paramName, paramData);
-    setSearchParams(newParams);
+    setSearchParams(newParams, { replace: true });
   }
 
   return (

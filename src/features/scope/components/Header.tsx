@@ -17,7 +17,7 @@ export default function Header({ title, param }: HeaderProps) {
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set(param, isOn.toString());
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams, { replace: true });
   }, [isOn, setSearchParams, searchParams, param]);
 
   return (

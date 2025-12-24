@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useSubdomainContext } from "../../../context/SubdomainContext";
 
 export default function useSubdomains(domain: string) {
-  const { scanData, startScan } = useSubdomainContext();
-  const data = scanData[domain] || {
+  const { subDomains, startScan } = useSubdomainContext();
+  const data = subDomains[domain] || {
     httpSubdomains: [],
     dnsSubdomains: [],
     progress: 0,

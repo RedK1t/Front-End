@@ -47,7 +47,7 @@ export default function Table() {
   useEffect(() => {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("length", String(filteredTable.length));
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams, { replace: true });
   }, [filteredTable.length, searchParams, setSearchParams]);
   const sortedTable = filteredTable.sort((a, b) => {
     if (sort) {

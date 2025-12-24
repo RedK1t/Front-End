@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
@@ -20,8 +20,14 @@ export default function CodeWrapper({
   type?: "request" | "response";
 }) {
   const [value, setValue] = useState(initialValue);
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
   const [searchParams] = useSearchParams();
   const query = searchParams.get(`${type}query`) || undefined;
+
   const getLanguage = () => {
     switch (language) {
       case "html":

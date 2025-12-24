@@ -26,7 +26,7 @@ export default function SelectFilter({
           e.preventDefault();
           const newParams = new URLSearchParams(searchParams);
           newParams.delete(placeholder);
-          setSearchParams(newParams);
+          setSearchParams(newParams, { replace: true });
         }}
         className="cursor-pointer text-white/50"
       />
@@ -38,7 +38,7 @@ export default function SelectFilter({
           // Set Filter to Search Params
           const newParams = new URLSearchParams(searchParams);
           newParams.set(placeholder, value);
-          setSearchParams(newParams);
+          setSearchParams(newParams, { replace: true });
         }}
       >
         {/* SelectFilter Trigger */}

@@ -38,7 +38,7 @@ const defaultScanState: ScanState = {
 };
 
 type SubdomainContextType = {
-  scanData: Record<string, ScanState>;
+  subDomains: Record<string, ScanState>;
   startScan: (domain: string) => void;
   stopScan: (domain: string) => void;
 };
@@ -48,7 +48,7 @@ const SubdomainContext = createContext<SubdomainContextType | undefined>(
 );
 
 export function SubdomainProvider({ children }: { children: ReactNode }) {
-  const [scanData, setScanData] = useState<Record<string, ScanState>>({});
+  const [subDomains, setSubDomains] = useState<Record<string, ScanState>>({});
   const socketsRef = useRef<Record<string, WebSocket>>({});
 
   const startScan = useCallback((domain: string) => {
@@ -69,7 +69,7 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
     }
 
     // Initialize/Reset data for this domain on new scan
-    setScanData((prev) => ({
+    setSubDomains((prev) => ({
       ...prev,
       [domain]: { ...defaultScanState, isScanning: true },
     }));
@@ -92,8 +92,9 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      console.log(data);
 
-      setScanData((prev) => {
+      setSubDomains((prev) => {
         const current = prev[domain] || defaultScanState;
 
         let nextHttp = current.httpSubdomains;
@@ -139,7 +140,7 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
 
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
-      setScanData((prev) => ({
+      setSubDomains((prev) => ({
         ...prev,
         [domain]: { ...(prev[domain] || defaultScanState), isScanning: false },
       }));
@@ -147,7 +148,7 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
 
     ws.onclose = () => {
       console.log("WebSocket disconnected for", domain);
-      setScanData((prev) => ({
+      setSubDomains((prev) => ({
         ...prev,
         [domain]: { ...(prev[domain] || defaultScanState), isScanning: false },
       }));
@@ -160,14 +161,14 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
       ws.close();
       delete socketsRef.current[domain];
     }
-    setScanData((prev) => ({
+    setSubDomains((prev) => ({
       ...prev,
       [domain]: { ...(prev[domain] || defaultScanState), isScanning: false },
     }));
   }, []);
 
   return (
-    <SubdomainContext.Provider value={{ scanData, startScan, stopScan }}>
+    <SubdomainContext.Provider value={{ subDomains, startScan, stopScan }}>
       {children}
     </SubdomainContext.Provider>
   );

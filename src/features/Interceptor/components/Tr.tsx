@@ -41,7 +41,7 @@ export default function Tr({
   function handleSelect() {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("selected", index.toString());
-    setSearchParams(newSearchParams);
+    setSearchParams(newSearchParams, { replace: true });
   }
   return (
     <ContextMenu>

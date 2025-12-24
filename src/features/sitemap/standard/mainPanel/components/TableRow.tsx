@@ -1,11 +1,11 @@
 import getMethodColor from "@/utils/getMethodColor";
-import { Check } from "lucide-react";
-import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-type TableRowProps = {
+import { formatDistanceToNow } from "date-fns";
+export type TableRowProps = {
+  id: string;
   lastSeen: string;
   source: string;
-  status: string;
+  status: number;
   method: string;
   path: string;
 };
@@ -16,13 +16,13 @@ export default function TableRow({
   status,
   method,
   path,
+  id,
 }: TableRowProps) {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const selected = searchParams.get("selected") === `${method}-${path}`;
+  const selected = searchParams.get("selected") === id;
   function handleSelect() {
     const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("selected", `${method}-${path}`);
+    newSearchParams.set("selected", id);
     setSearchParams(newSearchParams, { replace: true });
   }
   return (
@@ -30,7 +30,12 @@ export default function TableRow({
       onClick={method === "Method" ? undefined : handleSelect}
       className={`rounded-6px flex w-full ${method === "Method" ? "" : "cursor-pointer"} items-center justify-between px-4 py-2 text-center ${selected ? "bg-dark-red/20" : ""}`}
     >
-      <div className="w-1/5 text-center">{lastSeen}</div>
+      {/* Last Seen */}
+      <div className="w-1/5 text-center">
+        {lastSeen
+          ? formatDistanceToNow(new Date(lastSeen), { addSuffix: true })
+          : "N/A"}
+      </div>
 
       {/*  Source */}
       <div className="flex w-1/5 items-center justify-center">
@@ -55,16 +60,6 @@ export default function TableRow({
 
       {/* Path */}
       <div className="w-1/5 text-center">{path}</div>
-
-      {/* Checkbox */}
-      <div className="text-center">
-        <div
-          onClick={() => setIsChecked(!isChecked)}
-          className={`flex h-5 w-5 items-center justify-center rounded text-center ${isChecked ? "bg-dark-red/70" : "border-dark-yellowish-white border"}`}
-        >
-          {isChecked ? <Check /> : ""}
-        </div>
-      </div>
     </div>
   );
 }
