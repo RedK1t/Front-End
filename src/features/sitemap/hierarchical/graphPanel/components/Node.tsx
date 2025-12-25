@@ -19,7 +19,7 @@ export function Node({ id, data }: NodeProps) {
         newSearchParams.set("selected", id);
         setSearchParams(newSearchParams);
       }}
-      className="bg-gray small-text flex min-w-[175px] items-center gap-2.5 rounded-[5px] p-3"
+      className={`${id === searchParams.get("selected") ? "ring-red ring-2" : ""} bg-gray small-text flex min-w-44 items-center gap-2.5 rounded-[5px] p-3 transition-all duration-300`}
     >
       <p
         className={`${getMethodColor(data.method)} rounded-[3px] px-1 py-0.5 text-center`}
