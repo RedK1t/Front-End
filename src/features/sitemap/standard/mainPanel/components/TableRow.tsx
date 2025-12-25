@@ -33,7 +33,10 @@ export default function TableRow({
       {/* Last Seen */}
       <div className="w-1/6 text-center">
         {lastSeen
-          ? formatDistanceToNow(new Date(lastSeen), { addSuffix: true })
+          ? formatDistanceToNow(new Date(lastSeen), {
+              addSuffix: true,
+              includeSeconds: true,
+            })
           : "N/A"}
       </div>
 

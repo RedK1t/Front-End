@@ -25,7 +25,7 @@ export default function Sitemap() {
           className="border-light-red overflow-y-hidden! border-t"
         >
           <BottomPanel
-            editable={true}
+            editable={false}
             requestText={selectedEndpointData?.request}
             responseText={selectedEndpointData?.response}
           />
