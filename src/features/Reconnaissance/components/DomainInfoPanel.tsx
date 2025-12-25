@@ -17,7 +17,6 @@ export default function DomainInfoPanel() {
     error: crtError,
   } = useGetCrt(domain || "");
 
-  console.log(data);
   const filter = searchParams.get("dig");
   return (
     /*  Panel */
