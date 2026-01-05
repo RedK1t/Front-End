@@ -9,7 +9,7 @@ type TrProps = {
 export default function Td({ left, right, children }: TrProps) {
   return (
     <td
-      className={`cursor-pointer px-2 py-1 text-start ${left ? "rounded-l-[4px]" : right ? "rounded-r-[4px]" : ""}`}
+      className={`cursor-pointer px-2 py-1 text-start ${left ? "rounded-l-lg" : right ? "rounded-r-lg" : ""}`}
     >
       {children}
     </td>
