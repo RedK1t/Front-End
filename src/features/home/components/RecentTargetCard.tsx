@@ -1,0 +1,68 @@
+import uparrowIcon from "../../../assets/uparrowIcon.svg";
+
+type RecentTargetCardProps = {
+  targetName: string;
+  targetDomain: string;
+  vulnerabilitiesFound: number;
+  lastScanned: string;
+};
+
+const LOGO_DEV_PUBLIC_KEY = "pk_e6MtMO_tQm6SnFDQtPovWg";
+function CompanyLogo({ domain }: { domain: string }) {
+  return (
+    <img
+      src={`https://img.logo.dev/${domain}?token=${LOGO_DEV_PUBLIC_KEY}&format=png&retina=true&theme=dark`}
+      alt="Company logo"
+      className="h-12 w-12 rounded-full"
+    />
+  );
+}
+export default function RecentTargetCard({
+  targetName,
+  targetDomain,
+  vulnerabilitiesFound,
+  lastScanned,
+}: RecentTargetCardProps) {
+  return (
+    <div className="bg-gray/80 flex h-52 w-72 flex-col justify-between rounded-[14px] p-4 transition-all duration-300 hover:-translate-y-1">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        {/* Header Content */}
+        <div className="flex flex-col">
+          <p className="heading-text text-white">{targetName}</p>
+          <p className="normal-text text-yellowish-white">{targetDomain}</p>
+        </div>
+        {/* Header Icon */}
+        <CompanyLogo domain={targetDomain} />
+      </div>
+
+      {/* Content */}
+      <div className="flex justify-between">
+        {/* Content Left */}
+        <div className="flex w-1/2 flex-col gap-2">
+          <p className="normal-text text-white">Vulnerabilities Found</p>
+          <div className="flex items-end">
+            <p className="heading-text text-red text-shadow-red text-shadow-[0_0_24px_rgba(255,0,0,1)]">
+              {vulnerabilitiesFound}
+            </p>
+            <img
+              src={uparrowIcon}
+              alt="Up Arrow Icon"
+              className="h-5 w-5 -translate-y-1/4"
+            />
+          </div>
+        </div>
+        {/* Content Right */}
+        <div className="flex flex-col items-end justify-between">
+          <div className="flex flex-col gap-1 text-end">
+            <p className="normal-text">Last Scanned</p>
+            <p className="normal-text text-red">{lastScanned}</p>
+          </div>
+          <button className="small-text shadow-red/20 hover:shadow-red/50 border-button-glow cursor-pointer rounded-md border bg-black px-2 py-1 text-white shadow-[0_0_15px]">
+            Manage
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
