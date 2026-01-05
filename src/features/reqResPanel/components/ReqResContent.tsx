@@ -57,7 +57,7 @@ Content-Length: 421
 
 type ReqResContentProps = {
   text?: string;
-  type: "request" | "response";
+  type: "Request" | "Response";
   editableProp?: boolean;
 };
 
@@ -120,7 +120,7 @@ export default function ReqResContent({
 
   return (
     <div
-      className={`${type === "request" ? "border-light-red border-r pr-5" : "pl-5"} flex h-full w-1/2 flex-col gap-2.5 py-5`}
+      className={`${type === "Request" ? "border-light-red border-r pr-5" : "pl-5"} flex h-full w-1/2 flex-col gap-2.5 py-5`}
     >
       {/* header */}
       <p className="normal-text text-white">{type}</p>

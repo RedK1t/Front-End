@@ -18,12 +18,12 @@ export default function BottomPanel({
         {/* Div for content */}
         <div className="mx-auto flex h-full w-11/12 items-start justify-between">
           <ReqResContent
-            type="request"
+            type="Request"
             editableProp={editable}
             text={requestText}
           />
           <ReqResContent
-            type="response"
+            type="Response"
             text={responseText}
             editableProp={editable}
           />

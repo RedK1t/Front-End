@@ -12,12 +12,12 @@ export default function CodeWrapper({
   language = "javascript",
   initialValue = "",
   editableProp = true,
-  type = "request",
+  type = "Request",
 }: {
   language?: "html" | "css" | "javascript" | "js" | "json" | "http";
   initialValue?: string;
   editableProp?: boolean;
-  type?: "request" | "response";
+  type?: "Request" | "Response";
 }) {
   const [value, setValue] = useState(initialValue);
 

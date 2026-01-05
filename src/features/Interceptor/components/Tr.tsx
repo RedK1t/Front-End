@@ -6,10 +6,9 @@ import Td from "./Td";
 import {
   ContextMenu,
   ContextMenuContent,
-  ContextMenuItem,
   ContextMenuTrigger,
 } from "@radix-ui/react-context-menu";
-import type { ReactNode } from "react";
+import ContextMenuItemStyled from "@/components/ContextMenuItemStyled";
 
 type TrProps = {
   index: number;
@@ -98,13 +97,5 @@ export default function Tr({
         <ContextMenuItemStyled>Send to Intruder</ContextMenuItemStyled>
       </ContextMenuContent>
     </ContextMenu>
-  );
-}
-
-function ContextMenuItemStyled({ children }: { children: ReactNode }) {
-  return (
-    <ContextMenuItem className="hover:bg-dark-red/40! rounded-6px text-yellowish-white! min-w-44 cursor-pointer px-3 py-1 focus-visible:outline-0">
-      {children}
-    </ContextMenuItem>
   );
 }
