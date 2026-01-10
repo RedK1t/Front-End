@@ -3,6 +3,7 @@ import exportIcon from "../../../assets/ExportIcon.svg";
 import SubdomainRow from "./SubdomainRow";
 import useSubdomains from "../hooks/useSubdomains";
 import { useDomain } from "@/context/DomainContext";
+import { motion } from "motion/react";
 
 export default function SubdomainsPanel() {
   const [searchParams] = useSearchParams();
@@ -82,49 +83,58 @@ export default function SubdomainsPanel() {
           </p>
         </div>
       </div>
-
       {/*  Subdomains List */}
-      <div className="flex h-full flex-col gap-3 overflow-y-auto py-3">
+      <motion.div
+        key={`${filter || "all"}-${progress === 100}`}
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.1,
+            },
+          },
+        }}
+        initial="hidden"
+        animate="visible"
+        className="flex h-full flex-col gap-3 overflow-x-hidden overflow-y-auto py-3"
+      >
         {/*  Subdomain Item */}
-        {filter === "all" && (
-          <>
-            {httpSubdomains.map((subdomain) => (
+        {(filter === "web" || filter === "all") &&
+          httpSubdomains?.map((subdomain) => (
+            <motion.div
+              layout
+              key={subdomain.subdomain}
+              variants={{
+                hidden: { opacity: 0, x: -20 },
+                visible: { opacity: 1, x: 0 },
+              }}
+            >
               <SubdomainRow
-                key={subdomain.subdomain}
                 subdomain={subdomain.subdomain}
                 ip={subdomain.ips.join(", ")}
                 status={subdomain.status}
                 url={subdomain.url}
               />
-            ))}
-            {dnsSubdomains.map((subdomain) => (
+            </motion.div>
+          ))}
+        {(filter === "other" || filter === "all") &&
+          dnsSubdomains?.map((subdomain) => (
+            <motion.div
+              layout
+              key={subdomain.subdomain}
+              variants={{
+                hidden: { opacity: 0, x: -20 },
+                visible: { opacity: 1, x: 0 },
+              }}
+            >
               <SubdomainRow
-                key={subdomain.subdomain}
                 subdomain={subdomain.subdomain}
                 ip={subdomain.ips.join(", ")}
               />
-            ))}
-          </>
-        )}
-        {filter === "web" &&
-          httpSubdomains?.map((subdomain) => (
-            <SubdomainRow
-              key={subdomain.subdomain}
-              subdomain={subdomain.subdomain}
-              ip={subdomain.ips.join(", ")}
-              status={subdomain.status}
-              url={subdomain.url}
-            />
+            </motion.div>
           ))}
-        {filter === "other" &&
-          dnsSubdomains?.map((subdomain) => (
-            <SubdomainRow
-              key={subdomain.subdomain}
-              subdomain={subdomain.subdomain}
-              ip={subdomain.ips.join(", ")}
-            />
-          ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

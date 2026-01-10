@@ -6,6 +6,8 @@ import useWhoisDnsRecords from "../hooks/useWhoisDnsRecords";
 import useGetCrt from "../hooks/useGetCrt";
 import CrtRow from "./CrtRow";
 import { useDomain } from "@/context/DomainContext";
+import { motion } from "motion/react";
+import type { ReactNode } from "react";
 
 export default function DomainInfoPanel() {
   const [searchParams] = useSearchParams();
@@ -39,7 +41,16 @@ export default function DomainInfoPanel() {
       </div>
 
       {/*  Domain Info */}
-      <div className="flex flex-col gap-3 overflow-y-auto">
+      <motion.div
+        variants={{
+          hidden: { opacity: 0 },
+          visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+        }}
+        key={`${filter}-${crtData}-${data}`}
+        initial="hidden"
+        animate="visible"
+        className="flex flex-col gap-3 overflow-x-hidden overflow-y-auto"
+      >
         {isLoading && (filter === "Dns" || filter === "Whois") && (
           <div className="flex justify-center">
             <span className="loading bg-red loading-spinner h-12 w-12"></span>
@@ -52,29 +63,33 @@ export default function DomainInfoPanel() {
         {data?.success && filter === "Dns" && (
           <>
             {data.dns?.records.MX && (
-              <InfoRow
-                label="MX"
-                value={
-                  data.dns?.records.MX
-                    ? data.dns.records.MX.map(
-                        (mx) => `Priority: ${mx.priority} - ${mx.exchange}`,
-                      ).join("\n")
-                    : "-"
-                }
-              />
+              <InfoRowAnimation>
+                <InfoRow
+                  label="MX"
+                  value={
+                    data.dns?.records.MX
+                      ? data.dns.records.MX.map(
+                          (mx) => `Priority: ${mx.priority} - ${mx.exchange}`,
+                        ).join("\n")
+                      : "-"
+                  }
+                />
+              </InfoRowAnimation>
             )}
             {data.dns?.records.SRV && (
-              <InfoRow
-                label="SRV"
-                value={
-                  data.dns?.records.SRV
-                    ? data.dns.records.SRV.map(
-                        (srv) =>
-                          `Priority: ${srv.priority} - Weight: ${srv.weight} - Port: ${srv.port} - Target: ${srv.name}`,
-                      ).join("\n")
-                    : "-"
-                }
-              />
+              <InfoRowAnimation>
+                <InfoRow
+                  label="SRV"
+                  value={
+                    data.dns?.records.SRV
+                      ? data.dns.records.SRV.map(
+                          (srv) =>
+                            `Priority: ${srv.priority} - Weight: ${srv.weight} - Port: ${srv.port} - Target: ${srv.name}`,
+                        ).join("\n")
+                      : "-"
+                  }
+                />
+              </InfoRowAnimation>
             )}
             {data.dns &&
               Object.entries(data.dns.records)
@@ -86,11 +101,12 @@ export default function DomainInfoPanel() {
                     records.every((item) => typeof item === "string"),
                 )
                 .map(([type, records]) => (
-                  <InfoRow
-                    key={type}
-                    label={type}
-                    value={(records as string[]).join("\n")}
-                  />
+                  <InfoRowAnimation key={type}>
+                    <InfoRow
+                      label={type}
+                      value={(records as string[]).join("\n")}
+                    />
+                  </InfoRowAnimation>
                 ))}
           </>
         )}
@@ -130,11 +146,13 @@ export default function DomainInfoPanel() {
                 ).map(([key, value]) => {
                   if (!value || key === "text" || key.includes(">>>")) return;
                   return (
-                    <InfoRow
-                      key={key}
-                      label={key}
-                      value={String(value).replace(/,/g, "\n")}
-                    />
+                    <InfoRowAnimation>
+                      <InfoRow
+                        key={key}
+                        label={key}
+                        value={String(value).replace(/,/g, "\n")}
+                      />
+                    </InfoRowAnimation>
                   );
                 })}
               </>
@@ -155,15 +173,30 @@ export default function DomainInfoPanel() {
                 crtData.map((item) => [item.issuer_ca_id, item]),
               ).values(),
             ).map((item) => (
-              <CrtRow
-                key={item.id}
-                issuerCaId={item.issuer_ca_id}
-                issuer_name={item.issuer_name}
-              />
+              <InfoRowAnimation>
+                <CrtRow
+                  key={item.id}
+                  issuerCaId={item.issuer_ca_id}
+                  issuer_name={item.issuer_name}
+                />
+              </InfoRowAnimation>
             ))}
           </>
         )}
-      </div>
+      </motion.div>
     </div>
+  );
+}
+
+function InfoRowAnimation({ children }: { children: ReactNode }) {
+  return (
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, x: -20 },
+        visible: { opacity: 1, x: 0 },
+      }}
+    >
+      {children}
+    </motion.div>
   );
 }
