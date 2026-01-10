@@ -16,7 +16,7 @@ export default function SubdomainsPanel() {
     numberOfResults,
     elapsedTime,
   } = useSubdomains(domain || "");
-  const filter = searchParams.get("subdomain");
+  const filter = searchParams.get("subdomain") || "all";
   return (
     /*  Panel */
     <div className="bg-gray flex h-[80dvh] w-full flex-col gap-y-2.5 rounded-md px-6 py-6 lg:w-1/2">
@@ -85,7 +85,7 @@ export default function SubdomainsPanel() {
       </div>
       {/*  Subdomains List */}
       <motion.div
-        key={`${filter || "all"}-${progress === 100}`}
+        key={`${filter || "all"}-${numberOfResults}`}
         variants={{
           hidden: { opacity: 0 },
           visible: {

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import plusIcon from "../../../assets/PlusIcon.svg";
 import shareIcon from "../../../assets/ShareIcon.svg";
 import searchIcon from "../../../assets/SearchIcon.svg";
+import { motion } from "motion/react";
 
 export default function NewTargetCard() {
   const [domainInput, setDomainInput] = useState("");
@@ -17,7 +18,21 @@ export default function NewTargetCard() {
     modal?.showModal();
   }
   return (
-    <>
+    <motion.div
+      initial={{
+        scale: 0.7,
+        opacity: 0.8,
+      }}
+      whileInView={{
+        scale: 1,
+        opacity: 1,
+        transition: {
+          type: "spring",
+          duration: 1,
+        },
+      }}
+      viewport={{ once: true }}
+    >
       <button
         onClick={openModal}
         className="bg-gray/80 flex h-52 w-72 cursor-pointer flex-col items-center justify-center rounded-[14px] px-3 pt-1.5 pb-4 transition-all duration-300 hover:-translate-y-1"
@@ -81,6 +96,6 @@ export default function NewTargetCard() {
           <button>close</button>
         </form>
       </dialog>
-    </>
+    </motion.div>
   );
 }

@@ -1,6 +1,6 @@
 import getMethodColor from "@/utils/getMethodColor";
-import { useSearchParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
+import { motion } from "motion/react";
 export type TableRowProps = {
   id: string;
   lastSeen: string;
@@ -8,6 +8,8 @@ export type TableRowProps = {
   status: number;
   method: string;
   path: string;
+  selected: boolean;
+  onClick: (id: string) => void;
 };
 
 export default function TableRow({
@@ -17,18 +19,17 @@ export default function TableRow({
   method,
   path,
   id,
+  selected,
+  onClick,
 }: TableRowProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const selected = searchParams.get("selected") === id;
-  function handleSelect() {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("selected", id);
-    setSearchParams(newSearchParams, { replace: true });
-  }
   return (
-    <div
-      onClick={method === "Method" ? undefined : handleSelect}
-      className={`rounded-6px flex w-full ${method === "Method" ? "" : "cursor-pointer"} items-center justify-between px-4 py-2 text-center ${selected ? "bg-dark-red/20" : ""}`}
+    <motion.div
+      whileHover={{
+        scale: 1.05,
+        backgroundColor: "#CE323240",
+      }}
+      onClick={method === "Method" ? undefined : () => onClick(id)}
+      className={`rounded-6px flex w-full ${method === "Method" ? "" : "cursor-pointer"} items-center justify-between px-4 py-2 text-center ${selected ? "bg-dark-red/20!" : ""}`}
     >
       {/* Last Seen */}
       <div className="w-1/6 text-center">
@@ -63,6 +64,6 @@ export default function TableRow({
 
       {/* Path */}
       <div className="w-2/6 text-center">{path}</div>
-    </div>
+    </motion.div>
   );
 }

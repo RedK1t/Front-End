@@ -2,13 +2,11 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import BottomPanel from "../reqResPanel/BottomPanel";
 import { Outlet, useSearchParams } from "react-router-dom";
 import useGetEndpoints from "./hooks/useGetEndpoints";
-import { useDomain } from "@/context/DomainContext";
 
 export default function Sitemap() {
-  const { domain } = useDomain();
   const [searchParams] = useSearchParams();
   const selectedEndpoint = searchParams.get("selected") || "";
-  const { flattenedEndpoints } = useGetEndpoints(domain || "");
+  const { flattenedEndpoints } = useGetEndpoints();
   const selectedEndpointData = flattenedEndpoints.find(
     (endpoint) => endpoint.id === selectedEndpoint,
   );

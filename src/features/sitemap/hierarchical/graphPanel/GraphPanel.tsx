@@ -10,7 +10,6 @@ import { useCallback, useState, useEffect } from "react";
 import { Node } from "./components/Node";
 import type { EdgeType, NodeType } from "../../types/graphTypes";
 import { createNodeTree } from "@/utils/createNode";
-import { useDomain } from "@/context/DomainContext";
 import useGetEndpoints from "../../hooks/useGetEndpoints";
 import { createEdge } from "@/utils/createEdge";
 import { useSearchParams } from "react-router-dom";
@@ -21,8 +20,7 @@ const nodeTypes = {
 };
 
 export default function GraphPanel() {
-  const { domain } = useDomain();
-  const { graphEndpoints } = useGetEndpoints(domain || "");
+  const { graphEndpoints } = useGetEndpoints();
   const [searchParams] = useSearchParams();
   const subdomain = searchParams.get("subdomain");
   const [nodes, setNodes] = useState<NodeType[]>([]);

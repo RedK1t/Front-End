@@ -5,11 +5,13 @@ type FilterTabProps = {
   paramName: string;
   paramData: string;
   children: ReactNode;
+  isDefault?: boolean;
 };
 export default function FilterTab({
   paramName,
   paramData,
   children,
+  isDefault = false,
 }: FilterTabProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const tabStyles =
@@ -27,7 +29,10 @@ export default function FilterTab({
   return (
     <button
       className={`${tabStyles} ${
-        searchParams.get(paramName) === paramData ? hoverStyles : ""
+        (!searchParams.get(paramName) && isDefault) ||
+        searchParams.get(paramName) === paramData
+          ? hoverStyles
+          : ""
       }`}
       onClick={handleClick}
     >

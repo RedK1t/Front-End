@@ -19,7 +19,7 @@ export default function DomainInfoPanel() {
     error: crtError,
   } = useGetCrt(domain || "");
 
-  const filter = searchParams.get("dig");
+  const filter = searchParams.get("dig") || "Whois";
   return (
     /*  Panel */
     <div className="bg-gray flex h-[80dvh] w-full flex-col gap-y-10 rounded-md px-6 py-6 lg:w-1/2">
@@ -41,14 +41,8 @@ export default function DomainInfoPanel() {
       </div>
 
       {/*  Domain Info */}
-      <motion.div
-        variants={{
-          hidden: { opacity: 0 },
-          visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-        }}
-        key={`${filter}-${crtData}-${data}`}
-        initial="hidden"
-        animate="visible"
+      <div
+        key={filter}
         className="flex flex-col gap-3 overflow-x-hidden overflow-y-auto"
       >
         {isLoading && (filter === "Dns" || filter === "Whois") && (
@@ -61,7 +55,16 @@ export default function DomainInfoPanel() {
           <p className="text-red text-center">{data?.error}</p>
         )}
         {data?.success && filter === "Dns" && (
-          <>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+            }}
+            key={`${filter}-${data}`}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col gap-3"
+          >
             {data.dns?.records.MX && (
               <InfoRowAnimation>
                 <InfoRow
@@ -108,7 +111,7 @@ export default function DomainInfoPanel() {
                     />
                   </InfoRowAnimation>
                 ))}
-          </>
+          </motion.div>
         )}
         {data?.success &&
           filter === "Whois" &&
@@ -140,7 +143,16 @@ export default function DomainInfoPanel() {
             );
 
             return (
-              <>
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+                }}
+                key={`${filter}-${data}`}
+                initial="hidden"
+                animate="visible"
+                className="flex flex-col gap-3"
+              >
                 {Object.entries(
                   longestWhoisEntry as Record<string, unknown>,
                 ).map(([key, value]) => {
@@ -155,7 +167,7 @@ export default function DomainInfoPanel() {
                     </InfoRowAnimation>
                   );
                 })}
-              </>
+              </motion.div>
             );
           })()}
         {crtIsLoading && filter === "Ssl" && (
@@ -167,7 +179,16 @@ export default function DomainInfoPanel() {
           <p className="text-red text-center">{crtError.message}</p>
         )}
         {crtData && filter === "Ssl" && (
-          <>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+            }}
+            key={`${filter}-${data}`}
+            initial="hidden"
+            animate="visible"
+            className="flex flex-col gap-3"
+          >
             {Array.from(
               new Map(
                 crtData.map((item) => [item.issuer_ca_id, item]),
@@ -181,9 +202,9 @@ export default function DomainInfoPanel() {
                 />
               </InfoRowAnimation>
             ))}
-          </>
+          </motion.div>
         )}
-      </motion.div>
+      </div>
     </div>
   );
 }

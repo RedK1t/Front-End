@@ -1,11 +1,8 @@
-import { useDomain } from "@/context/DomainContext";
 import useGetEndpoints, { type endpoint } from "../../hooks/useGetEndpoints";
 import FolderItem from "./FolderItem";
 
 export default function SidePanel() {
-  const { domain } = useDomain();
-
-  const { endpoints, isLoading, isError } = useGetEndpoints(domain || "");
+  const { endpoints, isLoading, isError } = useGetEndpoints();
   if (isLoading) {
     return <div>Loading...</div>;
   }

@@ -7,11 +7,22 @@ export const http = (query = "") => {
   const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const queryRegex = query ? new RegExp(escapeRegExp(query), "i") : null;
 
-  const httpMode: StreamParser<{ inBody: boolean }> = {
+  const httpMode: StreamParser<{ inBody: boolean; isHtml: boolean }> = {
     startState() {
-      return { inBody: false };
+      return { inBody: false, isHtml: false };
     },
     token(stream, state) {
+      if (state.isHtml) {
+        stream.skipToEnd();
+        return null;
+      }
+
+      if (stream.match(/<!DOCTYPE html>/i)) {
+        state.isHtml = true;
+        stream.skipToEnd();
+        return "meta";
+      }
+
       if (queryRegex) {
         const remainingLine = stream.string.substring(stream.pos);
         const match = remainingLine.match(queryRegex);
