@@ -1,15 +1,10 @@
-import { useDomain } from "@/context/DomainContext";
 import Filters from "./Filters";
 import TableRow from "./TableRow";
-import useSubdomains from "@/features/Reconnaissance/hooks/useSubdomains";
 import useGetEndpoints from "@/features/sitemap/hooks/useGetEndpoints";
 import { useSearchParams } from "react-router-dom";
 import { useMemo } from "react";
 
 export default function EndpointsTable() {
-  const { domain } = useDomain();
-  const { dnsSubdomains, httpSubdomains } = useSubdomains(domain || "");
-
   const [searchParams, setSearchParams] = useSearchParams();
   const folder = searchParams.get("folder") || "";
   const search = searchParams.get("search") || "";
