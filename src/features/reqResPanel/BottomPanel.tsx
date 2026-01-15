@@ -16,12 +16,14 @@ export default function BottomPanel({
       {/* Div for border */}
       <div className="h-full w-full overflow-y-hidden">
         {/* Div for content */}
-        <div className="mx-auto flex h-full w-11/12 items-start justify-between">
+        <div className="mx-auto flex h-full w-11/12 items-start justify-between space-x-5">
           <ReqResContent
             type="Request"
             editableProp={editable}
             text={requestText}
           />
+          {/* Border */}
+          <div className="border-red h-full border-r" />
           <ReqResContent
             type="Response"
             text={responseText}

@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
+import SwitchButton from "@/components/SwitchButton";
+import ArrowsRightLeft from "@/assets/ArrowsRightLeft.svg";
 
 const defaultText = `POST /api/v1/orders HTTP/1.1
 Host: api.example.com
@@ -54,23 +56,57 @@ Content-Length: 421
   "notes": "Please include a gift receipt."
 }
 `;
-
-type ReqResContentProps = {
+type requestOrResponse = {
+  requestAndResponse?: false;
+  type: "Request" | "Response" | "Request Template";
   text?: string;
-  type: "Request" | "Response";
+  requestText?: undefined;
+  responseText?: undefined;
+};
+type requestAndResponse = {
+  requestAndResponse: true;
+  type?: undefined;
+  text?: undefined;
+  requestText?: string;
+  responseText?: string;
+};
+type ReqResContentProps = (requestOrResponse | requestAndResponse) & {
   editableProp?: boolean;
+  comment?: string;
 };
 
 export default function ReqResContent({
-  text = defaultText,
   type,
   editableProp = true,
+  comment,
+  ...props
 }: ReqResContentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Determine which text to display based on mode and current view
+  const displayText = props.requestAndResponse
+    ? (searchParams.get("isItRes") === "true"
+        ? props.responseText
+        : props.requestText) || defaultText
+    : props.text || defaultText;
+  const resOrReq =
+    searchParams.get("isItRes") === "true" ? "Response" : "Request";
   const [query, setQuery] = useState("");
   const ref = useRef<HTMLDivElement>(null);
   const [count, setCount] = useState(0);
   const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    setQuery("");
+    setCount(0);
+    setIndex(0);
+
+    const newURL = new URLSearchParams(searchParams);
+
+    newURL.delete(`Requestquery`);
+    newURL.delete(`Responsequery`);
+    setSearchParams(newURL, { replace: true });
+  }, [resOrReq]);
 
   useEffect(() => {
     // wait until the classes are loaded
@@ -88,17 +124,19 @@ export default function ReqResContent({
     setQuery(e.target.value);
     const newURL = new URLSearchParams(searchParams);
     if (e.target.value === "") {
-      newURL.delete(`${type}query`);
+      newURL.delete(`${type || resOrReq}query`);
     } else {
-      newURL.set(`${type}query`, e.target.value);
+      newURL.set(`${type || resOrReq}query`, e.target.value);
     }
     setSearchParams(newURL, { replace: true });
   }
 
   function handleClear() {
     setQuery("");
+    setCount(0);
+    setIndex(0);
     const newURL = new URLSearchParams(searchParams);
-    newURL.delete(`${type}query`);
+    newURL.delete(`${type || resOrReq}query`);
     setSearchParams(newURL, { replace: true });
   }
 
@@ -119,22 +157,39 @@ export default function ReqResContent({
   }
 
   return (
-    <div
-      className={`${type === "Request" ? "border-light-red border-r pr-5" : "pl-5"} flex h-full w-1/2 flex-col gap-2.5 py-5`}
-    >
+    <div className={`flex h-full w-full flex-col gap-2.5 py-5`}>
       {/* header */}
-      <p className="normal-text text-white">{type}</p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <h2 className="mid-text text-yellowish-white">{type || resOrReq}</h2>
+          <span className="text-dark-yellowish-white normal-text">
+            {comment}
+          </span>
+        </div>
+        {props.requestAndResponse && (
+          <SwitchButton
+            offIcon={ArrowsRightLeft}
+            onIcon={ArrowsRightLeft}
+            offText="Request"
+            onText="Response"
+            param="isItRes"
+            textTransform={60}
+            imgTransform={250}
+            buttonClassName="w-26"
+          />
+        )}
+      </div>
 
       {/* code */}
       <div
         ref={ref}
-        className="bg-gray text-yellowish-white coding-text h-full min-h-[100px] w-full overflow-y-hidden rounded-[5px] p-2.5"
+        className="bg-gray text-yellowish-white coding-text h-full min-h-25 w-full overflow-y-hidden rounded-[5px] p-2.5"
       >
         <CodeWrapper
           language="http"
-          initialValue={text}
+          initialValue={displayText}
           editableProp={editableProp}
-          type={type}
+          type={type || resOrReq}
         />
       </div>
 

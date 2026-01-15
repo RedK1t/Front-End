@@ -14,6 +14,7 @@ import ErrorFallback from "./features/ErrorFallback";
 import { SubdomainProvider } from "./context/SubdomainContext";
 import { DomainProvider } from "./context/DomainContext";
 import Repeater from "./features/repeater/Repeater";
+import Intruder from "./features/intruder/Intruder";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
           { path: "scope", element: <Scope /> },
           { path: "interceptor", element: <Interceptor /> },
           { path: "repeater", element: <Repeater /> },
+          { path: "intruder", element: <Intruder /> },
         ],
       },
     ],

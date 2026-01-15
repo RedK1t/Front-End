@@ -17,7 +17,7 @@ export default function CodeWrapper({
   language?: "html" | "css" | "javascript" | "js" | "json" | "http";
   initialValue?: string;
   editableProp?: boolean;
-  type?: "Request" | "Response";
+  type?: "Request" | "Response" | "Request Template";
 }) {
   const [value, setValue] = useState(initialValue);
 

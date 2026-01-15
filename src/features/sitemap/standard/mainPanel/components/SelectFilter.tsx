@@ -11,15 +11,21 @@ import { useSearchParams } from "react-router-dom";
 type SelectFilterProps = {
   placeholder: string;
   options: string[];
+  fullWidth?: boolean;
 };
 
 export default function SelectFilter({
   placeholder,
   options,
+  fullWidth = false,
 }: SelectFilterProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   return (
-    <div className="bg-gray flex items-center rounded-md pl-2">
+    <div
+      className={`bg-gray rounded-6px flex items-center pl-2 ${
+        fullWidth ? "w-full" : ""
+      }`}
+    >
       {/* SelectFilter Clear Button */}
       <MdCancel
         onClick={(e) => {
@@ -42,11 +48,11 @@ export default function SelectFilter({
         }}
       >
         {/* SelectFilter Trigger */}
-        <SelectTrigger className="bg-gray small-text min-w-[100px] border-0 text-white">
+        <SelectTrigger className="bg-gray small-text w-full min-w-25 border-0 text-white">
           <SelectValue placeholder={placeholder}></SelectValue>
         </SelectTrigger>
         {/* SelectFilter Content */}
-        <SelectContent className="bg-gray small-text min-w-[100px] border-0 text-white">
+        <SelectContent className="bg-gray small-text min-w-25 border-0 text-white">
           {options.map((option) => (
             <SelectItem key={option} value={option}>
               {option}
