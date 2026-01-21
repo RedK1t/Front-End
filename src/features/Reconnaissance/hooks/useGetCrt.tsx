@@ -1,3 +1,4 @@
+import { useDomain } from "@/context/DomainContext";
 import { useQuery } from "@tanstack/react-query";
 type CrtData = {
   issuer_ca_id: number;
@@ -11,7 +12,9 @@ type CrtData = {
   serial_number: string;
   result_count: number;
 }[];
-export default function useGetCrt(domain: string) {
+export default function useGetCrt() {
+  const { domain } = useDomain();
+
   const { data, isLoading, error } = useQuery<CrtData>({
     queryKey: ["crt", domain],
     queryFn: async () => {

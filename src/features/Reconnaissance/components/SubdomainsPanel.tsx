@@ -2,12 +2,10 @@ import { useSearchParams } from "react-router-dom";
 import exportIcon from "../../../assets/ExportIcon.svg";
 import SubdomainRow from "./SubdomainRow";
 import useSubdomains from "../hooks/useSubdomains";
-import { useDomain } from "@/context/DomainContext";
 import { motion } from "motion/react";
 
 export default function SubdomainsPanel() {
   const [searchParams] = useSearchParams();
-  const { domain } = useDomain();
 
   const {
     progress,
@@ -15,7 +13,7 @@ export default function SubdomainsPanel() {
     httpSubdomains,
     numberOfResults,
     elapsedTime,
-  } = useSubdomains(domain || "");
+  } = useSubdomains();
   const filter = searchParams.get("subdomain") || "all";
   return (
     /*  Panel */

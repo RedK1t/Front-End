@@ -5,19 +5,17 @@ import InfoRow from "./InfoRow";
 import useWhoisDnsRecords from "../hooks/useWhoisDnsRecords";
 import useGetCrt from "../hooks/useGetCrt";
 import CrtRow from "./CrtRow";
-import { useDomain } from "@/context/DomainContext";
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
 export default function DomainInfoPanel() {
   const [searchParams] = useSearchParams();
-  const { domain } = useDomain();
-  const { data, error, isLoading } = useWhoisDnsRecords(domain || "");
+  const { data, error, isLoading } = useWhoisDnsRecords();
   const {
     data: crtData,
     isLoading: crtIsLoading,
     error: crtError,
-  } = useGetCrt(domain || "");
+  } = useGetCrt();
 
   const filter = searchParams.get("dig") || "Whois";
   return (

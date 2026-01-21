@@ -1,3 +1,4 @@
+import { useDomain } from "@/context/DomainContext";
 import { useQuery } from "@tanstack/react-query";
 interface DnsRecords {
   A: string[] | null;
@@ -101,7 +102,8 @@ type ErrorRespond = {
 
 type WhoisDnsRecords = SuccessRespond | ErrorRespond;
 
-export default function useWhoisDnsRecords(domain: string) {
+export default function useWhoisDnsRecords() {
+  const { domain } = useDomain();
   const { data, error, isLoading } = useQuery<WhoisDnsRecords>({
     queryKey: ["whois-dns-records", domain],
     queryFn: async () => {
