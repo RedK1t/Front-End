@@ -1,6 +1,6 @@
 import useSubdomains from "@/features/Reconnaissance/hooks/useSubdomains";
 import Panel from "./Panel";
-import SubdomainRow from "./SubdomainRow";
+import SubDomainRow from "./SubDomainDataRow";
 
 export default function SubDomainsPanel() {
   const {
@@ -16,6 +16,7 @@ export default function SubDomainsPanel() {
       filter="subdomainsStatus"
       options={["All", "Active", "Inactive"]}
     >
+      {/* progress bar */}
       <div className="flex h-fit w-full items-center overflow-hidden">
         <div
           className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${progress === 100 ? "w-full opacity-100" : "w-0 overflow-hidden opacity-0"}`}
@@ -64,13 +65,16 @@ export default function SubDomainsPanel() {
           </p>
         </div>
       </div>
-      {progress === 100 &&
-        dnsSubdomains.map((subdomain) => (
-          <SubdomainRow data={subdomain} key={subdomain.subdomain} />
-        )) &&
-        httpSubdomains.map((subdomain) => (
-          <SubdomainRow data={subdomain} key={subdomain.subdomain} />
-        ))}
+      {progress === 100 && (
+        <>
+          {dnsSubdomains.map((subdomain) => (
+            <SubDomainRow data={subdomain} key={subdomain.subdomain} />
+          ))}
+          {httpSubdomains.map((subdomain) => (
+            <SubDomainRow data={subdomain} key={subdomain.subdomain} />
+          ))}
+        </>
+      )}
     </Panel>
   );
 }
