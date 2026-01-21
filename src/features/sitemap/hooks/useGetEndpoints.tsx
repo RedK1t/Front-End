@@ -64,7 +64,7 @@ export function transformToGraphType(endpoints: endpoint[]): GraphEndPoint[] {
 }
 export default function useGetEndpoints() {
   const { domain } = useDomain();
-  const Subdomains = useSubdomains(domain || "");
+  const Subdomains = useSubdomains();
   const allSubdomains = [domain];
   Subdomains.httpSubdomains.forEach((subdomain) => {
     allSubdomains.push(subdomain.subdomain);
