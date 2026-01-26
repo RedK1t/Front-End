@@ -33,24 +33,25 @@ export default function CookiesPanel() {
   console.log(data);
   return (
     <Panel title="Cookies" isLoading={isLoading} error={error}>
-      {headerCookies.map((cookie: Cookie) => {
-        const attributes = Object.keys(cookie.attributes).map((key: string) => {
-          return [key, cookie.attributes[key]];
-        });
+      {headerCookies.map((cookie: Cookie, index: number) => {
+        const attributes = Object.entries(cookie.attributes);
         return (
           <DataRow
+            key={`header-${index}`}
             label={cookie.name}
             value={cookie.value}
             rowList={attributes}
           />
         );
       })}
-      {clientCookies.map((cookie) => {
-        const nameValPairs = Object.keys(cookie).map((key: string) => {
-          return [key, cookie[key]];
-        });
+      {clientCookies.map((cookie, index) => {
+        const nameValPairs = Object.entries(cookie).map(([key, value]) => [
+          key,
+          String(value),
+        ]);
         return (
           <DataRow
+            key={`client-${index}`}
             label={cookie.name}
             value={cookie.value}
             rowList={nameValPairs}
