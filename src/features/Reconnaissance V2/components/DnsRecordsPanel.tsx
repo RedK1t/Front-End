@@ -1,4 +1,3 @@
-import Loader from "@/components/Loader";
 import useWhoisDnsRecords from "../../Reconnaissance/hooks/useWhoisDnsRecords";
 import DataRow from "./DataRow";
 import Panel from "./Panel";
@@ -7,17 +6,7 @@ export default function DnsRecordsPanel() {
   const { data, error, isLoading } = useWhoisDnsRecords();
 
   return (
-    <Panel title="DNS Records">
-      {error && (
-        <div className="flex items-center justify-center">
-          <p className="text-red-500">{error.message}</p>
-        </div>
-      )}
-      {isLoading && (
-        <div className="flex items-center justify-center">
-          <Loader />
-        </div>
-      )}
+    <Panel title="DNS Records" isLoading={isLoading} error={error}>
       {data?.success && data.dns?.records.MX && (
         <DataRow
           label="MX"

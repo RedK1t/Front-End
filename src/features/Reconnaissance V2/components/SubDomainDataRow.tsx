@@ -41,12 +41,12 @@ export default function SubdomainRow({ data }: SubdomainRowProps) {
         </div>
       </div>
       <div
-        className={`flex flex-col gap-2 px-3 ${isOpen ? "max-h-[1500px] pt-2" : "max-h-0 pt-0"} overflow-hidden transition-all duration-300`}
+        className={`flex flex-col gap-2 px-1 ${isOpen ? "max-h-[1500px] pt-2" : "max-h-0 pt-0"} overflow-hidden transition-all duration-300`}
       >
         {openPorts?.state === "up" && (
           <>
             {openPorts?.ports?.map((port) => (
-              <div className="normal-text text-dark-yellowish-white flex items-center justify-between">
+              <div className="normal-text text-dark-yellowish-white bg-dark-yellowish-white/10 rounded-6px flex items-center justify-between px-2 py-1">
                 <p>{port.protocol}</p>
                 <p>{port.port}</p>
               </div>

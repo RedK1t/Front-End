@@ -1,23 +1,12 @@
 import useWhoisDnsRecords from "@/features/Reconnaissance/hooks/useWhoisDnsRecords";
 import Panel from "./Panel";
 import DataRow from "./DataRow";
-import Loader from "@/components/Loader";
 
 export default function WhoisPanel() {
   const { data, error, isLoading } = useWhoisDnsRecords();
 
   return (
-    <Panel title="WHOIS">
-      {error && (
-        <div className="flex items-center justify-center">
-          <p className="text-red-500">{error.message}</p>
-        </div>
-      )}
-      {isLoading && (
-        <div className="flex items-center justify-center">
-          <Loader />
-        </div>
-      )}
+    <Panel title="WHOIS" isLoading={isLoading} error={error}>
       {data?.success &&
         (() => {
           const whoisData = data.whois;
