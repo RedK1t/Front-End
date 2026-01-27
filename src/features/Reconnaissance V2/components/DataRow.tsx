@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 
 type DataRowProps = {
   label: string;
   value: string | string[] | number;
-  rowList?: string[][];
+  rowList?: (string | number)[][];
+  children?: ReactNode; // this will be used for custom inner lists
 };
-export default function DataRow({ label, value, rowList }: DataRowProps) {
+export default function DataRow({
+  label,
+  value,
+  rowList,
+  children,
+}: DataRowProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   if (Array.isArray(value) && value.length > 1)
@@ -40,12 +46,14 @@ export default function DataRow({ label, value, rowList }: DataRowProps) {
     return (
       <div className="rounded-6px flex flex-col gap-y-1 bg-black/40 px-2 py-3">
         <div className="flex items-center justify-between gap-2">
-          <p className="normal-text text-light-red">{label}</p>
+          <p className="normal-text text-light-red text-wrap break-all">
+            {label}
+          </p>
           <div className="flex items-center gap-1">
             <p className="normal-text text-dark-yellowish-white text-end text-wrap break-all">
               {value}
             </p>
-            {rowList && (
+            {(rowList || children) && (
               <button
                 className="h-5 w-5 cursor-pointer"
                 onClick={() => setIsOpen((prev) => !prev)}
@@ -64,6 +72,8 @@ export default function DataRow({ label, value, rowList }: DataRowProps) {
               <p>{data[1]}</p>
             </div>
           ))}
+
+          {children}
         </div>
       </div>
     );
