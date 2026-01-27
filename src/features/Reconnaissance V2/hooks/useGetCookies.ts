@@ -26,7 +26,10 @@ function useGetCookies() {
   const { data, isLoading, error } = useQuery<CookiesData>({
     queryKey: ["cookies", domain],
     queryFn: async () => {
-      const res = await fetch(`/web-check-proxy/cookies?url=${domain}`);
+      const baseUrl = import.meta.env.DEV
+        ? "/web-check-proxy"
+        : import.meta.env.VITE_web_check_url;
+      const res = await fetch(`${baseUrl}/cookies?url=${domain}`);
       return res.json();
     },
   });

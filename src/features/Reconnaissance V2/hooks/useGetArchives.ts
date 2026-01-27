@@ -19,7 +19,10 @@ function useGetArchives() {
   const { data, isLoading, error } = useQuery<ArchiveData>({
     queryKey: ["archives", domain],
     queryFn: async () => {
-      const res = await fetch(`/web-check-proxy/archives?url=${domain}`);
+      const baseUrl = import.meta.env.DEV
+        ? "/web-check-proxy"
+        : import.meta.env.VITE_web_check_url;
+      const res = await fetch(`${baseUrl}/archives?url=${domain}`);
       return res.json();
     },
   });
