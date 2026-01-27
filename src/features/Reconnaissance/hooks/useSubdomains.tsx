@@ -15,16 +15,24 @@ export default function useSubdomains() {
   };
 
   useEffect(() => {
-    // Only start scan if we don't have data and aren't already scanning
+    // Only start scan if we don't have data, aren't already scanning, and haven't failed
     if (
       domain &&
       !data.isScanning &&
+      !data.error &&
       data.progress === 0 &&
       data.numberOfResults === 0
     ) {
       startScan(domain);
     }
-  }, [domain, data.isScanning, data.progress, data.numberOfResults, startScan]);
+  }, [
+    domain,
+    data.isScanning,
+    data.error,
+    data.progress,
+    data.numberOfResults,
+    startScan,
+  ]);
 
   return data;
 }

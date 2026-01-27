@@ -26,6 +26,7 @@ export type ScanState = {
   numberOfResults: number;
   elapsedTime: number;
   isScanning: boolean;
+  error: string | null;
 };
 
 const defaultScanState: ScanState = {
@@ -35,6 +36,7 @@ const defaultScanState: ScanState = {
   numberOfResults: 0,
   elapsedTime: 0,
   isScanning: false,
+  error: null,
 };
 
 type SubdomainContextType = {
@@ -133,6 +135,7 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
             numberOfResults: nextCount,
             elapsedTime: nextTime,
             isScanning: nextScanning,
+            error: null,
           },
         };
       });
@@ -142,7 +145,11 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
       console.error("WebSocket error:", error);
       setSubDomains((prev) => ({
         ...prev,
-        [domain]: { ...(prev[domain] || defaultScanState), isScanning: false },
+        [domain]: {
+          ...(prev[domain] || defaultScanState),
+          isScanning: false,
+          error: "Connection failed",
+        },
       }));
     };
 
