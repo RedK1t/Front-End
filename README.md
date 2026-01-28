@@ -15,6 +15,6 @@ npm run div
 docker build -t front-end .
 ```
 
-```
+```bash
 docker run --name front -p 5500:5500 front-end
 ```

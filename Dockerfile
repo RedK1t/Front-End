@@ -1,5 +1,5 @@
 # --- STAGE 1: BUILD ---
-FROM node:20-bookworm-slim AS builder
+FROM node:22.21-bookworm-slim AS builder
 WORKDIR /app
 
 # Copy dependency files
