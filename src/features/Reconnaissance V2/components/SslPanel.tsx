@@ -36,7 +36,7 @@ function getExtendedKeyUsage(oids: string[]) {
 }
 
 export default function SslPanel() {
-  const { data: sslCert, isLoading, error } = useGetSslCert();
+  const { data: sslCert, isFetching, error, refetch } = useGetSslCert();
   const {
     subject,
     issuer,
@@ -49,7 +49,12 @@ export default function SslPanel() {
     ext_key_usage,
   } = sslCert || {};
   return (
-    <Panel title="SSL Certificate" isLoading={isLoading} error={error}>
+    <Panel
+      title="SSL Certificate"
+      isFetching={isFetching}
+      error={error}
+      refetch={refetch}
+    >
       {subject && <DataRow label="Subject" value={subject?.CN} />}
       {issuer?.O && <DataRow label="Issuer" value={issuer.O} />}
       {asn1Curve && <DataRow label="ASN1 Curve" value={asn1Curve} />}

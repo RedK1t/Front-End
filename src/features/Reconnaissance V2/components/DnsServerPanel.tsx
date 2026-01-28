@@ -3,9 +3,14 @@ import DataRow from "./DataRow";
 import Panel from "./Panel";
 
 export default function DnsServerPanel() {
-  const { data, isLoading, error } = useGetDnsServer();
+  const { data, isFetching, error, refetch } = useGetDnsServer();
   return (
-    <Panel title="DNS Servers" isLoading={isLoading} error={error}>
+    <Panel
+      title="DNS Servers"
+      isFetching={isFetching}
+      error={error}
+      refetch={refetch}
+    >
       <div className="flex flex-col gap-5">
         {data?.dns.map((dns, index) => {
           return (

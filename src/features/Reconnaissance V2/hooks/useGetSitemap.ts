@@ -28,7 +28,7 @@ type SitemapData = {
 
 function useGetSitemap() {
   const { domain } = useDomain();
-  const { data, isLoading, error } = useQuery<SitemapData>({
+  const { data, isFetching, error, refetch } = useQuery<SitemapData>({
     queryKey: ["sitemap", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
@@ -38,7 +38,7 @@ function useGetSitemap() {
       return res.json();
     },
   });
-  return { data, isLoading, error };
+  return { data, isFetching, error, refetch };
 }
 
 export default useGetSitemap;

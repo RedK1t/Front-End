@@ -10,7 +10,7 @@ type RobotsTxtData = {
 
 function useGetRobotsTxt() {
   const { domain } = useDomain();
-  const { data, isLoading, error } = useQuery<RobotsTxtData>({
+  const { data, isFetching, error, refetch } = useQuery<RobotsTxtData>({
     queryKey: ["robots-txt", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
@@ -20,7 +20,7 @@ function useGetRobotsTxt() {
       return res.json();
     },
   });
-  return { data, isLoading, error };
+  return { data, isFetching, error, refetch };
 }
 
 export default useGetRobotsTxt;

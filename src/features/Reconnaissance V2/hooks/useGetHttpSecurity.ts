@@ -11,7 +11,7 @@ type HttpSecurityData = {
 
 function useGetHttpSecurity() {
   const { domain } = useDomain();
-  const { data, isLoading, error } = useQuery<HttpSecurityData>({
+  const { data, isFetching, error, refetch } = useQuery<HttpSecurityData>({
     queryKey: ["http-security", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
@@ -21,7 +21,7 @@ function useGetHttpSecurity() {
       return res.json();
     },
   });
-  return { data, isLoading, error };
+  return { data, isFetching, error, refetch };
 }
 
 export default useGetHttpSecurity;

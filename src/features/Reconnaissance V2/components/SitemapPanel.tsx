@@ -3,7 +3,7 @@ import DataRow from "./DataRow";
 import Panel from "./Panel";
 
 export default function SitemapPanel() {
-  const { data, isLoading, error } = useGetSitemap();
+  const { data, isFetching, error, refetch } = useGetSitemap();
   const normalSiteMap = data?.urlset?.url || null;
   const siteMapIndex = data?.sitemapindex?.sitemap || null;
 
@@ -35,7 +35,12 @@ export default function SitemapPanel() {
   };
 
   return (
-    <Panel title="Sitemap" isLoading={isLoading} error={error}>
+    <Panel
+      title="Sitemap"
+      isFetching={isFetching}
+      error={error}
+      refetch={refetch}
+    >
       {normalSiteMap &&
         normalSiteMap.map((subpage, index) => {
           return (

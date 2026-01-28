@@ -23,7 +23,7 @@ type CookiesData = {
 
 function useGetCookies() {
   const { domain } = useDomain();
-  const { data, isLoading, error } = useQuery<CookiesData>({
+  const { data, isFetching, error, refetch } = useQuery<CookiesData>({
     queryKey: ["cookies", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
@@ -33,7 +33,7 @@ function useGetCookies() {
       return res.json();
     },
   });
-  return { data, isLoading, error };
+  return { data, isFetching, error, refetch };
 }
 
 export default useGetCookies;

@@ -12,11 +12,13 @@ type ArchiveData = {
     daysBetweenScans: number;
   };
   scanUrl: string;
+
+  error?: string;
 };
 
 function useGetArchives() {
   const { domain } = useDomain();
-  const { data, isLoading, error } = useQuery<ArchiveData>({
+  const { data, isFetching, error, refetch } = useQuery<ArchiveData>({
     queryKey: ["archives", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
@@ -26,7 +28,7 @@ function useGetArchives() {
       return res.json();
     },
   });
-  return { data, isLoading, error };
+  return { data, isFetching, error, refetch };
 }
 
 export default useGetArchives;

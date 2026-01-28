@@ -12,11 +12,16 @@ const getPathName = (link: string) => {
 };
 
 export default function LinkedPagesPanel() {
-  const { data, isLoading, error } = useGetLinkedPages();
+  const { data, isFetching, error, refetch } = useGetLinkedPages();
   const internal = data?.internal || [];
   const external = data?.external || [];
   return (
-    <Panel title="Linked Pages" isLoading={isLoading} error={error}>
+    <Panel
+      title="Linked Pages"
+      isFetching={isFetching}
+      error={error}
+      refetch={refetch}
+    >
       <h3>Summary</h3>
       <DataRow label="Internal Link Count" value={internal.length} />
       <DataRow label="External Link Count" value={external.length} />

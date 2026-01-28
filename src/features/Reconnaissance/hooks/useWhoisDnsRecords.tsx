@@ -104,7 +104,7 @@ type WhoisDnsRecords = SuccessRespond | ErrorRespond;
 
 export default function useWhoisDnsRecords() {
   const { domain } = useDomain();
-  const { data, error, isLoading } = useQuery<WhoisDnsRecords>({
+  const { data, error, isFetching, refetch } = useQuery<WhoisDnsRecords>({
     queryKey: ["whois-dns-records", domain],
     queryFn: async () => {
       const res = await fetch(
@@ -114,5 +114,5 @@ export default function useWhoisDnsRecords() {
       return data;
     },
   });
-  return { data, error, isLoading };
+  return { data, error, isFetching, refetch };
 }

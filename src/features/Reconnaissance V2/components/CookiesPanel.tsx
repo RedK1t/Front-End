@@ -27,12 +27,17 @@ const parseHeaderCookies = (cookiesHeader: string[]): Cookie[] => {
 };
 
 export default function CookiesPanel() {
-  const { data, isLoading, error } = useGetCookies();
+  const { data, isFetching, error, refetch } = useGetCookies();
   const headerCookies = parseHeaderCookies(data?.headerCookies || []) || [];
   const clientCookies = data?.clientCookies || [];
   console.log(data);
   return (
-    <Panel title="Cookies" isLoading={isLoading} error={error}>
+    <Panel
+      title="Cookies"
+      isFetching={isFetching}
+      error={error}
+      refetch={refetch}
+    >
       {headerCookies.map((cookie: Cookie, index: number) => {
         const attributes = Object.entries(cookie.attributes);
         return (

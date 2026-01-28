@@ -3,10 +3,15 @@ import DataRow from "./DataRow";
 import Panel from "./Panel";
 
 export default function DnsRecordsPanel() {
-  const { data, error, isLoading } = useWhoisDnsRecords();
+  const { data, error, isFetching, refetch } = useWhoisDnsRecords();
 
   return (
-    <Panel title="DNS Records" isLoading={isLoading} error={error}>
+    <Panel
+      title="DNS Records"
+      isFetching={isFetching}
+      error={error}
+      refetch={refetch}
+    >
       {data?.success && data.dns?.records.MX && (
         <DataRow
           label="MX"

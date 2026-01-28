@@ -8,7 +8,7 @@ type LinkedPagesData = {
 
 function useGetLinkedPages() {
   const { domain } = useDomain();
-  const { data, isLoading, error } = useQuery<LinkedPagesData>({
+  const { data, isFetching, error, refetch } = useQuery<LinkedPagesData>({
     queryKey: ["linked-pages", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
@@ -18,7 +18,7 @@ function useGetLinkedPages() {
       return res.json();
     },
   });
-  return { data, isLoading, error };
+  return { data, isFetching, error, refetch };
 }
 
 export default useGetLinkedPages;

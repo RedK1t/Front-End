@@ -40,7 +40,7 @@ type SslCertData = {
 
 function useGetSslCert() {
   const { domain } = useDomain();
-  const { data, isLoading, error } = useQuery<SslCertData>({
+  const { data, isFetching, error, refetch } = useQuery<SslCertData>({
     queryKey: ["ssl-cert", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
@@ -50,7 +50,7 @@ function useGetSslCert() {
       return res.json();
     },
   });
-  return { data, isLoading, error };
+  return { data, isFetching, error, refetch };
 }
 
 export default useGetSslCert;

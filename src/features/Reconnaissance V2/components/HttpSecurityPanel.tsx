@@ -3,9 +3,14 @@ import DataRow from "./DataRow";
 import Panel from "./Panel";
 
 export default function HttpSecurityPanel() {
-  const { data, isLoading, error } = useGetHttpSecurity();
+  const { data, isFetching, error, refetch } = useGetHttpSecurity();
   return (
-    <Panel title="HTTP Security" isLoading={isLoading} error={error}>
+    <Panel
+      title="HTTP Security"
+      isFetching={isFetching}
+      error={error}
+      refetch={refetch}
+    >
       <DataRow
         label="Content Security Policy"
         value={data?.contentSecurityPolicy ? "✅ Yes" : "❌ No"}

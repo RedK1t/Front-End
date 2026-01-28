@@ -3,9 +3,14 @@ import DataRow from "./DataRow";
 import Panel from "./Panel";
 
 export default function FirewallPanel() {
-  const { data, isLoading, error } = useGetFirewall();
+  const { data, isFetching, error, refetch } = useGetFirewall();
   return (
-    <Panel title="Firewall" isLoading={isLoading} error={error}>
+    <Panel
+      title="Firewall"
+      isFetching={isFetching}
+      error={error}
+      refetch={refetch}
+    >
       <DataRow label="Firewall" value={data?.hasWaf ? "✅ Yes" : "❌ No*"} />
       {data?.waf && <DataRow label="WAF" value={data.waf} />}
       {!data?.hasWaf && (

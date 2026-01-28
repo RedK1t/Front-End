@@ -46,9 +46,7 @@ export default function DataRow({
     return (
       <div className="rounded-6px flex flex-col gap-y-1 bg-black/40 px-2 py-3">
         <div className="flex items-center justify-between gap-2">
-          <p className="normal-text text-light-red text-wrap break-all">
-            {label}
-          </p>
+          <p className="normal-text text-light-red text-wrap">{label}</p>
           <div className="flex items-center gap-1">
             <p className="normal-text text-dark-yellowish-white text-end text-wrap break-all">
               {value}

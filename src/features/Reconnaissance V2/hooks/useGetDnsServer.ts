@@ -14,7 +14,7 @@ type DnsServerData = {
 
 function useGetDnsServer() {
   const { domain } = useDomain();
-  const { data, isLoading, error } = useQuery<DnsServerData>({
+  const { data, isFetching, error, refetch } = useQuery<DnsServerData>({
     queryKey: ["dns-server", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
@@ -24,7 +24,7 @@ function useGetDnsServer() {
       return res.json();
     },
   });
-  return { data, isLoading, error };
+  return { data, isFetching, error, refetch };
 }
 
 export default useGetDnsServer;

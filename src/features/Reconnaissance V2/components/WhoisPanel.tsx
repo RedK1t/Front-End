@@ -3,10 +3,15 @@ import Panel from "./Panel";
 import DataRow from "./DataRow";
 
 export default function WhoisPanel() {
-  const { data, error, isLoading } = useWhoisDnsRecords();
+  const { data, error, isFetching, refetch } = useWhoisDnsRecords();
 
   return (
-    <Panel title="WHOIS" isLoading={isLoading} error={error}>
+    <Panel
+      title="WHOIS"
+      isFetching={isFetching}
+      error={error}
+      refetch={refetch}
+    >
       {data?.success &&
         (() => {
           const whoisData = data.whois;

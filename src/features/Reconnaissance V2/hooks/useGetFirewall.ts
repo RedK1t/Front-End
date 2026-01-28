@@ -8,7 +8,7 @@ type FirewallData = {
 
 function useGetFirewall() {
   const { domain } = useDomain();
-  const { data, isLoading, error } = useQuery<FirewallData>({
+  const { data, isFetching, error, refetch } = useQuery<FirewallData>({
     queryKey: ["firewall", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
@@ -18,7 +18,7 @@ function useGetFirewall() {
       return res.json();
     },
   });
-  return { data, isLoading, error };
+  return { data, isFetching, error, refetch };
 }
 
 export default useGetFirewall;
