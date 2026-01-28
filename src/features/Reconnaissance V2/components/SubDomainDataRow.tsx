@@ -41,7 +41,7 @@ export default function SubdomainRow({ data }: SubdomainRowProps) {
         </div>
       </div>
       <div
-        className={`flex flex-col gap-2 px-1 ${isOpen ? "max-h-[1500px] pt-2" : "max-h-0 pt-0"} overflow-hidden transition-all duration-300`}
+        className={`flex flex-col gap-2 px-1 ${isOpen ? "max-h-375 pt-2" : "max-h-0 pt-0"} overflow-hidden transition-all duration-300`}
       >
         {openPorts?.state === "up" && (
           <>

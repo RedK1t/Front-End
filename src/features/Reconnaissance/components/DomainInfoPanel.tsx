@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 
 export default function DomainInfoPanel() {
   const [searchParams] = useSearchParams();
-  const { data, error, isLoading } = useWhoisDnsRecords();
+  const { data, error, isFetching } = useWhoisDnsRecords();
   const {
     data: crtData,
     isLoading: crtIsLoading,
@@ -43,7 +43,7 @@ export default function DomainInfoPanel() {
         key={filter}
         className="flex flex-col gap-3 overflow-x-hidden overflow-y-auto"
       >
-        {isLoading && (filter === "Dns" || filter === "Whois") && (
+        {isFetching && (filter === "Dns" || filter === "Whois") && (
           <div className="flex justify-center">
             <span className="loading bg-red loading-spinner h-12 w-12"></span>
           </div>
