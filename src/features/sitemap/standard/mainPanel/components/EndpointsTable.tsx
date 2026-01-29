@@ -19,8 +19,7 @@ export default function EndpointsTable() {
     setSearchParams(newSearchParams, { replace: true });
   }
 
-  const { endpoints, flattenedEndpoints, isLoading, isError } =
-    useGetEndpoints();
+  const { flattenedEndpoints, isLoading, isError } = useGetEndpoints();
 
   const filteredEndpoints = useMemo(() => {
     if (!flattenedEndpoints) {
@@ -40,8 +39,6 @@ export default function EndpointsTable() {
         path: endpoint.path.split("/").slice(3).join("/") || "/",
       }));
   }, [flattenedEndpoints, folder, method, search, source, statusCode]);
-
-  console.log(endpoints);
   if (isLoading) {
     return <div>Loading...</div>;
   }

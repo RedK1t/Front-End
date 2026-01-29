@@ -4,7 +4,6 @@ import GetArchives from "../hooks/useGetArchives";
 
 export default function ArchivesPanel() {
   const { data, isFetching, error, refetch } = GetArchives();
-  console.log(data);
   return (
     <Panel
       title="Archive History"

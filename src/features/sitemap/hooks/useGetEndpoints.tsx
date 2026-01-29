@@ -72,8 +72,6 @@ export default function useGetEndpoints() {
   Subdomains.dnsSubdomains.forEach((subdomain) => {
     allSubdomains.push(subdomain.subdomain);
   });
-  console.log(domain);
-  console.log(allSubdomains);
 
   const { data, isLoading, isError } = useQuery<response>({
     queryKey: ["endpoints", domain],

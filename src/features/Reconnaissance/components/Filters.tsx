@@ -1,4 +1,6 @@
 import FilterTab from "./FilterTab";
+import { Link } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
 
 export default function Filters() {
   return (
@@ -18,7 +20,12 @@ export default function Filters() {
           INFO
         </FilterTab>
       </div>
-
+      <Link
+        to="/reconnaissance/v2"
+        className="bg-red/60 rounded-6px normal-text flex -translate-x-[30%] items-center gap-2 px-3 py-1.5"
+      >
+        Switch to Advanced Mode <FaArrowRight />
+      </Link>
       {/* Subdomain Filter */}
       <div className="bg-gray text-yellowish-white flex items-center gap-1 rounded-md px-2 py-1">
         <FilterTab paramName="subdomain" paramData="all" isDefault>

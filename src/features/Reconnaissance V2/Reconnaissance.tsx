@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ArchivesPanel from "./components/ArchivesPanel";
 import CookiesPanel from "./components/CookiesPanel";
 import DnsRecordsPanel from "./components/DnsRecordsPanel";
@@ -12,6 +13,7 @@ import SslPanel from "./components/SslPanel";
 import SubDomainsPanel from "./components/SubDomainsPanel";
 import TechStackPanel from "./components/TechStackPanel";
 import WhoisPanel from "./components/WhoisPanel";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function Reconnaissance() {
   const panels = [
@@ -33,6 +35,14 @@ export default function Reconnaissance() {
 
   return (
     <div className="mx-auto w-11/12 py-12">
+      <div className="flex w-full items-center justify-center pb-5">
+        <Link
+          to="/reconnaissance"
+          className="bg-red/60 rounded-6px normal-text flex w-fit items-center gap-2 px-3 py-1.5"
+        >
+          Switch to Basic Mode <FaArrowLeft />
+        </Link>
+      </div>
       {/* Mobile: 1 Column */}
       <div className="flex flex-col gap-4 md:hidden">{panels}</div>
 

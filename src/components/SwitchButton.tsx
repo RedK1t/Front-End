@@ -1,8 +1,17 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 
-type SwitchButtonProps = {
+type searchParam = {
   param: string;
+  to?: null;
+};
+
+type navigate = {
+  param?: null;
+  to: string;
+};
+
+type SwitchButtonProps = (searchParam | navigate) & {
   onIcon: string;
   offIcon: string;
   onText: string;
@@ -14,6 +23,7 @@ type SwitchButtonProps = {
 
 export default function SwitchButton({
   param,
+  to,
   onIcon,
   offIcon,
   onText,
@@ -23,14 +33,32 @@ export default function SwitchButton({
   textTransform,
 }: SwitchButtonProps) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const isOnParam = searchParams.get(param);
-  const [isOn, setIsOn] = useState(isOnParam === "true");
+  const location = useLocation();
+  const currentPath = location.pathname; // This will be "/sitemap/what" or similar
+  console.log(onIcon);
+  const isOnParam = searchParams.get(param || "");
+  const [isOn, setIsOn] = useState(
+    param
+      ? isOnParam === "true"
+      : currentPath.includes(to?.split("/").pop() || ""),
+  );
+  const navigate = useNavigate();
   function handleClick() {
-    const newSearchParams = new URLSearchParams(searchParams);
-    setIsOn(!isOn);
-    const newIsOn = !isOn;
-    newSearchParams.set(param, newIsOn.toString());
-    setSearchParams(newSearchParams, { replace: true });
+    if (to) {
+      if (isOn) {
+        navigate(-1);
+      } else {
+        navigate(to);
+      }
+      return;
+    }
+    if (param) {
+      const newSearchParams = new URLSearchParams(searchParams);
+      setIsOn(!isOn);
+      const newIsOn = !isOn;
+      newSearchParams.set(param, newIsOn.toString());
+      setSearchParams(newSearchParams, { replace: true });
+    }
   }
 
   return (
@@ -52,11 +80,15 @@ export default function SwitchButton({
           transform: isOn ? undefined : `translateX(-${imgTransform}%)`,
         }}
       >
-        <img
-          src={isOn ? onIcon : offIcon}
-          alt={isOn ? "offIcon" : "onIcon"}
-          className="h-9/12 w-9/12 translate-x-px"
-        />
+        {onIcon.includes("data") ? (
+          <img
+            src={isOn ? onIcon : offIcon}
+            alt={isOn ? "offIcon" : "onIcon"}
+            className="h-9/12 w-9/12 translate-x-px"
+          />
+        ) : (
+          <p className="normal-text">{isOn ? onIcon : offIcon}</p>
+        )}
       </div>
     </button>
   );

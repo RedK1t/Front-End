@@ -36,7 +36,7 @@ export default function Panel({
   }, [children]);
 
   return (
-    <div className="bg-gray rounded-6px text-dark-yellowish-white mb-4 flex h-fit max-h-150 min-h-25 w-full break-inside-avoid flex-col gap-2 overflow-hidden p-3">
+    <div className="bg-gray rounded-6px text-dark-yellowish-white mb-4 flex h-fit max-h-150 min-h-20 w-full break-inside-avoid flex-col gap-2 overflow-hidden p-3">
       {/*Header */}
       <div className="flex items-center justify-between">
         {/* Title */}
@@ -80,7 +80,7 @@ export default function Panel({
 
       {/* Error */}
       {error && (
-        <div className="flex flex-col items-center justify-center gap-4 py-8">
+        <div className="flex flex-col items-center justify-center gap-4">
           <div className="flex flex-col items-center gap-1">
             <p className="text-light-red normal-text font-bold">
               Failed to load data
@@ -115,7 +115,7 @@ export default function Panel({
 
       {/* No Data */}
       {isNoData && !isFetching && !error && (
-        <div className="flex h-full w-full flex-col items-center justify-center gap-4 py-12">
+        <div className="flex h-full w-full flex-col items-center justify-center gap-4">
           <p className="large-text text-dark-yellowish-white font-bold opacity-40">
             No data available
           </p>

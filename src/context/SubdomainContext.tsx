@@ -80,7 +80,6 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
     socketsRef.current[domain] = ws;
 
     ws.onopen = () => {
-      console.log("WebSocket connected for", domain);
       ws.send(
         JSON.stringify({
           domain: domain,
@@ -94,7 +93,6 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data);
 
       setSubDomains((prev) => {
         const current = prev[domain] || defaultScanState;
@@ -154,7 +152,6 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
     };
 
     ws.onclose = () => {
-      console.log("WebSocket disconnected for", domain);
       setSubDomains((prev) => ({
         ...prev,
         [domain]: { ...(prev[domain] || defaultScanState), isScanning: false },

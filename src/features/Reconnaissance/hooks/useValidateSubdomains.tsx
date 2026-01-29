@@ -47,7 +47,6 @@ export default function useValidateSubdomains({
       const data: ValidateSubdomainsResponse = await response.json();
       setActiveHttp(data.live_web_services);
       setDnsOnly(data.dns_only);
-      console.log(data);
     }
     validateSubdomains();
     loading.current = false;

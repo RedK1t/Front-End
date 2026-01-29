@@ -30,7 +30,6 @@ export default function CookiesPanel() {
   const { data, isFetching, error, refetch } = useGetCookies();
   const headerCookies = parseHeaderCookies(data?.headerCookies || []) || [];
   const clientCookies = data?.clientCookies || [];
-  console.log(data);
   return (
     <Panel
       title="Cookies"

@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
 import Home from "./features/home/Home";
-import Reconnaissance from "./features/Reconnaissance V2/Reconnaissance";
+import Reconnaissance from "./features/Reconnaissance/Reconnaissance";
+import ReconnaissanceV2 from "./features/Reconnaissance V2/Reconnaissance";
 import AppLayout from "./features/AppLayout";
 import Sitemap from "./features/sitemap/Sitemap";
 import Standard from "./features/sitemap/Standard";
@@ -35,7 +36,16 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/Reconnaissance",
-        element: <Reconnaissance />,
+        children: [
+          {
+            path: "",
+            element: <Reconnaissance />,
+          },
+          {
+            path: "v2",
+            element: <ReconnaissanceV2 />,
+          },
+        ],
       },
       {
         path: "/proxy",
