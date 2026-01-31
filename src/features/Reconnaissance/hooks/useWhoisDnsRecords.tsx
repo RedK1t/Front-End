@@ -109,7 +109,7 @@ export default function useWhoisDnsRecords() {
     queryFn: async () => {
       const baseUrl = import.meta.env.VITE_DEV_whois
         ? import.meta.env.VITE_DEV_whois
-        : import.meta.env.VITE_whois;
+        : 'https://whois-eta.vercel.app';
       console.log(`${baseUrl}/api/whois/${domain}`)
       const res = await fetch(
         `${baseUrl}/api/whois/${domain}`,
