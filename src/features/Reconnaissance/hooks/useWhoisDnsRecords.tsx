@@ -107,8 +107,12 @@ export default function useWhoisDnsRecords() {
   const { data, error, isFetching, refetch } = useQuery<WhoisDnsRecords>({
     queryKey: ["whois-dns-records", domain],
     queryFn: async () => {
+      const baseUrl = import.meta.env.VITE_DEV_whois
+        ? import.meta.env.VITE_DEV_whois
+        : import.meta.env.VITE_whois;
+      console.log(`${baseUrl}/api/whois/${domain}`)
       const res = await fetch(
-        `https://whois-eta.vercel.app/api/whois/${domain}`,
+        `${baseUrl}/api/whois/${domain}`,
       );
       const data = await res.json();
       return data;
