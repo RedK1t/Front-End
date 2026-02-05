@@ -113,7 +113,7 @@ export default function SideBar() {
       <NavItem
         icon={toolsIcon}
         text="Tools & Utilities"
-        to="/"
+        to="/tools"
         isOpen={isOpen}
       />
 

@@ -16,6 +16,7 @@ import { SubdomainProvider } from "./context/SubdomainContext";
 import { DomainProvider } from "./context/DomainContext";
 import Repeater from "./features/repeater/Repeater";
 import Intruder from "./features/intruder/Intruder";
+import Tools from "./features/tools/Tools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
           { path: "repeater", element: <Repeater /> },
           { path: "intruder", element: <Intruder /> },
         ],
+      },
+      {
+        path: "/tools",
+        element: <Tools />,
       },
     ],
   },
