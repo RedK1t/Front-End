@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDomain } from "../../../context/DomainContext";
 import openIcon from "../../../assets/openIcon.svg";
 import PortItem from "./PortItem";
 import useGetOpenPorts from "../hooks/useGetOpenPorts";
+import { FaPlay } from "react-icons/fa";
 
 type SubdomainRowProps = {
   subdomain: string;
@@ -16,7 +19,14 @@ export default function SubdomainRow({
   url,
 }: SubdomainRowProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { data, isLoading } = useGetOpenPorts(subdomain);
+  const { setSelectedSubdomain } = useDomain();
+  const navigate = useNavigate();
+  const { data, isLoading } = useGetOpenPorts(subdomain, isOpen);
+
+  const handleSitemapClick = () => {
+    setSelectedSubdomain(subdomain);
+    navigate("/proxy/sitemap/standard");
+  };
   return (
     // Subdomain Item
     <div className="flex flex-col rounded-md bg-black px-4 py-2">
@@ -38,10 +48,17 @@ export default function SubdomainRow({
         </div>
 
         {/* Subdomain Actions */}
-        <div className="flex w-2/12 items-center justify-between">
+        <div className="flex w-5/12 items-center justify-end gap-3">
+          <button
+            onClick={handleSitemapClick}
+            className="small-text bg-red hover:bg-light-red flex cursor-pointer items-center gap-2 rounded-md px-4 py-2 font-bold tracking-wider text-white uppercase transition-all hover:shadow-[0_0_20px_rgba(206,50,50,0.6)] active:scale-95"
+          >
+            <FaPlay className="h-3 w-3" />
+            TEST
+          </button>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="small-text border-dark-red/50 shadow-dark-red/30 hover:shadow-dark-red/50 cursor-pointer rounded-md border bg-black px-2 py-1 shadow-[0_0_15px] outline-0"
+            className="small-text text-dark-yellowish-white hover:border-red/30 hover:text-red cursor-pointer rounded-md border border-white/5 bg-white/5 px-3 py-2 transition-all active:scale-95"
           >
             Ports
           </button>

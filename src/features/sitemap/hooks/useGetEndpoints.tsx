@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import type { GraphEndPoint } from "../types/graphTypes";
-import useSubdomains from "@/features/Reconnaissance/hooks/useSubdomains";
 import { useDomain } from "@/context/DomainContext";
 
 type response = {
@@ -63,20 +62,12 @@ export function transformToGraphType(endpoints: endpoint[]): GraphEndPoint[] {
   }));
 }
 export default function useGetEndpoints() {
-  const { domain } = useDomain();
-  const Subdomains = useSubdomains();
-  const allSubdomains = [domain];
-  Subdomains.httpSubdomains.forEach((subdomain) => {
-    allSubdomains.push(subdomain.subdomain);
-  });
-  Subdomains.dnsSubdomains.forEach((subdomain) => {
-    allSubdomains.push(subdomain.subdomain);
-  });
+  const { selectedSubdomain } = useDomain();
 
   const { data, isLoading, isError } = useQuery<response>({
-    queryKey: ["endpoints", domain],
+    queryKey: ["endpoints", selectedSubdomain],
     queryFn: async () => {
-      if (!domain) {
+      if (!selectedSubdomain) {
         return { data: [] };
       }
       const res = await fetch(import.meta.env.VITE_endpoints_REST_url, {
@@ -85,7 +76,7 @@ export default function useGetEndpoints() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          domains: allSubdomains,
+          domains: [selectedSubdomain],
         }),
       });
       const data = await res.json();

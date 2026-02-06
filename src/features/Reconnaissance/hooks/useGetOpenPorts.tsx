@@ -27,9 +27,10 @@ type ErrorDomain = {
   error: string;
 };
 type Data = UpDomain | DownDomain | ErrorDomain;
-export default function useGetOpenPorts(target: string) {
+export default function useGetOpenPorts(target: string, enabled: boolean) {
   const { data, isLoading, error } = useQuery<Data>({
     queryKey: ["openPorts", target],
+    enabled: enabled && !!target,
     queryFn: async () => {
       const response = await fetch(import.meta.env.VITE_openPorts_REST_url, {
         method: "POST",
