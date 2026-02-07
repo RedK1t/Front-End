@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { IoCopyOutline } from "react-icons/io5";
+import { IoCopyOutline, IoClipboardOutline } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa";
 import { magicDecode, type MagicResult } from "../utils/magic";
 
@@ -15,6 +15,7 @@ export default function MagicToolCard({
   const [inputText, setInputText] = useState("");
   const [results, setResults] = useState<MagicResult[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [pasted, setPasted] = useState(false);
 
   useEffect(() => {
     if (!inputText) {
@@ -65,7 +66,7 @@ export default function MagicToolCard({
         )}
       </div>
       <div className="grid grid-cols-1 gap-4">
-        <div className="flex flex-col gap-2">
+        <div className="relative flex flex-col gap-2">
           <label className="small-text text-dark-yellowish-white font-semibold">
             Input Text
           </label>
@@ -75,6 +76,22 @@ export default function MagicToolCard({
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
           />
+          <button
+            onClick={async () => {
+              try {
+                const text = await navigator.clipboard.readText();
+                setInputText(text);
+                setPasted(true);
+                setTimeout(() => setPasted(false), 2000);
+              } catch (err) {
+                console.error("Failed to read clipboard:", err);
+              }
+            }}
+            className="rounded-6px absolute right-3 bottom-3 cursor-pointer bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
+            title="Paste from clipboard"
+          >
+            {pasted ? <FaCheck /> : <IoClipboardOutline />}
+          </button>
         </div>
 
         {/* Results Section */}
