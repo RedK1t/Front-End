@@ -1,4 +1,5 @@
 import ToolCard from "./components/ToolCard";
+import MagicToolCard from "./components/MagicToolCard";
 
 export default function Tools() {
   return (
@@ -11,6 +12,16 @@ export default function Tools() {
           encoding, and formatting tasks.
         </p>
       </div>
+
+      {/* Magic Tool Section */}
+      <section className="flex flex-col gap-4">
+        <div className="border-gray mb-2 flex items-center gap-3 border-b pb-2">
+          <h2 className="large-text text-white">Magic Tool</h2>
+        </div>
+        <div className="grid grid-cols-1">
+          <MagicToolCard />
+        </div>
+      </section>
 
       {/* Encoding Utilities Section */}
       <section className="flex flex-col gap-4">
