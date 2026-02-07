@@ -25,11 +25,11 @@ export default function TableRow({
   return (
     <motion.div
       whileHover={{
-        scale: 1.05,
+        scale: 1.01,
         backgroundColor: "#CE323240",
       }}
       onClick={method === "Method" ? undefined : () => onClick(id)}
-      className={`rounded-6px flex w-full ${method === "Method" ? "" : "cursor-pointer"} items-center justify-between px-4 py-2 text-center ${selected ? "bg-dark-red/20!" : ""}`}
+      className={`rounded-6px mx-auto flex w-[99%] ${method === "Method" ? "" : "cursor-pointer"} items-center justify-between px-4 py-3 text-center ${selected ? "bg-dark-red/20!" : ""}`}
     >
       {/* Last Seen */}
       <div className="w-1/6 text-center">

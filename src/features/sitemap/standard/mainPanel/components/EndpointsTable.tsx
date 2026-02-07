@@ -48,7 +48,7 @@ export default function EndpointsTable() {
   return (
     <div className="text-yellowish-white flex h-full w-full flex-col gap-y-2 overflow-hidden py-2">
       <Filters />
-      <div className="flex h-full w-full flex-col gap-y-2 overflow-auto">
+      <div className="flex h-full w-full flex-col overflow-x-hidden overflow-y-auto">
         {filteredEndpoints.map((endpoint) =>
           endpoint.method === null ? null : (
             <TableRow

@@ -87,8 +87,8 @@ export default function ReqResContent({
   const displayText = props.requestAndResponse
     ? (searchParams.get("isItRes") === "true"
         ? props.responseText
-        : props.requestText) || defaultText
-    : props.text || defaultText;
+        : props.requestText) || ""
+    : props.text || "";
   const resOrReq =
     searchParams.get("isItRes") === "true" ? "Response" : "Request";
   const [query, setQuery] = useState("");
