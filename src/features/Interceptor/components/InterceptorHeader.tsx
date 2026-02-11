@@ -7,14 +7,18 @@ import interceptorOffIcon from "@/assets/interceptorOffIcon.svg";
 import interceptorOnIcon from "@/assets/interceptorOnIcon.svg";
 import SwitchButton from "@/components/SwitchButton";
 import { useSearchParams } from "react-router-dom";
-import useProxySocket from "../hooks/useProxySocket";
+import useProxyActions from "../hooks/useProxyActions";
+import useProxyTraffic from "../hooks/useProxyTraffic";
 
 export default function InterceptorHeader() {
   const [searchParams] = useSearchParams();
-  const { sendJsonMessage, lastJsonMessage, readyState } = useProxySocket();
-
+  const { forwardRequest, dropRequest, toggleIntercept, forwardAll, dropAll } =
+    useProxyActions();
+  const { interceptedRequests, interceptedResponses } = useProxyTraffic();
   const interceptor = searchParams.get("Interceptor") === "true";
   const interceptorOn = searchParams.get("interceptorOn") === "true";
+  const id = searchParams.get("selected");
+
   return (
     <div
       className={`flex items-center justify-between overflow-hidden text-nowrap transition-all duration-700 ${interceptor ? "w-full opacity-100" : "w-0 opacity-0"}`}
@@ -30,10 +34,7 @@ export default function InterceptorHeader() {
           onText="Interceptor On"
           offText="Interceptor Off"
           onClick={() => {
-            sendJsonMessage({
-              action: "toggle_intercept",
-              enabled: !interceptorOn,
-            });
+            toggleIntercept(!interceptorOn);
           }}
         />
         {/* <SwitchButton
@@ -46,13 +47,24 @@ export default function InterceptorHeader() {
           onText="Forward"
           offText="Forward All"
         /> */}
+        {/* FIXME: fix forward button */}
         <button
+          onClick={() => {
+            if (id) {
+              forwardRequest(id, "", "", "", "");
+            }
+          }}
           className={`bg-red/60 small-text text-yellowish-white rounded-6px flex w-fit cursor-pointer items-center justify-between gap-2 px-3 py-2`}
         >
           Forward
           <img src={forwardIcon} alt="forwardIcon" className="h-4 w-4" />
         </button>
+
+        {/* FIXME: fix forwardAll button */}
         <button
+          onClick={() => {
+            forwardAll([]);
+          }}
           className={`bg-gray small-text text-yellowish-white rounded-6px flex w-fit cursor-pointer items-center justify-between gap-2 px-3 py-2`}
         >
           Forward All
@@ -71,12 +83,23 @@ export default function InterceptorHeader() {
       </div>
       <div className="flex items-center gap-x-2">
         <button
+          onClick={() => {
+            if (id) {
+              dropRequest(id);
+            }
+          }}
           className={`bg-red/60 small-text text-yellowish-white rounded-6px flex w-fit cursor-pointer items-center justify-between gap-2 px-3 py-2`}
         >
           Drop
           <img src={dropIcon} alt="dropIcon" className="h-4 w-4" />
         </button>
         <button
+          onClick={() => {
+            dropAll([
+              ...interceptedRequests.map((req) => req.id),
+              ...interceptedResponses.map((res) => res.id),
+            ]);
+          }}
           className={`bg-gray small-text text-yellowish-white rounded-6px flex w-fit cursor-pointer items-center justify-between gap-2 px-3 py-2`}
         >
           Drop All
