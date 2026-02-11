@@ -8,11 +8,10 @@ import {
 } from "@xyflow/react";
 import { useCallback, useState, useEffect } from "react";
 import { Node } from "./components/Node";
-import type { EdgeType, NodeType } from "../../types/graphTypes";
 import { createNodeTree } from "@/utils/createNode";
 import useGetEndpoints from "../../hooks/useGetEndpoints";
 import { createEdge } from "@/utils/createEdge";
-import { useSearchParams } from "react-router-dom";
+import type { EdgeType, NodeType } from "../../types/graphTypes";
 
 //react flow node type
 const nodeTypes = {
@@ -21,35 +20,28 @@ const nodeTypes = {
 
 export default function GraphPanel() {
   const { graphEndpoints } = useGetEndpoints();
-  const [searchParams] = useSearchParams();
-  const subdomain = searchParams.get("subdomain");
   const [nodes, setNodes] = useState<NodeType[]>([]);
-
   const [edges, setEdges] = useState<EdgeType[]>([]);
 
   useEffect(() => {
-    const dumbNodes: NodeType[] = [];
+    const endpoint = graphEndpoints[0];
     const initialEdges: EdgeType[] = [];
-
-    const endpoint = graphEndpoints.find(
-      (ep) => ep.path.split("/")[2] === subdomain,
-    );
+    const initialNodes: NodeType[] = endpoint ? createNodeTree(endpoint) : [];
 
     if (endpoint) {
-      dumbNodes.push(...createNodeTree(endpoint));
+      createEdge(endpoint, initialEdges);
     }
 
-    createEdge(endpoint || graphEndpoints[0], initialEdges);
-
-    // Batch state update to avoid cascading renders
-    setNodes(dumbNodes);
+    setNodes(initialNodes);
     setEdges(initialEdges);
-  }, [subdomain]);
+  }, [graphEndpoints]);
+
   const onNodesChange: OnNodesChange = useCallback(
     (changes) =>
       setNodes((nds) => applyNodeChanges(changes, nds) as NodeType[]),
     [setNodes],
   );
+
   const onEdgesChange: OnEdgesChange = useCallback(
     (changes) =>
       setEdges((eds) => applyEdgeChanges(changes, eds) as EdgeType[]),

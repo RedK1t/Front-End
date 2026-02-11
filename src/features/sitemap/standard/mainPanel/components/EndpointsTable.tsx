@@ -3,6 +3,7 @@ import TableRow from "./TableRow";
 import useGetEndpoints from "@/features/sitemap/hooks/useGetEndpoints";
 import { useSearchParams } from "react-router-dom";
 import { useMemo } from "react";
+import Loader from "@/components/Loader";
 
 export default function EndpointsTable() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -40,7 +41,11 @@ export default function EndpointsTable() {
       }));
   }, [flattenedEndpoints, folder, method, search, source, statusCode]);
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <Loader />
+      </div>
+    );
   }
   if (isError) {
     return <div>Error fetching endpoints</div>;

@@ -26,7 +26,7 @@ export function Node({ id, data }: NodeProps) {
       >
         {data.method}
       </p>
-      <p>{data.endpoint}</p>
+      <p>{decodeURIComponent(data.endpoint)}</p>
       <Handle type="source" position={Position.Right} />
       <Handle type="target" position={Position.Left} />
     </div>

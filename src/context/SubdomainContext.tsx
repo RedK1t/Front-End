@@ -43,6 +43,8 @@ type SubdomainContextType = {
   subDomains: Record<string, ScanState>;
   startScan: (domain: string) => void;
   stopScan: (domain: string) => void;
+  scanSubdomains: boolean;
+  setScanSubdomains: (scan: boolean) => void;
 };
 
 const SubdomainContext = createContext<SubdomainContextType | undefined>(
@@ -52,112 +54,130 @@ const SubdomainContext = createContext<SubdomainContextType | undefined>(
 export function SubdomainProvider({ children }: { children: ReactNode }) {
   const [subDomains, setSubDomains] = useState<Record<string, ScanState>>({});
   const socketsRef = useRef<Record<string, WebSocket>>({});
+  const [scanSubdomains, setScanSubdomains] = useState(true);
 
-  const startScan = useCallback((domain: string) => {
-    if (!domain) return;
+  const startScan = useCallback(
+    (domain: string) => {
+      if (!domain) return;
 
-    // If already scanning, don't start again
-    if (
-      socketsRef.current[domain] &&
-      socketsRef.current[domain].readyState !== WebSocket.CLOSED
-    ) {
-      return;
-    }
+      // If already scanning, don't start again
+      if (
+        socketsRef.current[domain] &&
+        socketsRef.current[domain].readyState !== WebSocket.CLOSED
+      ) {
+        return;
+      }
 
-    const url = import.meta.env.VITE_subdomains_websocket_url;
-    if (!url) {
-      console.error("VITE_subdomains_websocket_url is not defined");
-      return;
-    }
+      const url = import.meta.env.VITE_subdomains_websocket_url;
+      if (!url) {
+        console.error("VITE_subdomains_websocket_url is not defined");
+        return;
+      }
 
-    // Initialize/Reset data for this domain on new scan
-    setSubDomains((prev) => ({
-      ...prev,
-      [domain]: { ...defaultScanState, isScanning: true },
-    }));
+      // Initialize/Reset data for this domain on new scan
+      setSubDomains((prev) => ({
+        ...prev,
+        [domain]: { ...defaultScanState, isScanning: true },
+      }));
 
-    const ws = new WebSocket(url);
-    socketsRef.current[domain] = ws;
+      const ws = new WebSocket(url);
+      socketsRef.current[domain] = ws;
 
-    ws.onopen = () => {
-      ws.send(
-        JSON.stringify({
-          domain: domain,
-          wordlist_preset: "2",
-          passive: true,
-          timeout: 5.0,
-          threads: 50,
-        }),
-      );
-    };
-
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-
-      setSubDomains((prev) => {
-        const current = prev[domain] || defaultScanState;
-
-        let nextHttp = current.httpSubdomains;
-        let nextDns = current.dnsSubdomains;
-        let nextProgress = current.progress;
-        let nextCount = current.numberOfResults;
-        let nextTime = current.elapsedTime;
-        let nextScanning = current.isScanning;
-
-        if (data.type === "progress") {
-          nextProgress = data.percentage;
-        } else if (data.type === "http_validated") {
-          nextHttp = [
-            ...nextHttp,
-            {
-              subdomain: data.subdomain,
-              url: data.url,
-              status: data.status,
-              ips: data.ips,
-            },
-          ];
-        } else if (data.type === "dns_only") {
-          nextDns = [...nextDns, { subdomain: data.subdomain, ips: data.ips }];
-        } else if (data.type === "complete") {
-          nextCount = data.count;
-          nextTime = data.elapsed_time;
-          nextScanning = false;
+      ws.onopen = () => {
+        if (scanSubdomains) {
+          ws.send(
+            JSON.stringify({
+              domain: domain,
+              wordlist_preset: "1",
+              passive: true,
+              timeout: 5.0,
+              threads: 50,
+            }),
+          );
+        } else {
+          ws.send(
+            JSON.stringify({
+              domain: domain,
+            }),
+          );
         }
+      };
 
-        return {
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        setSubDomains((prev) => {
+          const current = prev[domain] || defaultScanState;
+
+          let nextHttp = current.httpSubdomains;
+          let nextDns = current.dnsSubdomains;
+          let nextProgress = current.progress;
+          let nextCount = current.numberOfResults;
+          let nextTime = current.elapsedTime;
+          let nextScanning = current.isScanning;
+
+          if (data.type === "progress") {
+            nextProgress = data.percentage;
+          } else if (data.type === "http_validated") {
+            nextHttp = [
+              ...nextHttp,
+              {
+                subdomain: data.subdomain,
+                url: data.url,
+                status: data.status,
+                ips: data.ips,
+              },
+            ];
+          } else if (data.type === "dns_only") {
+            nextDns = [
+              ...nextDns,
+              { subdomain: data.subdomain, ips: data.ips },
+            ];
+          } else if (data.type === "complete") {
+            nextCount = data.count;
+            nextTime = data.elapsed_time;
+            nextScanning = false;
+          }
+
+          return {
+            ...prev,
+            [domain]: {
+              httpSubdomains: nextHttp,
+              dnsSubdomains: nextDns,
+              progress: nextProgress,
+              numberOfResults: nextCount,
+              elapsedTime: nextTime,
+              isScanning: nextScanning,
+              error: null,
+            },
+          };
+        });
+      };
+
+      ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        setSubDomains((prev) => ({
           ...prev,
           [domain]: {
-            httpSubdomains: nextHttp,
-            dnsSubdomains: nextDns,
-            progress: nextProgress,
-            numberOfResults: nextCount,
-            elapsedTime: nextTime,
-            isScanning: nextScanning,
-            error: null,
+            ...(prev[domain] || defaultScanState),
+            isScanning: false,
+            error: "Connection failed",
           },
-        };
-      });
-    };
+        }));
+      };
 
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-      setSubDomains((prev) => ({
-        ...prev,
-        [domain]: {
-          ...(prev[domain] || defaultScanState),
-          isScanning: false,
-          error: "Connection failed",
-        },
-      }));
-    };
-
-    ws.onclose = () => {
-      setSubDomains((prev) => ({
-        ...prev,
-        [domain]: { ...(prev[domain] || defaultScanState), isScanning: false },
-      }));
-    };
-  }, []);
+      ws.onclose = () => {
+        setSubDomains((prev) => ({
+          ...prev,
+          [domain]: {
+            ...(prev[domain] || defaultScanState),
+            isScanning: false,
+          },
+        }));
+      };
+    },
+    [scanSubdomains],
+  );
 
   const stopScan = useCallback((domain: string) => {
     const ws = socketsRef.current[domain];
@@ -172,7 +192,15 @@ export function SubdomainProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <SubdomainContext.Provider value={{ subDomains, startScan, stopScan }}>
+    <SubdomainContext.Provider
+      value={{
+        subDomains,
+        startScan,
+        stopScan,
+        scanSubdomains,
+        setScanSubdomains,
+      }}
+    >
       {children}
     </SubdomainContext.Provider>
   );

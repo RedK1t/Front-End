@@ -29,7 +29,7 @@ export default function TableRow({
         backgroundColor: "#CE323240",
       }}
       onClick={method === "Method" ? undefined : () => onClick(id)}
-      className={`rounded-6px mx-auto flex w-[99%] ${method === "Method" ? "" : "cursor-pointer"} items-center justify-between px-4 py-3 text-center ${selected ? "bg-dark-red/20!" : ""}`}
+      className={`rounded-6px mx-auto flex w-[99%] ${method === "Method" ? "" : "cursor-pointer"} items-center justify-between px-4 py-2 text-center ${selected ? "bg-dark-red/20!" : ""}`}
     >
       {/* Last Seen */}
       <div className="w-1/6 text-center">
@@ -63,7 +63,7 @@ export default function TableRow({
       </div>
 
       {/* Path */}
-      <div className="w-2/6 text-center">{path}</div>
+      <div className="w-2/6 text-center">{decodeURIComponent(path)}</div>
     </motion.div>
   );
 }

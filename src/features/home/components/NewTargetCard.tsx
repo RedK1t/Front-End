@@ -6,10 +6,13 @@ import plusIcon from "../../../assets/PlusIcon.svg";
 import shareIcon from "../../../assets/ShareIcon.svg";
 import searchIcon from "../../../assets/SearchIcon.svg";
 import { motion } from "motion/react";
+import { useSubdomainContext } from "@/context/SubdomainContext";
+import BinaryToggle from "@/components/BinaryToggle";
 
 export default function NewTargetCard() {
   const [domainInput, setDomainInput] = useState("");
   const { setDomain } = useDomain();
+  const { scanSubdomains, setScanSubdomains } = useSubdomainContext();
   const navigate = useNavigate();
   function openModal() {
     const modal = document.getElementById(
@@ -72,6 +75,16 @@ export default function NewTargetCard() {
                 className="placeholder:large-text placeholder:text-dark-yellowish-white w-full rounded-md bg-black p-3 outline-0"
                 value={domainInput}
                 onChange={(e) => setDomainInput(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <p className="mid-text text-light-red">Check for subdomains?</p>
+              <BinaryToggle
+                value={scanSubdomains}
+                onChange={setScanSubdomains}
+                leftOption="No, skip it"
+                rightOption="Yes, scan"
+                width={200}
               />
             </div>
           </div>

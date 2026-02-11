@@ -1,10 +1,15 @@
+import Loader from "@/components/Loader";
 import useGetEndpoints, { type endpoint } from "../../hooks/useGetEndpoints";
 import FolderItem from "./FolderItem";
 
 export default function SidePanel() {
   const { endpoints, isLoading, isError } = useGetEndpoints();
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <Loader />
+      </div>
+    );
   }
   if (isError) {
     return <div>Error fetching endpoints</div>;

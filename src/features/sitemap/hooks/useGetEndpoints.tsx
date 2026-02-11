@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { GraphEndPoint } from "../types/graphTypes";
 import { useDomain } from "@/context/DomainContext";
+import { useMemo } from "react";
 
 type response = {
   data: endpoint[];
@@ -84,8 +85,14 @@ export default function useGetEndpoints() {
     },
   });
 
-  const flattened = data ? flatEndpoints(data.data) : [];
-  const graphEndpoints = data ? transformToGraphType(data.data) : [];
+  const flattened = useMemo(
+    () => (data ? flatEndpoints(data.data) : []),
+    [data],
+  );
+  const graphEndpoints = useMemo(
+    () => (data ? transformToGraphType(data.data) : []),
+    [data],
+  );
 
   return {
     endpoints: data?.data,
