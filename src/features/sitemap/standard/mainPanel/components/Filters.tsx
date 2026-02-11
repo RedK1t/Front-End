@@ -3,11 +3,12 @@ import SelectFilter from "./SelectFilter";
 import { useSearchParams } from "react-router-dom";
 // import { useEffect } from "react";
 import StandardSwitch from "./StandardSwitch";
+import useGetEndpoints from "@/features/sitemap/hooks/useGetEndpoints";
 // import CapturingSwitch from "./CapturingSwitch";
 
 export default function Filters() {
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const { sources, statuses, methods } = useGetEndpoints();
   // Get Filters from Search Params
   // const isCapturing = searchParams.get("Capturing") || "true";
 
@@ -29,30 +30,13 @@ export default function Filters() {
         <StandardSwitch />
       </div>
       <div className="flex w-1/6 items-center justify-center">
-        <SelectFilter placeholder="source" options={["Active", "Passive"]} />
+        <SelectFilter placeholder="source" options={sources} />
       </div>
       <div className="flex w-1/6 items-center justify-center">
-        <SelectFilter
-          placeholder="statusCode"
-          options={[
-            "200",
-            "201",
-            "204",
-            "301",
-            "302",
-            "400",
-            "401",
-            "403",
-            "404",
-            "500",
-          ]}
-        />
+        <SelectFilter placeholder="statusCode" options={statuses} />
       </div>
       <div className="flex w-1/6 items-center justify-center">
-        <SelectFilter
-          placeholder="method"
-          options={["GET", "POST", "PUT", "DELETE"]}
-        />
+        <SelectFilter placeholder="method" options={methods} />
       </div>
       <div className="flex w-2/6 items-center justify-center">
         <Input

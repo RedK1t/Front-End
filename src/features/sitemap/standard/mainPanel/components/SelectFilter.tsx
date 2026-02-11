@@ -10,7 +10,7 @@ import { useSearchParams } from "react-router-dom";
 
 type SelectFilterProps = {
   placeholder: string;
-  options: string[];
+  options: string[] | number[];
   fullWidth?: boolean;
 };
 
@@ -53,11 +53,14 @@ export default function SelectFilter({
         </SelectTrigger>
         {/* SelectFilter Content */}
         <SelectContent className="bg-gray small-text min-w-25 border-0 text-white">
-          {options.map((option) => (
-            <SelectItem key={option} value={option}>
-              {option}
-            </SelectItem>
-          ))}
+          {options.map((option) => {
+            if (!option) return null;
+            return (
+              <SelectItem key={option} value={String(option)}>
+                {option}
+              </SelectItem>
+            );
+          })}
         </SelectContent>
       </Select>
     </div>

@@ -89,6 +89,20 @@ export default function useGetEndpoints() {
     () => (data ? flatEndpoints(data.data) : []),
     [data],
   );
+
+  const sources = useMemo(
+    () => [...new Set(flattened.map((ep) => ep.source))],
+    [flattened],
+  );
+  const statuses = useMemo(
+    () => [...new Set(flattened.map((ep) => ep.status))],
+    [flattened],
+  );
+  const methods = useMemo(
+    () => [...new Set(flattened.map((ep) => ep.method))],
+    [flattened],
+  );
+
   const graphEndpoints = useMemo(
     () => (data ? transformToGraphType(data.data) : []),
     [data],
@@ -97,6 +111,9 @@ export default function useGetEndpoints() {
   return {
     endpoints: data?.data,
     flattenedEndpoints: flattened,
+    sources,
+    statuses,
+    methods,
     graphEndpoints,
     isLoading,
     isError,
