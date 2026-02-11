@@ -7,10 +7,14 @@ import interceptorOffIcon from "@/assets/interceptorOffIcon.svg";
 import interceptorOnIcon from "@/assets/interceptorOnIcon.svg";
 import SwitchButton from "@/components/SwitchButton";
 import { useSearchParams } from "react-router-dom";
+import useProxySocket from "../hooks/useProxySocket";
 
 export default function InterceptorHeader() {
   const [searchParams] = useSearchParams();
+  const { sendJsonMessage, lastJsonMessage, readyState } = useProxySocket();
+
   const interceptor = searchParams.get("Interceptor") === "true";
+  const interceptorOn = searchParams.get("interceptorOn") === "true";
   return (
     <div
       className={`flex items-center justify-between overflow-hidden text-nowrap transition-all duration-700 ${interceptor ? "w-full opacity-100" : "w-0 opacity-0"}`}
@@ -25,6 +29,12 @@ export default function InterceptorHeader() {
           offIcon={interceptorOffIcon}
           onText="Interceptor On"
           offText="Interceptor Off"
+          onClick={() => {
+            sendJsonMessage({
+              action: "toggle_intercept",
+              enabled: !interceptorOn,
+            });
+          }}
         />
         {/* <SwitchButton
           param="forward"

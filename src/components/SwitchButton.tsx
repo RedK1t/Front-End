@@ -1,17 +1,7 @@
-import { useState } from "react";
+import { type ButtonHTMLAttributes, useState } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 
-type searchParam = {
-  param: string;
-  to?: null;
-};
-
-type navigate = {
-  param?: null;
-  to: string;
-};
-
-type SwitchButtonProps = (searchParam | navigate) & {
+type SwitchButtonProps = {
   onIcon: string;
   offIcon: string;
   onText: string;
@@ -19,7 +9,9 @@ type SwitchButtonProps = (searchParam | navigate) & {
   buttonClassName?: string;
   textTransform: number;
   imgTransform: number;
-};
+  param?: string;
+  to?: string;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function SwitchButton({
   param,
@@ -31,11 +23,12 @@ export default function SwitchButton({
   buttonClassName,
   imgTransform,
   textTransform,
+  onClick,
+  ...props
 }: SwitchButtonProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const currentPath = location.pathname; // This will be "/sitemap/what" or similar
-  console.log(onIcon);
   const isOnParam = searchParams.get(param || "");
   const [isOn, setIsOn] = useState(
     param
@@ -43,7 +36,10 @@ export default function SwitchButton({
       : currentPath.includes(to?.split("/").pop() || ""),
   );
   const navigate = useNavigate();
-  function handleClick() {
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    if (onClick) {
+      onClick(event);
+    }
     if (to) {
       if (isOn) {
         navigate(-1);
@@ -63,6 +59,7 @@ export default function SwitchButton({
 
   return (
     <button
+      {...props}
       onClick={handleClick}
       className={`bg-gray small-text text-yellowish-white rounded-6px flex cursor-pointer items-center justify-between py-0.5 pr-0.5 pl-1.5 ${buttonClassName}`}
     >
