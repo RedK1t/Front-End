@@ -105,12 +105,15 @@ export default function InterceptorHeader() {
           Drop All
           <img src={dropAllIcon} alt="dropAllIcon" className="h-4 w-4" />
         </button>
-        <button
+        <a
+          href="http://localhost:6080/vnc.html"
+          target="_blank"
+          rel="noopener noreferrer"
           className={`bg-gray small-text text-yellowish-white rounded-6px flex w-32 cursor-pointer items-center justify-between px-3 py-2`}
         >
           Open Browser
           <img src={browserIcon} alt="browserIcon" className="h-4 w-4" />
-        </button>
+        </a>
       </div>
     </div>
   );

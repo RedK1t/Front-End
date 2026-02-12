@@ -17,6 +17,7 @@ import { DomainProvider } from "./context/DomainContext";
 import Repeater from "./features/repeater/Repeater";
 import Intruder from "./features/intruder/Intruder";
 import Tools from "./features/tools/Tools";
+import ProxyLayout from "./features/ProxyLayout";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +55,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/proxy",
+        element: <ProxyLayout />,
         children: [
           {
             path: "sitemap",
