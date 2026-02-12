@@ -24,12 +24,14 @@ type requestAndResponse = {
 type ReqResContentProps = (requestOrResponse | requestAndResponse) & {
   editableProp?: boolean;
   comment?: string;
+  onBlur?: (value: string) => void;
 };
 
 export default function ReqResContent({
   type,
   editableProp = true,
   comment,
+  onBlur,
   ...props
 }: ReqResContentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -114,6 +116,9 @@ export default function ReqResContent({
         <div className="flex items-center gap-2.5">
           <h2 className="mid-text text-yellowish-white">{type || resOrReq}</h2>
           <span className="text-dark-yellowish-white normal-text">
+            {editableProp ? "(Editable)" : "(Read-Only)"}
+          </span>
+          <span className="text-dark-yellowish-white normal-text">
             {comment}
           </span>
         </div>
@@ -141,6 +146,7 @@ export default function ReqResContent({
           initialValue={displayText}
           editableProp={editableProp}
           type={type || resOrReq}
+          onBlur={onBlur}
         />
       </div>
 

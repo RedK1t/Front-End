@@ -1,8 +1,47 @@
-import type { intercepted_request } from "../types";
+import type { intercepted_request, intercepted_response } from "../types";
 import useProxySocket from "./useProxySocket";
+import { useQueryClient } from "@tanstack/react-query";
 
 function useProxyActions() {
   const { sendJsonMessage } = useProxySocket();
+  const queryClient = useQueryClient();
+
+  const updateInterceptedRequest = (id: string, newRaw: string) => {
+    // Standard HTTP: headers and body are separated by two newlines
+    const [headers, ...bodyParts] = newRaw.split("\n\n");
+    const body = bodyParts.join("\n\n");
+
+    queryClient.setQueryData(
+      ["intercepted_request"],
+      (oldData: intercepted_request[] = []) => {
+        return oldData.map((item) =>
+          item.id === id ? { ...item, raw: newRaw, headers, body } : item,
+        );
+      },
+    );
+  };
+
+  const updateInterceptedResponse = (id: string, newRaw: string) => {
+    // Standard HTTP: headers and body are separated by two newlines
+    const [headers, ...bodyParts] = newRaw.split("\n\n");
+    const body = bodyParts.join("\n\n");
+
+    queryClient.setQueryData(
+      ["intercepted_response"],
+      (oldData: intercepted_response[] = []) => {
+        return oldData.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                raw_response: newRaw,
+                response_headers: headers,
+                response_body: body,
+              }
+            : item,
+        );
+      },
+    );
+  };
 
   const toggleIntercept = (enabled: boolean) => {
     sendJsonMessage({
@@ -99,6 +138,8 @@ function useProxyActions() {
     dropResponse,
     forwardAll,
     dropAll,
+    updateInterceptedRequest,
+    updateInterceptedResponse,
   };
 }
 

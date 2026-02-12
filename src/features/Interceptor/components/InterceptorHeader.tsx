@@ -14,18 +14,18 @@ export default function InterceptorHeader() {
   const [searchParams] = useSearchParams();
   const { forwardRequest, dropRequest, toggleIntercept, forwardAll, dropAll } =
     useProxyActions();
-  const { interceptedRequests, interceptedResponses } = useProxyTraffic();
+  const { interceptedRequests, interceptedResponses, interceptStatus } =
+    useProxyTraffic();
   const interceptor = searchParams.get("Interceptor") === "true";
-  const interceptorOn = searchParams.get("interceptorOn") === "true";
   const id = searchParams.get("selected");
 
   return (
     <div
-      className={`flex items-center justify-between overflow-hidden text-nowrap transition-all duration-700 ${interceptor ? "w-full opacity-100" : "w-0 opacity-0"}`}
+      className={`flex items-center justify-between overflow-hidden text-nowrap transition-all duration-700 ${!interceptor ? "w-full opacity-100" : "w-0 opacity-0"}`}
     >
       <div className="flex items-center gap-x-3">
         <SwitchButton
-          param="interceptorOn"
+          dataValue={interceptStatus}
           imgTransform={340}
           textTransform={30}
           buttonClassName="w-32"
@@ -34,7 +34,7 @@ export default function InterceptorHeader() {
           onText="Interceptor On"
           offText="Interceptor Off"
           onClick={() => {
-            toggleIntercept(!interceptorOn);
+            toggleIntercept(!interceptStatus);
           }}
         />
         {/* <SwitchButton

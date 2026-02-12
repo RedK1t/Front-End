@@ -1,4 +1,4 @@
-import { type ButtonHTMLAttributes, useState } from "react";
+import { type ButtonHTMLAttributes, useEffect, useState } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 
 type SwitchButtonProps = {
@@ -11,6 +11,7 @@ type SwitchButtonProps = {
   imgTransform: number;
   param?: string;
   to?: string;
+  dataValue?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function SwitchButton({
@@ -24,6 +25,7 @@ export default function SwitchButton({
   imgTransform,
   textTransform,
   onClick,
+  dataValue,
   ...props
 }: SwitchButtonProps) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,7 +35,9 @@ export default function SwitchButton({
   const [isOn, setIsOn] = useState(
     param
       ? isOnParam === "true"
-      : currentPath.includes(to?.split("/").pop() || ""),
+      : to
+        ? currentPath.includes(to.split("/").pop() || "")
+        : dataValue,
   );
   const navigate = useNavigate();
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
@@ -57,6 +61,11 @@ export default function SwitchButton({
     }
   }
 
+  useEffect(() => {
+    if (dataValue !== undefined) {
+      setIsOn(dataValue);
+    }
+  }, [dataValue]);
   return (
     <button
       {...props}

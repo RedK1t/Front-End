@@ -37,7 +37,7 @@ export default function HttpHistoryHeader() {
   }
   return (
     <div
-      className={`${interceptor ? "w-0 opacity-0" : "w-full opacity-100"} flex h-fit overflow-hidden text-nowrap transition-all duration-700`}
+      className={`${interceptor ? "w-full opacity-100" : "w-0 opacity-0"} flex h-fit overflow-hidden text-nowrap transition-all duration-700`}
     >
       <div className="bg-gray rounded-6px flex h-8 w-8 cursor-pointer items-center justify-center">
         <img src={filterIcon} alt="filterIcon" className="" />

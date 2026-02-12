@@ -60,7 +60,7 @@ export default function Table({ headers, data }: TableProps) {
         </thead>
         <tbody>
           {sortedTable.map((row, i) => (
-            <Tr key={i} index={i} isRequest={row.includes("Request")} id={i}>
+            <Tr key={i} index={i}>
               {row.map((cell, j) => {
                 if (cell === "Request")
                   return (

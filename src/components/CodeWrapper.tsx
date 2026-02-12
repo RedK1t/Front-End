@@ -13,11 +13,13 @@ export default function CodeWrapper({
   initialValue = "",
   editableProp = true,
   type = "Request",
+  onBlur,
 }: {
   language?: "html" | "css" | "javascript" | "js" | "json" | "http";
   initialValue?: string;
   editableProp?: boolean;
   type?: "Request" | "Response" | "Request Template";
+  onBlur?: (value: string) => void;
 }) {
   const [value, setValue] = useState(initialValue);
 
@@ -84,6 +86,7 @@ export default function CodeWrapper({
       ]}
       editable={editableProp}
       onChange={(val) => setValue(val)}
+      onBlur={() => onBlur?.(value)}
       basicSetup={{
         autocompletion: true,
         lineNumbers: true,
