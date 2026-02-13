@@ -24,22 +24,26 @@ export default function InterceptorBottomPanel() {
       {/* Div for border */}
       <div className="h-full w-full overflow-y-hidden">
         {/* Div for content */}
-        <div className="mx-auto flex h-full w-11/12 items-start justify-between space-x-5">
-          <div className="h-full w-1/2">
+        <div className="flex h-full w-full items-start justify-between space-x-5 pr-8 pl-14">
+          <div className={`h-full ${selectedItemRequest ? "w-full" : "w-1/2"}`}>
             <ReqResContent
               type="Request"
-              editableProp={request ? true : false}
+              editableProp={selectedItemRequest ? true : false}
               text={request}
               onBlur={(val) => updateInterceptedRequest(selected, val)}
             />
           </div>
           {/* Border */}
-          <div className="border-red h-full border-r" />
-          <div className="h-full w-1/2">
+          {selectedItemResponse && (
+            <div className="border-red h-full border-r" />
+          )}
+          <div
+            className={`h-full overflow-hidden ${selectedItemResponse ? "w-1/2" : "w-0"}`}
+          >
             <ReqResContent
               type="Response"
               text={response}
-              editableProp={response ? true : false}
+              editableProp={selectedItemResponse ? true : false}
               onBlur={(val) => updateInterceptedResponse(selected, val)}
             />
           </div>

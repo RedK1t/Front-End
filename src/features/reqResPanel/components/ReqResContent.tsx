@@ -116,9 +116,6 @@ export default function ReqResContent({
         <div className="flex items-center gap-2.5">
           <h2 className="mid-text text-yellowish-white">{type || resOrReq}</h2>
           <span className="text-dark-yellowish-white normal-text">
-            {editableProp ? "(Editable)" : "(Read-Only)"}
-          </span>
-          <span className="text-dark-yellowish-white normal-text">
             {comment}
           </span>
         </div>
