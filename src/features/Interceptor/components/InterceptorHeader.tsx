@@ -12,8 +12,14 @@ import useProxyTraffic from "../hooks/useProxyTraffic";
 
 export default function InterceptorHeader() {
   const [searchParams] = useSearchParams();
-  const { forwardRequest, dropRequest, toggleIntercept, forwardAll, dropAll } =
-    useProxyActions();
+  const {
+    forwardRequest,
+    forwardResponse,
+    dropRequest,
+    toggleIntercept,
+    forwardAll,
+    dropAll,
+  } = useProxyActions();
   const { interceptedRequests, interceptedResponses, interceptStatus } =
     useProxyTraffic();
   const interceptor = searchParams.get("Interceptor") === "true";
@@ -51,7 +57,17 @@ export default function InterceptorHeader() {
         <button
           onClick={() => {
             if (id) {
-              forwardRequest(id, "", "", "", "");
+              const request = interceptedRequests.find(
+                (req) => req.id === id,
+              )?.raw;
+              const response = interceptedResponses.find(
+                (res) => res.id === id,
+              )?.raw_response;
+              if (request) {
+                forwardRequest(id, request);
+              } else if (response) {
+                forwardResponse(id, response);
+              }
             }
           }}
           className={`bg-red/60 small-text text-yellowish-white rounded-6px flex w-fit cursor-pointer items-center justify-between gap-2 px-3 py-2`}
@@ -63,7 +79,19 @@ export default function InterceptorHeader() {
         {/* FIXME: fix forwardAll button */}
         <button
           onClick={() => {
-            forwardAll([]);
+            const reqRes = interceptedRequests.map((req) => ({
+              id: req.id,
+              type: "request",
+              raw: req.raw,
+            }));
+            reqRes.push(
+              ...interceptedResponses.map((res) => ({
+                id: res.id,
+                type: "response",
+                raw: res.raw_response,
+              })),
+            );
+            forwardAll(reqRes);
           }}
           className={`bg-gray small-text text-yellowish-white rounded-6px flex w-fit cursor-pointer items-center justify-between gap-2 px-3 py-2`}
         >

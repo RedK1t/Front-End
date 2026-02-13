@@ -1,22 +1,23 @@
 import ReqResContent from "@/features/reqResPanel/components/ReqResContent";
 import useProxyActions from "../hooks/useProxyActions";
+import { useSearchParams } from "react-router-dom";
+import useProxyTraffic from "../hooks/useProxyTraffic";
 
-export default function InterceptorBottomPanel({
-  id = "",
-  reqEditable = false,
-  resEditable = false,
-  requestText = "",
-  responseText = "",
-}: {
-  id?: string;
-  reqEditable?: boolean;
-  resEditable?: boolean;
-  requestText?: string;
-  responseText?: string;
-}) {
+export default function InterceptorBottomPanel() {
   const { updateInterceptedRequest, updateInterceptedResponse } =
     useProxyActions();
-
+  const [searchParams] = useSearchParams();
+  const { interceptedRequests, interceptedResponses } = useProxyTraffic();
+  const selected = searchParams.get("selected") || "";
+  const selectedItemRequest = interceptedRequests.find(
+    (item) => item.id === selected,
+  );
+  const selectedItemResponse = interceptedResponses.find(
+    (item) => item.id === selected,
+  );
+  const request =
+    selectedItemRequest?.raw || selectedItemResponse?.parent_request.raw;
+  const response = selectedItemResponse?.raw_response || "";
   return (
     <div className="flex h-full flex-col">
       {/* <Header /> */}
@@ -27,9 +28,9 @@ export default function InterceptorBottomPanel({
           <div className="h-full w-1/2">
             <ReqResContent
               type="Request"
-              editableProp={reqEditable}
-              text={requestText}
-              onBlur={(val) => updateInterceptedRequest(id, val)}
+              editableProp={request ? true : false}
+              text={request}
+              onBlur={(val) => updateInterceptedRequest(selected, val)}
             />
           </div>
           {/* Border */}
@@ -37,9 +38,9 @@ export default function InterceptorBottomPanel({
           <div className="h-full w-1/2">
             <ReqResContent
               type="Response"
-              text={responseText}
-              editableProp={resEditable}
-              onBlur={(val) => updateInterceptedResponse(id, val)}
+              text={response}
+              editableProp={response ? true : false}
+              onBlur={(val) => updateInterceptedResponse(selected, val)}
             />
           </div>
         </div>

@@ -1,8 +1,9 @@
 import Th from "./Th";
 import { useSearchParams } from "react-router-dom";
 import Tr from "./Tr";
-import { useEffect } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 import useProxyTraffic from "../../hooks/useProxyTraffic";
+import useProxyActions from "../../hooks/useProxyActions";
 
 type TableRowProps = {
   Time: string;
@@ -17,7 +18,59 @@ type TableRowProps = {
 };
 
 export default function Table() {
-  const { interceptedRequests, interceptedResponses } = useProxyTraffic();
+  const {
+    interceptedRequests,
+    interceptedResponses,
+    markedForResponseIntercept,
+  } = useProxyTraffic();
+
+  const {
+    forwardRequest,
+    forwardResponse,
+    dropRequest,
+    markForResponseIntercept,
+    unmarkForResponseIntercept,
+  } = useProxyActions();
+
+  const handleForward = useCallback(
+    (id: string, direction: string) => {
+      if (direction === "Request") {
+        const request = interceptedRequests.find((req) => req.id === id);
+        if (request?.id && request?.raw) {
+          forwardRequest(request.id, request.raw);
+        }
+      } else {
+        const response = interceptedResponses.find((res) => res.id === id);
+        if (response?.id && response?.raw_response) {
+          forwardResponse(response.id, response.raw_response);
+        }
+      }
+    },
+    [
+      interceptedRequests,
+      interceptedResponses,
+      forwardRequest,
+      forwardResponse,
+    ],
+  );
+
+  const handleDrop = useCallback(
+    (id: string) => {
+      dropRequest(id);
+    },
+    [dropRequest],
+  );
+
+  const handleToggleMark = useCallback(
+    (id: string, isMarked: boolean) => {
+      if (isMarked) {
+        unmarkForResponseIntercept(id);
+      } else {
+        markForResponseIntercept(id);
+      }
+    },
+    [markForResponseIntercept, unmarkForResponseIntercept],
+  );
   const tableRows = interceptedRequests.map((item) => ({
     id: item.id,
     Time: item.Time,
@@ -51,6 +104,7 @@ export default function Table() {
   const [searchParams, setSearchParams] = useSearchParams();
   const sort = searchParams.get("sort");
   const search = searchParams.get("search");
+  const Selected = searchParams.get("selected");
   const filteredTable = tableRows.filter((row) => {
     return Object.values(row).some((value) =>
       String(value)
@@ -58,24 +112,54 @@ export default function Table() {
         .includes(search?.toLowerCase() || ""),
     );
   });
-  useEffect(() => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("length", String(filteredTable.length));
-    setSearchParams(newSearchParams, { replace: true });
-  }, [filteredTable.length, searchParams, setSearchParams]);
-  const sortedTable = filteredTable.sort((a, b) => {
-    if (sort) {
-      const key = sort.split("-")[0] as keyof TableRowProps;
-      const aVal = a[key];
-      const bVal = b[key];
-      const order = sort.includes("asc") ? 1 : -1;
-      if (typeof aVal === "number" && typeof bVal === "number") {
-        return (aVal - bVal) * order;
+  // Was Meant For Http History
+  // useEffect(() => {
+  //   const newSearchParams = new URLSearchParams(searchParams);
+  //   newSearchParams.set("length", String(filteredTable.length));
+  //   setSearchParams(newSearchParams, { replace: true });
+  // }, [filteredTable.length, searchParams, setSearchParams]);
+
+  const sortedTable = useMemo(() => {
+    const table = [...filteredTable].sort((a, b) => {
+      if (sort) {
+        const key = sort.split("-")[0] as keyof TableRowProps;
+        const aVal = a[key];
+        const bVal = b[key];
+        const order = sort.includes("asc") ? 1 : -1;
+        if (typeof aVal === "number" && typeof bVal === "number") {
+          return (aVal - bVal) * order;
+        }
+        return String(aVal).localeCompare(String(bVal)) * order;
       }
-      return String(aVal).localeCompare(String(bVal)) * order;
+      return 0;
+    });
+    return table;
+  }, [filteredTable, sort]);
+
+  useEffect(() => {
+    if (sortedTable.length === 0) return;
+    const selectedRow = sortedTable.find((row) => row?.id === Selected);
+    if (!selectedRow) {
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.set("selected", sortedTable[0]?.id || "");
+      setSearchParams(newSearchParams, { replace: true });
     }
-    return 0;
-  });
+  }, [sortedTable]);
+
+  const handleSelect = useCallback(
+    (id: string) => {
+      setSearchParams(
+        (prev) => {
+          const newParams = new URLSearchParams(prev);
+          newParams.set("selected", id);
+          return newParams;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
+
   return (
     <div className="overflow-auto">
       <table className="w-full">
@@ -94,7 +178,17 @@ export default function Table() {
         </thead>
         <tbody>
           {sortedTable.map((row, index) => (
-            <Tr key={row.id} index={index} {...row} />
+            <Tr
+              key={row.id}
+              index={index}
+              isSelected={row.id === Selected}
+              handleSelect={handleSelect}
+              handleForward={handleForward}
+              handleDrop={handleDrop}
+              handleToggleMark={handleToggleMark}
+              isMarked={markedForResponseIntercept.includes(row.id)}
+              {...row}
+            />
           ))}
         </tbody>
       </table>

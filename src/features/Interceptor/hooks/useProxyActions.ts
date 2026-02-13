@@ -7,25 +7,17 @@ function useProxyActions() {
   const queryClient = useQueryClient();
 
   const updateInterceptedRequest = (id: string, newRaw: string) => {
-    // Standard HTTP: headers and body are separated by two newlines
-    const [headers, ...bodyParts] = newRaw.split("\n\n");
-    const body = bodyParts.join("\n\n");
-
     queryClient.setQueryData(
       ["intercepted_request"],
       (oldData: intercepted_request[] = []) => {
         return oldData.map((item) =>
-          item.id === id ? { ...item, raw: newRaw, headers, body } : item,
+          item.id === id ? { ...item, raw: newRaw } : item,
         );
       },
     );
   };
 
   const updateInterceptedResponse = (id: string, newRaw: string) => {
-    // Standard HTTP: headers and body are separated by two newlines
-    const [headers, ...bodyParts] = newRaw.split("\n\n");
-    const body = bodyParts.join("\n\n");
-
     queryClient.setQueryData(
       ["intercepted_response"],
       (oldData: intercepted_response[] = []) => {
@@ -34,8 +26,6 @@ function useProxyActions() {
             ? {
                 ...item,
                 raw_response: newRaw,
-                response_headers: headers,
-                response_body: body,
               }
             : item,
         );
@@ -64,39 +54,19 @@ function useProxyActions() {
     });
   };
 
-  const forwardRequest = (
-    id: string,
-    method: string,
-    url: string,
-    headers: string,
-    body: string,
-  ) => {
+  const forwardRequest = (id: string, request: string) => {
     sendJsonMessage({
       action: "forward_request",
       id,
-      request: {
-        method,
-        url,
-        headers,
-        body,
-      },
+      request,
     });
   };
 
-  const forwardResponse = (
-    id: string,
-    headers: string,
-    body: string,
-    status_code: number,
-  ) => {
+  const forwardResponse = (id: string, response: string) => {
     sendJsonMessage({
       action: "forward_response",
       id,
-      response: {
-        status_code,
-        headers,
-        body,
-      },
+      response,
     });
   };
 
@@ -114,10 +84,10 @@ function useProxyActions() {
     });
   };
 
-  const forwardAll = (requests: intercepted_request[]) => {
+  const forwardAll = (items: { id: string; type: string; raw: string }[]) => {
     sendJsonMessage({
       action: "forward_all",
-      requests,
+      items,
     });
   };
 

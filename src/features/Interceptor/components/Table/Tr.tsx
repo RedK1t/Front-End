@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { memo } from "react";
 import checkIcon from "@/assets/CheckMarkIcon.svg";
 import leftArrowIcon from "@/assets/leftArrowIcon.svg";
 import rightArrowIcon from "@/assets/rightArrowIcon.svg";
@@ -9,11 +9,16 @@ import {
   ContextMenuTrigger,
 } from "@radix-ui/react-context-menu";
 import ContextMenuItemStyled from "@/components/ContextMenuItemStyled";
-import useProxyActions from "./../../hooks/useProxyActions";
-import useProxyTraffic from "../../hooks/useProxyTraffic";
 
 type TrProps = {
   index: number;
+  isSelected: boolean;
+  handleSelect: (id: string) => void;
+  handleForward: (id: string, direction: string) => void;
+  handleDrop: (id: string) => void;
+  handleToggleMark: (id: string, isMarked: boolean) => void;
+  isMarked: boolean;
+
   id: string;
   Time: string;
   Type: string;
@@ -28,8 +33,14 @@ type TrProps = {
   body: string;
 };
 
-export default function Tr({
+export default memo(function Tr({
   index,
+  isSelected,
+  handleSelect,
+  handleForward,
+  handleDrop,
+  handleToggleMark,
+  isMarked,
   id,
   Time,
   Type,
@@ -41,34 +52,13 @@ export default function Tr({
   Length,
   Params,
 }: TrProps) {
-  const {
-    forwardRequest,
-    forwardResponse,
-    dropRequest,
-    markForResponseIntercept,
-    unmarkForResponseIntercept,
-  } = useProxyActions();
-  const {
-    markedForResponseIntercept,
-    interceptedRequests,
-    interceptedResponses,
-  } = useProxyTraffic();
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const isSelected = searchParams.get("selected") === id.toString();
-  const isMarkedForResponseIntercept = markedForResponseIntercept.includes(id);
-  function handleSelect() {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set("selected", id.toString());
-    setSearchParams(newSearchParams, { replace: true });
-  }
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
         <tr
-          onClick={handleSelect}
-          onContextMenu={handleSelect}
-          className={`small-text ${index % 2 === 0 ? "" : "bg-yellowish-white/8"} cursor-pointer ${isSelected ? "bg-dark-red/20!" : ""} ${isMarkedForResponseIntercept ? "border-light-red border-l-2" : ""}`}
+          onClick={() => handleSelect(id)}
+          onContextMenu={() => handleSelect(id)}
+          className={`small-text ${index % 2 === 0 ? "" : "bg-yellowish-white/8"} cursor-pointer ${isSelected ? "bg-dark-red/20!" : ""} ${isMarked ? "border-light-red border-l-2" : ""}`}
         >
           <Td left={true}>{Time}</Td>
           <Td>{Type}</Td>
@@ -100,47 +90,10 @@ export default function Tr({
       <ContextMenuContent className="bg-gray rounded-6px! small-text! text-yellowish-white! z-50! border-0! drop-shadow-lg drop-shadow-black/50">
         <ContextMenuItemStyled>{URL}</ContextMenuItemStyled>
         <div className="bg-yellowish-white! h-px! w-full" />
-        <ContextMenuItemStyled
-          onClick={() => {
-            if (Direction === "Request") {
-              const request = interceptedRequests.find((req) => req.id === id);
-              const {
-                id: requestId,
-                method,
-                url,
-                headers,
-                body,
-              } = request || {};
-
-              if (request) {
-                forwardRequest(requestId!, method!, url!, headers!, body!);
-              }
-            }
-            if (Direction === "Response") {
-              const response = interceptedResponses.find(
-                (req) => req.id === id,
-              );
-              const {
-                id: responseId,
-                status_code,
-                response_headers,
-                response_body,
-              } = response || {};
-
-              if (response) {
-                forwardResponse(
-                  responseId!,
-                  response_headers!,
-                  response_body!,
-                  status_code!,
-                );
-              }
-            }
-          }}
-        >
+        <ContextMenuItemStyled onClick={() => handleForward(id, Direction)}>
           Forward
         </ContextMenuItemStyled>
-        <ContextMenuItemStyled onClick={() => dropRequest(id)}>
+        <ContextMenuItemStyled onClick={() => handleDrop(id)}>
           Drop
         </ContextMenuItemStyled>
         <div className="bg-yellowish-white! h-[0.5px]! w-full" />
@@ -149,14 +102,9 @@ export default function Tr({
           <>
             <div className="bg-yellowish-white! h-px! w-full" />
             <ContextMenuItemStyled
-              onClick={() =>
-                isMarkedForResponseIntercept
-                  ? unmarkForResponseIntercept(id)
-                  : markForResponseIntercept(id)
-              }
+              onClick={() => handleToggleMark(id, isMarked)}
             >
-              {isMarkedForResponseIntercept ? "Unmark" : "Mark"} Intercept it’s
-              Response
+              {isMarked ? "Unmark" : "Mark"} Intercept it’s Response
             </ContextMenuItemStyled>
           </>
         )}
@@ -166,4 +114,4 @@ export default function Tr({
       </ContextMenuContent>
     </ContextMenu>
   );
-}
+});
