@@ -1,37 +1,31 @@
-import { FaBug, FaServer } from "react-icons/fa";
-import InfoCard from "./components/InfoCard";
-import { IoWarningOutline } from "react-icons/io5";
 import ResultsTable from "./components/ResultsTable";
 import DetailsCard from "./components/DetailsCard";
+import ScannerCacheManager from "./hooks/ScannerCacheManager";
+import { useEffect } from "react";
+import useScannerActions from "./hooks/useScannerActions";
+import { useSearchParams } from "react-router-dom";
+import InfoCardsList from "./components/InfoCardsList";
 
 export default function AIScanner() {
+  const { startScan } = useScannerActions();
+  const [searchParams] = useSearchParams();
+  const url = searchParams.get("url");
+  useEffect(() => {
+    if (url) {
+      startScan(url);
+    }
+  }, []);
   return (
-    <div className="mx-auto flex h-full w-11/12 flex-col gap-2.5 py-5">
-      {/* Info Cards */}
-      <div className="flex items-center gap-2.5">
-        <InfoCard
-          title="Endpoints Scanned"
-          value="142"
-          icon={<FaServer className="text-yellowish-white/10 h-12 w-12" />}
-        />
-        <InfoCard
-          title="Total Payloads"
-          value="12,478"
-          icon={<FaBug className="text-yellowish-white/10 h-12 w-12" />}
-        />
-        <InfoCard
-          title="Endpoints Scanned"
-          value="142"
-          icon={
-            <IoWarningOutline className="text-yellowish-white/10 h-12 w-12" />
-          }
-        />
+    <>
+      <ScannerCacheManager />
+      <div className="mx-auto flex h-full w-11/12 flex-col gap-2.5 overflow-hidden py-5">
+        {/* Info Cards */}
+        <InfoCardsList />
+        {/* Table */}
+        <ResultsTable />
+        {/* Req & Res */}
+        <DetailsCard />
       </div>
-
-      {/* Table */}
-      <ResultsTable />
-      {/* Req & Res */}
-      <DetailsCard />
-    </div>
+    </>
   );
 }

@@ -18,7 +18,7 @@ type TrProps = {
   handleDrop: (id: string) => void;
   handleToggleMark: (id: string, isMarked: boolean) => void;
   isMarked: boolean;
-
+  navigate: (path: string) => void;
   id: string;
   Time: string;
   Type: string;
@@ -40,6 +40,7 @@ export default memo(function Tr({
   handleForward,
   handleDrop,
   handleToggleMark,
+  navigate,
   isMarked,
   id,
   Time,
@@ -97,7 +98,13 @@ export default memo(function Tr({
           Drop
         </ContextMenuItemStyled>
         <div className="bg-yellowish-white! h-[0.5px]! w-full" />
-        <ContextMenuItemStyled>Do Quick Scan</ContextMenuItemStyled>
+        <ContextMenuItemStyled
+          onClick={() => {
+            navigate(`/AiScanner?url=${URL}`);
+          }}
+        >
+          Do Quick Scan
+        </ContextMenuItemStyled>
         {Direction === "Request" && (
           <>
             <div className="bg-yellowish-white! h-px! w-full" />

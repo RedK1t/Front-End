@@ -2,9 +2,12 @@ import Table from "@/components/Table/Table";
 import { Input } from "@/components/ui/input";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useSearchParams } from "react-router-dom";
+import useScannerTraffic from "../hooks/useScannerTraffic";
 
 export default function ResultsTable() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { vulnerabilities } = useScannerTraffic();
+
   return (
     <div className="bg-gray flex w-full flex-col gap-3 rounded-xl p-3">
       <div className="flex w-full items-center justify-between">
@@ -27,7 +30,7 @@ export default function ResultsTable() {
           <FaMagnifyingGlass />
         </div>
       </div>
-      <div className="rounded-6px h-35 overflow-hidden bg-black">
+      <div className="rounded-6px h-52 overflow-hidden bg-black">
         <Table
           headers={[
             "id",
@@ -36,17 +39,13 @@ export default function ResultsTable() {
             "Endpoint",
             "Payload Used",
           ]}
-          data={[
-            ["1", "High", "SQL Injection", "/api/user", "12345"],
-            ["1", "High", "SQL Injection", "/api/user", "12345"],
-            ["1", "High", "SQL Injection", "/api/user", "12345"],
-            ["1", "High", "SQL Injection", "/api/user", "12345"],
-            ["1", "High", "SQL Injection", "/api/user", "12345"],
-            ["1", "High", "SQL Injection", "/api/user", "12345"],
-            ["1", "High", "SQL Injection", "/api/user", "12345"],
-            ["1", "High", "SQL Injection", "/api/user", "12345"],
-            ["1", "High", "SQL Injection", "/api/user", "12345"],
-          ]}
+          data={vulnerabilities.map((vuln) => [
+            vuln.id,
+            "-",
+            "Sql Injection",
+            vuln.url,
+            vuln.payload,
+          ])}
         />
       </div>
     </div>

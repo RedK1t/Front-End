@@ -1,5 +1,5 @@
 import Th from "./Th";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Tr from "./Tr";
 import { useEffect, useMemo, useCallback } from "react";
 import useProxyTraffic from "../../hooks/useProxyTraffic";
@@ -18,6 +18,8 @@ type TableRowProps = {
 };
 
 export default function Table() {
+  const navigate = useNavigate();
+
   const {
     interceptedRequests,
     interceptedResponses,
@@ -186,6 +188,7 @@ export default function Table() {
               handleForward={handleForward}
               handleDrop={handleDrop}
               handleToggleMark={handleToggleMark}
+              navigate={navigate}
               isMarked={markedForResponseIntercept.includes(row.id)}
               {...row}
             />

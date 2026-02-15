@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 type InfoCardProps = {
   title: string;
-  value: string;
+  value: string | number;
   icon: ReactNode;
 };
 export default function InfoCard({ title, value, icon }: InfoCardProps) {
