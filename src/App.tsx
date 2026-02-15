@@ -18,6 +18,7 @@ import Repeater from "./features/repeater/Repeater";
 import Intruder from "./features/intruder/Intruder";
 import Tools from "./features/tools/Tools";
 import ProxyLayout from "./features/ProxyLayout";
+import AIScanner from "./features/AI-Scanner/AIScanner";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "/AiScanner",
+        element: <AIScanner />,
+      },
+      {
         path: "/tools",
         element: <Tools />,
       },
@@ -89,7 +94,7 @@ export default function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
         <DomainProvider>
           <SubdomainProvider>
             <RouterProvider router={router} />

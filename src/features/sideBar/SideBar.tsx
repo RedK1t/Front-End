@@ -57,7 +57,7 @@ export default function SideBar() {
       <NavItem
         icon={scannerIcon}
         text="AI Vulnerability Scanner"
-        to="/"
+        to="/AiScanner"
         isOpen={isOpen}
       />
 

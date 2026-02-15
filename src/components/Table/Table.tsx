@@ -42,9 +42,9 @@ export default function Table({ headers, data }: TableProps) {
     return 0;
   });
   return (
-    <div className="overflow-auto">
+    <div className="h-full overflow-auto">
       <table className="w-full">
-        <thead className="small-text text-yellowish-white bg-yellowish-white/15">
+        <thead className="small-text text-yellowish-white bg-yellowish-white/15 sticky top-0 z-10 backdrop-blur-md">
           <tr>
             {headers.map((header, i) => (
               <Th

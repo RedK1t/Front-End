@@ -4,7 +4,7 @@ export default function TargetCardList() {
   return (
     <div className="mx-auto mt-14 flex w-full flex-wrap items-center justify-center gap-4 pb-14 md:w-11/12 lg:justify-start xl:w-10/12">
       <TargetCard isNew={true} />
-      {/* <TargetCard
+      <TargetCard
         targetName="Stripe"
         targetDomain="api.stripe.com"
         vulnerabilitiesFound={12}
@@ -57,7 +57,7 @@ export default function TargetCardList() {
         targetDomain="www.dropbox.com"
         vulnerabilitiesFound={31}
         lastScanned="8 hours ago"
-      /> */}
+      />
     </div>
   );
 }

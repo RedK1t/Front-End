@@ -8,7 +8,7 @@ import SwitchButton from "@/components/SwitchButton";
 import ArrowsRightLeft from "@/assets/ArrowsRightLeft.svg";
 
 type requestOrResponse = {
-  requestAndResponse?: false;
+  requestAndResponse: false;
   type: "Request" | "Response" | "Request Template";
   text?: string;
   requestText?: undefined;
@@ -163,13 +163,13 @@ export default function ReqResContent({
         </div>
         <button
           onClick={handlePrev}
-          className="rounded-6px bg-gray flex h-full w-12 cursor-pointer items-center justify-center"
+          className="rounded-6px bg-gray flex h-9 w-12 cursor-pointer items-center justify-center"
         >
           <FaArrowLeft />
         </button>
         <button
           onClick={handleNext}
-          className="rounded-6px bg-gray flex h-full w-12 cursor-pointer items-center justify-center"
+          className="rounded-6px bg-gray flex h-9 w-12 cursor-pointer items-center justify-center"
         >
           <FaArrowRight />
         </button>
