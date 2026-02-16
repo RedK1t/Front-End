@@ -34,6 +34,7 @@ ENV VITE_proxy_websocket_url=ws://localhost:5050/ws \
     VITE_web_check_url=http://localhost:3001/api \
     VITE_DEV_whois=http://localhost:3000 \
     VITE_scanner_websocket_url=ws://localhost:3006 \
-    VITE_web_check_local_url=http://localhost:3001/api
+    VITE_web_check_local_url=http://localhost:3001/api \
+    VITE_generateReport_REST_url=http://localhost:3002/api
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
