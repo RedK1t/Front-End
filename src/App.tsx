@@ -19,6 +19,7 @@ import Intruder from "./features/intruder/Intruder";
 import Tools from "./features/tools/Tools";
 import ProxyLayout from "./features/ProxyLayout";
 import AIScanner from "./features/AI-Scanner/AIScanner";
+import AiReport from "./features/Ai-Report/AiReport";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
       {
         path: "/AiScanner",
         element: <AIScanner />,
+      },
+      {
+        path: "/AiReport",
+        element: <AiReport />,
       },
       {
         path: "/tools",

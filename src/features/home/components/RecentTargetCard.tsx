@@ -51,7 +51,9 @@ export default function RecentTargetCard({
         <div className="flex items-center justify-between">
           {/* Header Content */}
           <div className="flex flex-col">
-            <p className="heading-text text-white">{targetName}</p>
+            <p className="heading-text text-white">
+              {targetName?.charAt(0)?.toUpperCase() + targetName?.slice(1)}
+            </p>
             <p className="normal-text text-yellowish-white">{targetDomain}</p>
           </div>
           {/* Header Icon */}

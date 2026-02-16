@@ -103,7 +103,7 @@ export default function SideBar() {
       <NavItem
         icon={reportIcon}
         text="Report Generation"
-        to="/"
+        to="/AiReport"
         isOpen={isOpen}
       />
 

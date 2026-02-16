@@ -38,7 +38,7 @@ export default function NewTargetCard() {
         JSON.stringify([
           {
             targetDomain: domainInput,
-            lastScanned: new Date().toLocaleString(),
+            lastScanned: new Date(),
             vulnerabilitiesFound: 0,
           },
         ]),
@@ -163,12 +163,25 @@ export default function NewTargetCard() {
                   if (scannedSubdomains.length > 0) {
                     localStorage.setItem(
                       "scannedSubdomains",
-                      JSON.stringify([...scannedSubdomains, domainInput]),
+                      JSON.stringify([
+                        ...scannedSubdomains,
+                        {
+                          targetDomain: domainInput,
+                          lastScanned: new Date(),
+                          vulnerabilitiesFound: 0,
+                        },
+                      ]),
                     );
                   } else {
                     localStorage.setItem(
                       "scannedSubdomains",
-                      JSON.stringify([domainInput]),
+                      JSON.stringify([
+                        {
+                          targetDomain: domainInput,
+                          lastScanned: new Date(),
+                          vulnerabilitiesFound: 0,
+                        },
+                      ]),
                     );
                   }
                   setDomain(domainInput);
