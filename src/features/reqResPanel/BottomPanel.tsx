@@ -19,6 +19,7 @@ export default function BottomPanel({
         <div className="mx-auto flex h-full w-11/12 items-start justify-between space-x-5">
           <div className="h-full w-1/2">
             <ReqResContent
+              requestAndResponse={false}
               type="Request"
               editableProp={editable}
               text={requestText}
@@ -28,6 +29,7 @@ export default function BottomPanel({
           <div className="border-red h-full border-r" />
           <div className="h-full w-1/2">
             <ReqResContent
+              requestAndResponse={false}
               type="Response"
               text={responseText}
               editableProp={editable}

@@ -17,6 +17,7 @@ export default function Intruder() {
             {/* Top Left Panel */}
             <Panel className="w-full pr-3 pl-14" defaultSize={50} minSize={30}>
               <ReqResContent
+                requestAndResponse={false}
                 type="Request Template"
                 comment="(Use § for positions)"
               />

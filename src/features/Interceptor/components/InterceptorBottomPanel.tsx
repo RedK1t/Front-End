@@ -31,6 +31,7 @@ export default function InterceptorBottomPanel() {
               editableProp={selectedItemRequest ? true : false}
               text={request}
               onBlur={(val) => updateInterceptedRequest(selected, val)}
+              requestAndResponse={false}
             />
           </div>
           {/* Border */}
@@ -45,6 +46,7 @@ export default function InterceptorBottomPanel() {
               text={response}
               editableProp={selectedItemResponse ? true : false}
               onBlur={(val) => updateInterceptedResponse(selected, val)}
+              requestAndResponse={false}
             />
           </div>
         </div>
