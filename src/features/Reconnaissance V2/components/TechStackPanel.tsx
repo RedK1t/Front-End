@@ -284,38 +284,45 @@ export default function TechStackPanel() {
     >
       {technologies.map((tech, index) => {
         return (
-          <div key={`tech-stack-row-${index}`}>
-            <div className="r1">
-              <h4>
+          <div
+            key={`tech-stack-row-${index}`}
+            className="rounded-6px bg-black p-2"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h4 className="mid-text text-light-red">
                 {tech.name}
-                <span className="tech-version">
+                <span className="normal-text text-dark-yellowish-white ml-1">
                   {tech.version ? `(v${tech.version})` : ""}
                 </span>
               </h4>
-              <span
-                className="tech-confidence"
-                title={`${tech.confidence}% certain`}
-              >
-                Certainty: {tech.confidence}%
-              </span>
-              <span className="tech-categories">
+              <span className="normal-text text-dark-yellowish-white">
                 {tech.categories.map(
                   (cat, i) =>
                     `${cat.name}${i < tech.categories.length - 1 ? ", " : ""}`,
                 )}
               </span>
             </div>
-            <div className="r2">
+            <div className="flex items-center gap-2">
               <img
-                className="tech-icon"
+                className="rounded-6px mx-2 min-w-10"
                 width="10"
                 src={`${iconsCdn}${tech.icon}`}
                 alt={tech.name}
               />
               <div>
-                <p className="tech-description">{tech.description}</p>
-                <p className="tech-website">
-                  Learn more at: <a href={tech.website}>{tech.website}</a>
+                <p className="normal-text text-yellowish-white italic">
+                  {tech.description}
+                </p>
+                <p className="normal-text">
+                  Learn more at:{" "}
+                  <a
+                    className="text-blue"
+                    target="_blank"
+                    rel="noreferrer"
+                    href={tech.website}
+                  >
+                    {tech.website}
+                  </a>
                 </p>
               </div>
             </div>

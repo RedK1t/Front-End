@@ -107,7 +107,7 @@ export default function Panel({
       {!isFetching && !error && !isNoData && (
         <div
           ref={ref}
-          className="flex h-full w-full flex-col gap-y-2 overflow-auto"
+          className="flex h-full w-full flex-col gap-y-2 overflow-y-auto"
         >
           {children}
         </div>
