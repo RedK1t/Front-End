@@ -27,7 +27,7 @@ function useGetTechStack() {
     queryKey: ["tech-stack", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
-        ? "/web-check-proxy"
+        ? import.meta.env.VITE_web_check_local_url
         : import.meta.env.VITE_web_check_url;
       const res = await fetch(`${baseUrl}/tech-stack?url=${domain}`);
       return res.json();

@@ -15,7 +15,7 @@ function useGetHttpSecurity() {
     queryKey: ["http-security", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
-        ? "/web-check-proxy"
+        ? import.meta.env.VITE_web_check_local_url
         : import.meta.env.VITE_web_check_url;
       const res = await fetch(`${baseUrl}/http-security?url=${domain}`);
       return res.json();

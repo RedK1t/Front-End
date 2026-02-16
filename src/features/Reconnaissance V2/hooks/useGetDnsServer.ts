@@ -18,7 +18,7 @@ function useGetDnsServer() {
     queryKey: ["dns-server", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
-        ? "/web-check-proxy"
+        ? import.meta.env.VITE_web_check_local_url
         : import.meta.env.VITE_web_check_url;
       const res = await fetch(`${baseUrl}/dns-server?url=${domain}`);
       return res.json();

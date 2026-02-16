@@ -13,14 +13,5 @@ export default defineConfig(({ mode }) => {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
     },
-    server: {
-      proxy: {
-        "/web-check-proxy": {
-          target: env.VITE_web_check_url,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/web-check-proxy/, ""),
-        },
-      },
-    },
   };
 });

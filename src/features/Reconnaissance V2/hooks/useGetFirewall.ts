@@ -12,7 +12,7 @@ function useGetFirewall() {
     queryKey: ["firewall", domain],
     queryFn: async () => {
       const baseUrl = import.meta.env.DEV
-        ? "/web-check-proxy"
+        ? import.meta.env.VITE_web_check_local_url
         : import.meta.env.VITE_web_check_url;
       const res = await fetch(`${baseUrl}/firewall?url=${domain}`);
       return res.json();
