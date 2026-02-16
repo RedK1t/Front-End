@@ -1,5 +1,9 @@
+import { useDomain } from "@/context/DomainContext";
 import uparrowIcon from "../../../assets/uparrowIcon.svg";
 import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
+import { FaArrowRight } from "react-icons/fa6";
 
 type RecentTargetCardProps = {
   targetName: string;
@@ -24,6 +28,8 @@ export default function RecentTargetCard({
   vulnerabilitiesFound,
   lastScanned,
 }: RecentTargetCardProps) {
+  const { setDomain } = useDomain();
+  const navigate = useNavigate();
   return (
     <motion.div
       initial={{
@@ -72,10 +78,21 @@ export default function RecentTargetCard({
           <div className="flex flex-col items-end justify-between">
             <div className="flex flex-col gap-1 text-end">
               <p className="normal-text">Last Scanned</p>
-              <p className="normal-text text-red">{lastScanned}</p>
+              <p className="normal-text text-red">
+                {formatDistanceToNow(new Date(lastScanned), {
+                  addSuffix: true,
+                })}
+              </p>
             </div>
-            <button className="small-text shadow-red/20 hover:shadow-red/50 border-button-glow cursor-pointer rounded-md border bg-black px-2 py-1 text-white shadow-[0_0_15px]">
+            <button
+              onClick={() => {
+                setDomain(targetDomain);
+                navigate(`/reconnaissance`);
+              }}
+              className="small-text group border-red/30 hover:border-red/60 hover:bg-red/10 flex cursor-pointer items-center gap-1 rounded-lg border bg-black/10 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_10px_rgba(206,50,50,0.3)] active:scale-95"
+            >
               Manage
+              <FaArrowRight />
             </button>
           </div>
         </div>
