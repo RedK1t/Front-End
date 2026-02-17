@@ -1,5 +1,5 @@
 import { chatWithGroq } from "@/api/groqApi";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 function useGetCompInfo() {
   const models = [
@@ -60,20 +60,15 @@ function useGetCompInfo() {
 `,
     },
   ]);
-  const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
   const modelNumber = useRef(0);
 
-  function handleSendMessage(text = "") {
-    const messageContent = typeof text === "string" ? text : "";
-    if (!input.trim() && !messageContent.trim()) return;
-
-    const userMessage = { role: "user", content: input || messageContent };
+  function handleSendMessage(text: string) {
+    const userMessage = { role: "user", content: text };
     const newMessages = [...messages, userMessage];
 
     setMessages(newMessages);
-    setInput("");
     setIsLoading(true);
 
     chatWithGroq({
@@ -106,8 +101,6 @@ function useGetCompInfo() {
   }
   return {
     messages,
-    input,
-    setInput,
     handleSendMessage,
     messagesRef,
     isLoading,
