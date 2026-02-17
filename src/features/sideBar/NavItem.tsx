@@ -9,6 +9,7 @@ type NavItemProps = {
   isOpen: boolean;
   nested?: boolean;
   children?: React.ReactNode;
+  disabled?: boolean;
 };
 
 export default function NavItem({
@@ -18,6 +19,7 @@ export default function NavItem({
   isOpen,
   nested = false,
   children,
+  disabled = false,
 }: NavItemProps) {
   const [isNestedOpen, setIsNestedOpen] = useState(false);
   const { pathname } = useLocation();
@@ -40,16 +42,24 @@ export default function NavItem({
     <div className="flex w-full flex-col">
       <Link
         to={
-          nested ? { pathname: location.pathname, search: location.search } : to
+          disabled
+            ? { pathname: location.pathname, search: location.search }
+            : nested
+              ? { pathname: location.pathname, search: location.search }
+              : to
         }
-        className={`flex ${isOpen ? "w-full" : "w-fit"} ${isActive && isOpen ? isActiveStyles : ""} hover:bg-red items-center gap-x-3 rounded-lg pr-7 transition-all duration-200`}
-        onClick={handleClick}
+        className={`flex ${isOpen ? "w-full" : "w-fit"} ${isActive && isOpen ? isActiveStyles : ""} ${disabled ? "cursor-not-allowed opacity-40" : "hover:bg-red"} items-center gap-x-3 rounded-lg pr-7 transition-all duration-200`}
+        onClick={disabled ? undefined : handleClick}
       >
         {/* NavItem Icon */}
         <div
-          className={`flex h-10 w-10 items-center justify-center ${isActive ? isActiveStyles : ""}`}
+          className={`flex h-10 w-10 items-center justify-center ${isActive && !disabled ? isActiveStyles : ""} ${disabled ? "grayscale" : ""}`}
         >
-          <img src={icon} alt={text} className={`h-4 w-4`} />
+          <img
+            src={icon}
+            alt={text}
+            className={`h-4 w-4 ${disabled ? "opacity-60" : ""}`}
+          />
         </div>
 
         {/* NavItem Text */}

@@ -45,6 +45,7 @@ export default function SitemapPanel() {
         normalSiteMap.map((subpage, index) => {
           return (
             <DataRow
+              breakLabel={true}
               label={getPathFromUrl(subpage.loc[0])}
               key={index}
               value=""

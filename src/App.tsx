@@ -35,13 +35,13 @@ const queryClient = new QueryClient({
 
 const router = createBrowserRouter([
   {
-    path: "/",
     ErrorBoundary: ErrorFallback,
-    element: <Home />,
-  },
-  {
     element: <AppLayout />,
     children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
       {
         path: "/Reconnaissance",
         children: [

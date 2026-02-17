@@ -15,18 +15,23 @@ export default function SidePanel() {
     return <div>Error fetching endpoints</div>;
   }
   function createFolder(endpoints: endpoint[], depth: number = 0) {
+    const seenFolders = new Set<string>();
+
     return endpoints.map((endpoint) => {
-      if (
-        depth !== 0 &&
-        (endpoint.children === undefined || endpoint.children.length === 0)
-      )
+      if (depth !== 0 && (!endpoint.children || endpoint.children.length === 0))
         return;
+
+      const folderName = endpoint.url.split("//")[1]?.split("/")[depth];
+      if (!folderName || seenFolders.has(folderName)) return;
+
+      seenFolders.add(folderName);
+
       return (
         <FolderItem
-          key={endpoint.id}
+          key={`${endpoint.id}-${depth}`}
           id={endpoint.url.split("//")[1]}
           withLine={depth !== 0}
-          folderName={endpoint.url.split("//")[1].split("/")[depth]}
+          folderName={folderName}
         >
           {endpoint.children?.map((child) => createFolder([child], depth + 1))}
         </FolderItem>

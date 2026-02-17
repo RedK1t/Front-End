@@ -1,7 +1,7 @@
 import { chatWithGroq } from "@/api/groqApi";
 import { useEffect, useRef, useState } from "react";
 
-function useChat() {
+function useGetCompInfo() {
   const models = [
     "openai/gpt-oss-120b", // Egyptian Slang: Brins (Perfect) | Expert (High-Capacity) | Aug 2025
     "llama-3.3-70b-versatile", // Egyptian Slang: Saye' (Natural) | Advanced (Versatile) | Dec 2024
@@ -59,23 +59,11 @@ function useChat() {
       - "/tools": Collection of utility tools for encoding, decoding, and various security testing operations
 `,
     },
-    {
-      role: "assistant",
-      content: "أهلاً! أقدر أساعدك إزاي؟",
-    },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
   const modelNumber = useRef(0);
-
-  useEffect(() => {
-    // Scroll to the bottom of the messages container
-    messagesRef?.current?.scrollTo({
-      top: messagesRef.current.scrollHeight,
-      behavior: "smooth",
-    });
-  }, [messages]);
 
   function handleSendMessage(text = "") {
     const messageContent = typeof text === "string" ? text : "";
@@ -126,4 +114,4 @@ function useChat() {
   };
 }
 
-export default useChat;
+export default useGetCompInfo;

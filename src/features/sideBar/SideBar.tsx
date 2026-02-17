@@ -13,10 +13,12 @@ import toolsIcon from "../../assets/toolsIcon.svg";
 import settingsIcon from "../../assets/settingsIconCropped.svg";
 import { useEffect, useRef, useState } from "react";
 import NavItem from "./NavItem";
+import { useDomain } from "@/context/DomainContext";
 
 export default function SideBar() {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const { domain, selectedSubdomain } = useDomain();
 
   // Handle SideBar Open/Close on Mouse Enter/Leave
   useEffect(() => {
@@ -52,13 +54,7 @@ export default function SideBar() {
         text="Reconnaissance"
         to="/reconnaissance"
         isOpen={isOpen}
-      />
-
-      <NavItem
-        icon={scannerIcon}
-        text="AI Vulnerability Scanner"
-        to="/AiScanner"
-        isOpen={isOpen}
+        disabled={!domain}
       />
 
       <NavItem
@@ -73,6 +69,9 @@ export default function SideBar() {
           text="Sitemap"
           to="/proxy/sitemap/standard"
           isOpen={isOpen}
+          disabled={
+            !domain || !selectedSubdomain || !selectedSubdomain.includes(domain)
+          }
         />
         <NavItem
           icon={scopeAndFiltersIcon}
@@ -101,6 +100,13 @@ export default function SideBar() {
       </NavItem>
 
       <NavItem
+        icon={scannerIcon}
+        text="AI Vulnerability Scanner"
+        to="/AiScanner"
+        isOpen={isOpen}
+      />
+
+      <NavItem
         icon={reportIcon}
         text="Report Generation"
         to="/AiReport"
@@ -117,7 +123,12 @@ export default function SideBar() {
         isOpen={isOpen}
       />
 
-      <NavItem icon={settingsIcon} text="Settings" to="/" isOpen={isOpen} />
+      <NavItem
+        icon={settingsIcon}
+        text="Settings"
+        to="/settings"
+        isOpen={isOpen}
+      />
     </div>,
     sidebarRoot,
   );

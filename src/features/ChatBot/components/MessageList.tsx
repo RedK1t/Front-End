@@ -22,7 +22,7 @@ function MessageList({ messages, messagesRef, isLoading }: MessageListProps) {
                 style={{ unicodeBidi: "isolate" }}
                 className="text-yellowish-white max-w-[95%] rounded-2xl rounded-bl-none bg-black/30 px-4 py-2 text-start text-sm shadow-sm"
               >
-                {item.content}
+                {item.content.replace(/\[\[.*?\]\]/g, "")}
               </div>
             </div>
           );
