@@ -1,5 +1,5 @@
 import refetchImg from "@/assets/refetch.svg";
-import Loader from "@/components/Loader";
+// import Loader from "@/components/Loader";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 type PanelFilterProps = {
@@ -72,14 +72,14 @@ export default function Panel({
       </div>
 
       {/* Loading */}
-      {isFetching && (
+      {/* {isFetching && (
         <div className="flex h-52 items-center justify-center">
           <Loader />
         </div>
-      )}
+      )} */}
 
       {/* Error */}
-      {error && (
+      {/* {error && (
         <div className="flex flex-col items-center justify-center gap-4">
           <div className="flex flex-col items-center gap-1">
             <p className="text-light-red normal-text font-bold">
@@ -101,7 +101,7 @@ export default function Panel({
             <span className="normal-text font-bold text-white">Retry</span>
           </button>
         </div>
-      )}
+      )} */}
 
       {/* Data */}
       {!isFetching && !error && !isNoData && (
