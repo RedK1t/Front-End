@@ -7,16 +7,16 @@ export default function Filters() {
     <div className="mx-auto flex w-11/12 items-center justify-between pt-11">
       {/* Dig Filter */}
       <div className="bg-gray text-yellowish-white flex items-center gap-1 rounded-md px-2 py-1">
-        <FilterTab paramName="dig" paramData="Whois" isDefault>
+        <FilterTab paramName="dig" paramData="WHOIS" isDefault>
           WHOIS
         </FilterTab>
-        <FilterTab paramName="dig" paramData="Dns">
+        <FilterTab paramName="dig" paramData="DNS">
           DNS Records
         </FilterTab>
-        <FilterTab paramName="dig" paramData="Ssl">
+        <FilterTab paramName="dig" paramData="SSL">
           SSL/TLS
         </FilterTab>
-        <FilterTab paramName="dig" paramData="Info">
+        <FilterTab paramName="dig" paramData="INFO">
           INFO
         </FilterTab>
       </div>

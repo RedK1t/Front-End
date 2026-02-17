@@ -13,7 +13,6 @@ export default function RobotsTxtPanel() {
       error={error}
       refetch={refetch}
     >
-      {robots.length === 0 && <p>No crawl rules found.</p>}
       {robots.map((row, index) => {
         return (
           <DataRow

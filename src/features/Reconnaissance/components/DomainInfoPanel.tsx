@@ -1,15 +1,23 @@
 import { useSearchParams } from "react-router-dom";
-import copyIcon from "../../../assets/copyIcon.svg";
-import exportIcon from "../../../assets/ExportIcon.svg";
+// import copyIcon from "../../../assets/copyIcon.svg";
+// import exportIcon from "../../../assets/ExportIcon.svg";
 import InfoRow from "./InfoRow";
 import useWhoisDnsRecords from "../hooks/useWhoisDnsRecords";
 import useGetCrt from "../hooks/useGetCrt";
 import CrtRow from "./CrtRow";
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
+import useGetCompInfo from "../hooks/useGetCompInfo";
+import Markdown from "react-markdown";
+import Loader from "@/components/Loader";
 
 export default function DomainInfoPanel() {
   const [searchParams] = useSearchParams();
+  const {
+    data: compInfo,
+    isLoading: compInfoIsLoading,
+    error: compInfoError,
+  } = useGetCompInfo();
   const { data, error, isFetching } = useWhoisDnsRecords();
   const {
     data: crtData,
@@ -17,16 +25,16 @@ export default function DomainInfoPanel() {
     error: crtError,
   } = useGetCrt();
 
-  const filter = searchParams.get("dig") || "Whois";
+  const filter = searchParams.get("dig") || "WHOIS";
   return (
     /*  Panel */
-    <div className="bg-gray flex h-[80dvh] w-full flex-col gap-y-10 rounded-md px-6 py-6 lg:w-1/2">
+    <div className="bg-gray flex h-[80dvh] w-full flex-col gap-y-5 rounded-md px-6 py-6 lg:w-1/2">
       {/*  Header */}
       <div className="flex w-full items-center justify-between">
-        <p className="large-text text-white">{filter} information</p>
+        <p className="large-text text-white">{filter}</p>
 
         {/*  Header Buttons */}
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <button className="bg-gray normal-text border-dark-yellowish-white flex cursor-pointer gap-3.5 rounded-md border px-2.5 py-2">
             <img src={copyIcon} alt="copy icon" />
             Copy
@@ -35,15 +43,15 @@ export default function DomainInfoPanel() {
             <img src={exportIcon} alt="export icon" />
             Export
           </button>
-        </div>
+        </div> */}
       </div>
 
-      {/*  Domain Info */}
+      {/*  Domain INFO */}
       <div
         key={filter}
         className="flex flex-col gap-3 overflow-x-hidden overflow-y-auto"
       >
-        {isFetching && (filter === "Dns" || filter === "Whois") && (
+        {isFetching && (filter === "DNS" || filter === "WHOIS") && (
           <div className="flex justify-center">
             <span className="loading bg-red loading-spinner h-12 w-12"></span>
           </div>
@@ -52,7 +60,7 @@ export default function DomainInfoPanel() {
         {!data?.success && (
           <p className="text-red text-center">{data?.error}</p>
         )}
-        {data?.success && filter === "Dns" && (
+        {data?.success && filter === "DNS" && (
           <motion.div
             variants={{
               hidden: { opacity: 0 },
@@ -112,7 +120,7 @@ export default function DomainInfoPanel() {
           </motion.div>
         )}
         {data?.success &&
-          filter === "Whois" &&
+          filter === "WHOIS" &&
           (() => {
             const whoisData = data.whois;
             if (!whoisData || Object.keys(whoisData).length === 0) {
@@ -168,15 +176,15 @@ export default function DomainInfoPanel() {
               </motion.div>
             );
           })()}
-        {crtIsLoading && filter === "Ssl" && (
+        {crtIsLoading && filter === "SSL" && (
           <div className="flex justify-center">
             <span className="loading bg-red loading-spinner h-12 w-12"></span>
           </div>
         )}
-        {crtError && filter === "Ssl" && (
+        {crtError && filter === "SSL" && (
           <p className="text-red text-center">{crtError.message}</p>
         )}
-        {crtData && filter === "Ssl" && (
+        {crtData && filter === "SSL" && (
           <motion.div
             variants={{
               hidden: { opacity: 0 },
@@ -201,6 +209,35 @@ export default function DomainInfoPanel() {
               </InfoRowAnimation>
             ))}
           </motion.div>
+        )}
+        {compInfoIsLoading && filter === "INFO" && (
+          <div className="flex justify-center">
+            <Loader />
+          </div>
+        )}
+        {compInfoError && filter === "INFO" && (
+          <p className="text-red text-center">{compInfoError.message}</p>
+        )}
+        {compInfo !== undefined && filter === "INFO" && (
+          <Markdown
+            components={{
+              strong: ({ children }) => (
+                <span className="text-red mid-text font-bold">{children}</span>
+              ),
+              p: ({ children }) => (
+                <span className="normal-text text-yellowish-white">
+                  {children}
+                </span>
+              ),
+              ul: ({ children }) => (
+                <span className="normal-text text-yellowish-white">
+                  {children}
+                </span>
+              ),
+            }}
+          >
+            {compInfo.choices[0].message.content}
+          </Markdown>
         )}
       </div>
     </div>

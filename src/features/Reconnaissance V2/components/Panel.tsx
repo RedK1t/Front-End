@@ -34,7 +34,7 @@ export default function Panel({
   useEffect(() => {
     setIsNoData(ref?.current?.innerHTML === "");
   }, [children]);
-
+  if (isFetching || error || isNoData) return null;
   return (
     <div className="bg-gray rounded-6px text-dark-yellowish-white mb-4 flex h-fit max-h-150 min-h-20 w-full break-inside-avoid flex-col gap-2 overflow-hidden p-3">
       {/*Header */}

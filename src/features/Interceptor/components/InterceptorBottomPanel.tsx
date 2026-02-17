@@ -18,6 +18,7 @@ export default function InterceptorBottomPanel() {
   const request =
     selectedItemRequest?.raw || selectedItemResponse?.parent_request.raw;
   const response = selectedItemResponse?.raw_response || "";
+  if (!selectedItemRequest && !selectedItemResponse) return null;
   return (
     <div className="flex h-full flex-col">
       {/* <Header /> */}
