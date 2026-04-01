@@ -1,14 +1,12 @@
 import { useDomain } from "@/context/DomainContext";
-import uparrowIcon from "../../../assets/uparrowIcon.svg";
-import { motion } from "motion/react";
-import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
+import { motion } from "motion/react";
 import { FaArrowRight } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 type RecentTargetCardProps = {
   targetName: string;
   targetDomain: string;
-  vulnerabilitiesFound: number;
   lastScanned: string;
 };
 
@@ -25,7 +23,7 @@ function CompanyLogo({ domain }: { domain: string }) {
 export default function RecentTargetCard({
   targetName,
   targetDomain,
-  vulnerabilitiesFound,
+
   lastScanned,
 }: RecentTargetCardProps) {
   const { setDomain } = useDomain();
@@ -62,30 +60,17 @@ export default function RecentTargetCard({
 
         {/* Content */}
         <div className="flex justify-between">
-          {/* Content Left */}
-          <div className="flex w-1/2 flex-col gap-2">
-            <p className="normal-text text-white">Vulnerabilities Found</p>
-            <div className="flex items-end">
-              <p className="heading-text text-red text-shadow-red text-shadow-[0_0_24px_rgba(255,0,0,1)]">
-                {vulnerabilitiesFound}
-              </p>
-              <img
-                src={uparrowIcon}
-                alt="Up Arrow Icon"
-                className="h-5 w-5 -translate-y-1/4"
-              />
-            </div>
+          <div className="flex flex-col gap-1 text-start">
+            <p className="normal-text">Last Scanned</p>
+            <p className="normal-text text-red">
+              {formatDistanceToNow(new Date(lastScanned), {
+                addSuffix: true,
+              })}
+            </p>
           </div>
+
           {/* Content Right */}
-          <div className="flex flex-col items-end justify-between">
-            <div className="flex flex-col gap-1 text-end">
-              <p className="normal-text">Last Scanned</p>
-              <p className="normal-text text-red">
-                {formatDistanceToNow(new Date(lastScanned), {
-                  addSuffix: true,
-                })}
-              </p>
-            </div>
+          <div className="flex items-end">
             <button
               onClick={() => {
                 setDomain(targetDomain);

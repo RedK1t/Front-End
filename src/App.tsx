@@ -20,6 +20,7 @@ import Tools from "./features/tools/Tools";
 import ProxyLayout from "./features/ProxyLayout";
 import AIScanner from "./features/AI-Scanner/AIScanner";
 import AiReport from "./features/Ai-Report/AiReport";
+import { Login, Signup } from "./features/auth";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
       },
       {
         path: "/Reconnaissance",

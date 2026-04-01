@@ -9,8 +9,11 @@ import { motion } from "motion/react";
 import { useSubdomainContext } from "@/context/SubdomainContext";
 import BinaryToggle from "@/components/BinaryToggle";
 import type { RecentScannedSubdomains } from "@/features/types";
+import useGetUser from "../hooks/useGetUser";
 
 export default function NewTargetCard() {
+  const { data: user } = useGetUser();
+
   const [domainInput, setDomainInput] = useState("");
   const { setDomain } = useDomain();
   const { scanSubdomains, setScanSubdomains } = useSubdomainContext();
@@ -70,7 +73,7 @@ export default function NewTargetCard() {
       viewport={{ once: true }}
     >
       <button
-        onClick={openModal}
+        onClick={() => (user ? openModal() : navigate("/login"))}
         className="bg-gray/80 hover:border-red/30 group flex h-52 w-72 cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border border-white/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(206,50,50,0.15)]"
       >
         <div className="group-hover:bg-red/10 flex h-16 w-16 items-center justify-center rounded-full bg-white/5 transition-colors duration-300">

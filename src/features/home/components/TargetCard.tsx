@@ -5,7 +5,6 @@ type RecentTargetCardProps = {
   isNew?: false;
   targetName: string;
   targetDomain: string;
-  vulnerabilitiesFound: number;
   lastScanned: string;
 };
 
@@ -25,13 +24,11 @@ export default function TargetCard(props: TargetCardProps) {
 
   // If the card is not new, return a regular target card
   if (!isNew) {
-    const { targetName, targetDomain, vulnerabilitiesFound, lastScanned } =
-      props;
+    const { targetName, targetDomain, lastScanned } = props;
     return (
       <RecentTargetCard
         targetName={targetName}
         targetDomain={targetDomain}
-        vulnerabilitiesFound={vulnerabilitiesFound}
         lastScanned={lastScanned}
       />
     );

@@ -8,7 +8,7 @@ export default function Home() {
   useEffect(() => {
     setDomain("");
     setSelectedSubdomain("");
-  }, []);
+  }, [setDomain, setSelectedSubdomain]);
   return (
     <div>
       <Navbar />
