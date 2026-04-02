@@ -9,3 +9,11 @@ export type RecentTarget = {
   domain: string;
   created_at: string;
 };
+
+export type SupabaseSubdomain = {
+  name: string;
+  ips: string[];
+  target_domain: string;
+  status_code?: number;
+  url?: string;
+};

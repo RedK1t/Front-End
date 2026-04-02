@@ -3,17 +3,50 @@ import exportIcon from "../../../assets/ExportIcon.svg";
 import SubdomainRow from "./SubdomainRow";
 import useSubdomains from "../hooks/useSubdomains";
 import { motion } from "motion/react";
+import { insertSubdomains } from "@/api/supabase";
+import { useDomain } from "@/context/DomainContext";
+import { useEffect } from "react";
+import useGetSubdomains from "@/hooks/useGetSubdomains";
+import Loader from "@/components/Loader";
 
 export default function SubdomainsPanel() {
   const [searchParams] = useSearchParams();
-
+  const { domain } = useDomain();
+  const { data, isLoading } = useGetSubdomains();
   const {
     progress,
     dnsSubdomains,
     httpSubdomains,
     numberOfResults,
-    elapsedTime,
-  } = useSubdomains();
+    isScanning,
+  } = useSubdomains(!isLoading && data?.length === 0);
+
+  useEffect(() => {
+    if (!isScanning && progress === 100) {
+      const subdomainsToInsert = dnsSubdomains
+        .map((item) => {
+          return {
+            name: item.subdomain,
+            ips: item.ips,
+            target_domain: domain || "",
+          };
+        })
+        .concat(
+          httpSubdomains.map((item) => ({
+            name: item.subdomain,
+            ips: item.ips,
+            target_domain: domain || "",
+            status_code: item.status,
+            url: item.url,
+          })),
+        );
+      try {
+        insertSubdomains(subdomainsToInsert);
+      } catch (error) {
+        console.error("Error inserting subdomains:", error);
+      }
+    }
+  }, [dnsSubdomains, httpSubdomains, domain, progress, isScanning]);
   const filter = searchParams.get("subdomain") || "all";
   return (
     /*  Panel */
@@ -33,57 +66,46 @@ export default function SubdomainsPanel() {
         </div>
       </div>
 
+      {/*  Subdomains Count */}
       <div className="flex h-fit w-full items-center overflow-hidden">
         <div
-          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${progress === 100 && filter === "all" ? "w-full opacity-100" : "w-0 overflow-hidden opacity-0"}`}
+          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${(progress === 100 || (data && data.length > 0)) && filter === "all" ? "w-full opacity-100" : "w-0 overflow-hidden opacity-0"}`}
         >
           <div className="normal-text text-yellowish-white flex items-center gap-1">
             <p>Found</p>
-            <span className="text-red">{numberOfResults}</span>
-            <p>subdomains in</p>
-            <span className="text-red">{elapsedTime}</span>
-            <p>seconds</p>
-          </div>
-        </div>
-        <div
-          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${progress === 100 && filter === "web" ? "w-full opacity-100" : "w-0 overflow-hidden opacity-0"}`}
-        >
-          <div className="normal-text text-yellowish-white flex items-center gap-1">
-            <p>Found</p>
-            <span className="text-red">{httpSubdomains?.length}</span>
+            <span className="text-red">{numberOfResults || data?.length}</span>
             <p>subdomains</p>
           </div>
         </div>
         <div
-          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${progress === 100 && filter === "other" ? "w-full opacity-100" : "w-0 overflow-hidden opacity-0"}`}
+          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${(progress === 100 || !isLoading) && filter === "web" ? "w-full opacity-100" : "w-0 overflow-hidden opacity-0"}`}
         >
           <div className="normal-text text-yellowish-white flex items-center gap-1">
             <p>Found</p>
-            <span className="text-red">{dnsSubdomains?.length}</span>
+            <span className="text-red">
+              {httpSubdomains?.length ||
+                data?.filter((item) => item.status_code !== null)?.length}
+            </span>
             <p>subdomains</p>
           </div>
         </div>
         <div
-          className={`flex h-fit items-center justify-between gap-2 transition-all duration-1000 ease-in-out ${progress === 100 ? "w-0 overflow-hidden opacity-0" : "w-full opacity-100"}`}
+          className={`flex flex-nowrap items-center justify-between gap-2 text-nowrap transition-all duration-1000 ease-in-out ${(progress === 100 || !isLoading) && filter === "other" ? "w-full opacity-100" : "w-0 overflow-hidden opacity-0"}`}
         >
-          <p className="normal-text text-yellowish-white">Progress:</p>
-          <div className="bg-red/40 h-2 w-full rounded-full">
-            <div
-              className="bg-red h-full rounded-full transition-all duration-500"
-              style={{
-                width: `${progress}%`,
-                boxShadow: "0 0 20px 1px rgba(250, 1, 12, 0.3)",
-              }}
-            ></div>
+          <div className="normal-text text-yellowish-white flex items-center gap-1">
+            <p>Found</p>
+            <span className="text-red">
+              {dnsSubdomains?.length ||
+                data?.filter((item) => item.status_code === null)?.length}
+            </span>
+            <p>subdomains</p>
           </div>
-          <p className="normal-text text-yellowish-white">
-            {+progress.toFixed(0)}%
-          </p>
         </div>
       </div>
+
       {/*  Subdomains List */}
       <motion.div
-        key={`${filter || "all"}-${numberOfResults}`}
+        key={`${filter || "all"}-${numberOfResults}-${isLoading}`}
         variants={{
           hidden: { opacity: 0 },
           visible: {
@@ -95,10 +117,48 @@ export default function SubdomainsPanel() {
         }}
         initial="hidden"
         animate="visible"
-        className="flex h-full flex-col gap-3 overflow-x-hidden overflow-y-auto py-3"
+        className={`flex h-full flex-col gap-3 overflow-x-hidden overflow-y-auto py-3 ${isLoading || isScanning ? "hide-scrollbar" : ""}`}
       >
         {/*  Subdomain Item */}
-        {(filter === "web" || filter === "all") &&
+        {(isLoading || isScanning) && (
+          <div className="flex h-full w-full items-center justify-center">
+            <Loader />
+          </div>
+        )}
+
+        {!isLoading &&
+          data &&
+          data
+            ?.filter((subdomain) => {
+              if (filter === "web" || filter === "all") {
+                return subdomain.status_code !== null;
+              }
+              if (filter === "other" || filter === "all") {
+                return subdomain.status_code === null;
+              }
+              return true;
+            })
+            .map((subdomain) => (
+              <motion.div
+                layout
+                key={subdomain.name}
+                variants={{
+                  hidden: { opacity: 0, x: -20 },
+                  visible: { opacity: 1, x: 0 },
+                }}
+              >
+                <SubdomainRow
+                  subdomain={subdomain.name}
+                  ip={subdomain.ips.join(", ")}
+                  status={subdomain.status_code}
+                  url={subdomain.url}
+                />
+              </motion.div>
+            ))}
+
+        {!isScanning &&
+          (filter === "web" || filter === "all") &&
+          httpSubdomains?.length > 0 &&
           httpSubdomains?.map((subdomain) => (
             <motion.div
               layout
@@ -116,7 +176,10 @@ export default function SubdomainsPanel() {
               />
             </motion.div>
           ))}
-        {(filter === "other" || filter === "all") &&
+
+        {!isScanning &&
+          (filter === "other" || filter === "all") &&
+          dnsSubdomains?.length > 0 &&
           dnsSubdomains?.map((subdomain) => (
             <motion.div
               layout

@@ -79,24 +79,25 @@ export default function RecentTargetCard({
           {/* Content Right */}
           <div className="flex items-end">
             <button
-              onClick={() => {
+              onClick={async () => {
                 setDomain(targetDomain);
                 navigate(`/reconnaissance`);
-                updateTarget(targetDomain);
-                queryClient.setQueryData(
-                  ["targets"],
-                  (oldData: RecentTarget[]) => {
-                    return oldData?.map((item) => {
-                      if (item.domain === targetDomain) {
-                        return {
-                          ...item,
-                          created_at: new Date().toISOString(),
-                        };
-                      }
-                      return item;
-                    });
-                  },
-                );
+                await updateTarget(targetDomain).then(() => {
+                  queryClient.setQueryData(
+                    ["targets"],
+                    (oldData: RecentTarget[]) => {
+                      return oldData?.map((item) => {
+                        if (item.domain === targetDomain) {
+                          return {
+                            ...item,
+                            created_at: new Date().toISOString(),
+                          };
+                        }
+                        return item;
+                      });
+                    },
+                  );
+                });
               }}
               className="small-text group border-red/30 hover:border-red/60 hover:bg-red/10 flex cursor-pointer items-center gap-1 rounded-lg border bg-black/10 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_10px_rgba(206,50,50,0.3)] active:scale-95"
             >

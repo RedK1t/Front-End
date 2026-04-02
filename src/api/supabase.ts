@@ -1,4 +1,4 @@
-import type { RecentTarget } from "@/types/types";
+import type { RecentTarget, SupabaseSubdomain } from "@/types/types";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -69,6 +69,7 @@ export async function getTargets() {
   }
   return data as RecentTarget[];
 }
+
 export async function getTarget(domain: string) {
   const user = await getUser();
   if (!user) {
@@ -85,6 +86,7 @@ export async function getTarget(domain: string) {
   }
   return data as RecentTarget[];
 }
+
 export async function updateTarget(domain: string) {
   const user = await getUser();
   if (!user) {
@@ -116,6 +118,33 @@ export async function insertNewTarget(domain: string) {
   const { error } = await supabase
     .from("targets")
     .insert({ user_id: user?.id, domain });
+  if (error) {
+    throw error;
+  }
+}
+
+// Subdomains
+export async function getSubdomains(domain: string) {
+  const { data, error } = await supabase
+    .from("subdomains")
+    .select("*")
+    .eq("target_domain", domain);
+
+  if (error) {
+    throw error;
+  }
+  return data as SupabaseSubdomain[];
+}
+
+export async function insertSubdomains(subdomains: SupabaseSubdomain[]) {
+  const data = await getSubdomains(subdomains[0].target_domain);
+  if (data.length > 0) {
+    return;
+  }
+  const { error } = await supabase
+    .from("subdomains")
+    .insert(subdomains)
+    .select();
   if (error) {
     throw error;
   }

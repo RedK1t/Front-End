@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSubdomainContext } from "../../../context/SubdomainContext";
 import { useDomain } from "@/context/DomainContext";
 
-export default function useSubdomains() {
+export default function useSubdomains(runScan: boolean) {
   const { domain } = useDomain();
   const { subDomains, startScan } = useSubdomainContext();
   const data = subDomains[domain!] || {
@@ -21,7 +21,8 @@ export default function useSubdomains() {
       !data.isScanning &&
       !data.error &&
       data.progress === 0 &&
-      data.numberOfResults === 0
+      data.numberOfResults === 0 &&
+      runScan
     ) {
       startScan(domain);
     }
@@ -32,6 +33,7 @@ export default function useSubdomains() {
     data.progress,
     data.numberOfResults,
     startScan,
+    runScan,
   ]);
 
   return data;
