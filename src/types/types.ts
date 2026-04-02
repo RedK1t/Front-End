@@ -28,3 +28,15 @@ export type supabasePort = {
   service_version: string;
   sub_domain_name: string;
 };
+
+export type supabaseEndpoint = {
+  id?: number;
+  created_at?: string;
+  request: string;
+  response: string;
+  path: string;
+  method: string;
+  status_code: number;
+  source: string;
+  sub_domain_name: string;
+};

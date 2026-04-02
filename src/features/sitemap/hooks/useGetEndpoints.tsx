@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import type { GraphEndPoint } from "../types/graphTypes";
 import { useDomain } from "@/context/DomainContext";
 import { useMemo } from "react";
+import { getEndpoints, insertEndpoints } from "@/api/supabase";
+import type { supabaseEndpoint } from "@/types/types";
 
 type response = {
   data: endpoint[];
@@ -13,8 +15,8 @@ export type endpoint = {
   status: number;
   source: string;
   created_at: string;
-  request?: string;
-  response?: string;
+  request: string;
+  response: string;
   children: endpoint[];
 };
 
@@ -23,11 +25,65 @@ export type FlatEndpoint = {
   lastSeen: string;
   source: string;
   status: number;
-  request?: string;
-  response?: string;
+  request: string;
+  response: string;
   method: string;
   path: string;
 };
+
+export function unFlattenEndpoints(flatEndpoints: FlatEndpoint[]): endpoint[] {
+  if (!flatEndpoints || flatEndpoints.length === 0) {
+    return [];
+  }
+
+  const filtered = flatEndpoints.filter((ep) => !ep.path.startsWith("http://"));
+
+  const endpointMap = new Map<string, endpoint>();
+  const roots: endpoint[] = [];
+
+  const sorted = [...filtered].sort((a, b) => a.path.length - b.path.length);
+
+  for (const flatEp of sorted) {
+    const ep: endpoint = {
+      id: flatEp.id,
+      url: flatEp.path,
+      method: flatEp.method,
+      status: flatEp.status,
+      source: flatEp.source,
+      created_at: flatEp.lastSeen,
+      request: flatEp.request || "",
+      response: flatEp.response || "",
+      children: [],
+    };
+    endpointMap.set(flatEp.path, ep);
+  }
+
+  for (const flatEp of sorted) {
+    const ep = endpointMap.get(flatEp.path)!;
+    const parentPath = getParentPath(flatEp.path);
+
+    if (parentPath === null || parentPath === "") {
+      roots.push(ep);
+    } else {
+      const parent = endpointMap.get(parentPath);
+      if (parent) {
+        parent.children.push(ep);
+      } else {
+        roots.push(ep);
+      }
+    }
+  }
+
+  return roots;
+}
+
+function getParentPath(path: string): string | null {
+  const lastSlashIndex = path.lastIndexOf("/");
+  if (lastSlashIndex <= 0) {
+    return null;
+  }
+  return path.substring(0, lastSlashIndex);
+}
 
 function flatEndpoints(endpoints: endpoint[]): FlatEndpoint[] {
   const list: FlatEndpoint[] = [];
@@ -71,6 +127,20 @@ export default function useGetEndpoints() {
       if (!selectedSubdomain) {
         return { data: [] };
       }
+      const supabaseEndpoints = await getEndpoints(selectedSubdomain);
+      if (supabaseEndpoints.length > 0) {
+        const endpoints = unFlattenEndpoints(
+          supabaseEndpoints.map((ep) => ({
+            ...ep,
+            id: ep.id!.toString(),
+            lastSeen: ep.created_at!,
+            status: ep.status_code,
+          })),
+        );
+        return {
+          data: endpoints,
+        };
+      }
       const res = await fetch(import.meta.env.VITE_endpoints_REST_url, {
         method: "post",
         headers: {
@@ -80,7 +150,19 @@ export default function useGetEndpoints() {
           domains: [selectedSubdomain],
         }),
       });
-      const data = await res.json();
+      const data: response = await res.json();
+      const endpointsToInsert: supabaseEndpoint[] = flatEndpoints(
+        data.data,
+      ).map((ep) => ({
+        sub_domain_name: selectedSubdomain,
+        status_code: ep.status,
+        method: ep.method,
+        path: ep.path,
+        request: ep.request,
+        response: ep.response,
+        source: ep.source,
+      }));
+      await insertEndpoints(endpointsToInsert);
       return data;
     },
   });

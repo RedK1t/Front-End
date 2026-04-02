@@ -1,5 +1,6 @@
 import type {
   RecentTarget,
+  supabaseEndpoint,
   supabasePort,
   SupabaseSubdomain,
 } from "@/types/types";
@@ -170,6 +171,27 @@ export async function getPorts(subdomain: string) {
 
 export async function insertPorts(ports: supabasePort[]) {
   const { error } = await supabase.from("ports").insert(ports).select();
+  if (error) {
+    throw error;
+  }
+}
+
+// endpoints
+export async function getEndpoints(subdomain: string) {
+  const { data, error } = await supabase
+    .from("endpoints")
+    .select("*")
+    .eq("sub_domain_name", subdomain);
+
+  if (error) {
+    throw error;
+  }
+
+  return data as supabaseEndpoint[];
+}
+
+export async function insertEndpoints(endpoints: supabaseEndpoint[]) {
+  const { error } = await supabase.from("endpoints").insert(endpoints).select();
   if (error) {
     throw error;
   }
