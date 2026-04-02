@@ -3,7 +3,7 @@ export type subdomainData = {
   ips: string[];
 };
 
-export type Target = {
+export type RecentTarget = {
   id: number;
   user_id: string;
   domain: string;

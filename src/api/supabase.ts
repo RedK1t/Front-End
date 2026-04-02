@@ -1,4 +1,4 @@
-import type { Target } from "@/types/types";
+import type { RecentTarget } from "@/types/types";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -67,5 +67,56 @@ export async function getTargets() {
   if (error) {
     throw error;
   }
-  return data as Target[];
+  return data as RecentTarget[];
+}
+export async function getTarget(domain: string) {
+  const user = await getUser();
+  if (!user) {
+    return [];
+  }
+  const { data, error } = await supabase
+    .from("targets")
+    .select("*")
+    .eq("user_id", user?.id)
+    .eq("domain", domain);
+
+  if (error) {
+    throw error;
+  }
+  return data as RecentTarget[];
+}
+export async function updateTarget(domain: string) {
+  const user = await getUser();
+  if (!user) {
+    return [];
+  }
+
+  const { error } = await supabase
+    .from("targets")
+    .update({ created_at: new Date().toISOString() })
+    .eq("user_id", user?.id)
+    .eq("domain", domain)
+    .select();
+
+  if (error) {
+    throw error;
+  }
+}
+
+export async function insertNewTarget(domain: string) {
+  const user = await getUser();
+  if (!user) {
+    throw new Error("you must login");
+  }
+  const targetExists = await getTarget(domain);
+  if (targetExists.length > 0) {
+    await updateTarget(domain);
+    return;
+  }
+  const { error } = await supabase
+    .from("targets")
+    .insert({ user_id: user?.id, domain });
+  if (error) {
+    throw error;
+  }
 }
