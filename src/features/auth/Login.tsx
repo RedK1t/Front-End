@@ -1,12 +1,18 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import { FiEye, FiEyeOff, FiLock, FiMail } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthButton from "./components/AuthButton";
 import AuthInput from "./components/AuthInput";
 import { useAuthForm } from "./hooks/useAuthForm";
+import useIsLogin from "@/hooks/useIsLogin";
 
 export default function Login() {
+  const isLogin = useIsLogin();
+  const navigate = useNavigate();
+  if (isLogin) {
+    navigate("/", { replace: true });
+  }
   const [formData, setFormData] = useState({
     email: "",
     password: "",

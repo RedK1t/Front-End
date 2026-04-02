@@ -1,14 +1,15 @@
-import redKitLogo from "../../../assets/redKitLogo.svg";
-import searchIcon from "../../../assets/SearchIcon.svg";
 import { signOut } from "@/api/supabase";
+import useGetUserLocally from "@/hooks/useGetUserLocally";
+import { useQueryClient } from "@tanstack/react-query";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
-import useGetUser from "../hooks/useGetUser";
+import redKitLogo from "../../../assets/redKitLogo.svg";
+import searchIcon from "../../../assets/SearchIcon.svg";
+import { useState } from "react";
 
 export default function Navbar() {
-  const { data: user } = useGetUser();
-  const userName = user?.user_metadata?.name || "";
+  const user = useGetUserLocally();
+  const [userName, setUserName] = useState(user?.user.user_metadata.name || "");
   const queryClient = useQueryClient();
   return (
     <div className="bg-gray mx-auto mt-6 flex w-11/12 items-center justify-between rounded-2xl px-3 py-2">
@@ -38,6 +39,7 @@ export default function Navbar() {
             <button
               onClick={async () => {
                 await signOut();
+                setUserName("");
                 // Revalidate the targets query after sign-out
                 queryClient.refetchQueries({ queryKey: ["targets"] });
                 // Also invalidate other user-related queries
