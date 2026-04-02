@@ -1,15 +1,9 @@
+import { getPorts, insertPorts } from "@/api/supabase";
 import { useQuery } from "@tanstack/react-query";
 type Port = {
   port: number;
-  protocol: "tcp" | "udp" | "sctp";
-  state:
-    | "open"
-    | "closed"
-    | "filtered"
-    | "unfiltered"
-    | "open|filtered"
-    | "closed|filtered"
-    | "unknown";
+  protocol: string;
+  state: string;
   service: string;
   service_version: string;
 };
@@ -32,6 +26,8 @@ export default function useGetOpenPorts(target: string, enabled: boolean) {
     queryKey: ["openPorts", target],
     enabled: enabled && !!target,
     queryFn: async () => {
+      const ports = await getPorts(target);
+      if (ports.length > 0) return { state: "up", ip: "000", ports };
       const response = await fetch(import.meta.env.VITE_openPorts_REST_url, {
         method: "POST",
         headers: {
@@ -41,7 +37,15 @@ export default function useGetOpenPorts(target: string, enabled: boolean) {
           domains: [target],
         }),
       });
-      return response.json();
+      const data: Data = await response.json();
+      if (data.state === "up") {
+        const dataToInsert = data.ports.map((port) => ({
+          ...port,
+          sub_domain_name: target,
+        }));
+        await insertPorts(dataToInsert);
+      }
+      return data;
     },
   });
   return {

@@ -1,4 +1,8 @@
-import type { RecentTarget, SupabaseSubdomain } from "@/types/types";
+import type {
+  RecentTarget,
+  supabasePort,
+  SupabaseSubdomain,
+} from "@/types/types";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -145,6 +149,27 @@ export async function insertSubdomains(subdomains: SupabaseSubdomain[]) {
     .from("subdomains")
     .insert(subdomains)
     .select();
+  if (error) {
+    throw error;
+  }
+}
+
+// Ports
+export async function getPorts(subdomain: string) {
+  const { data, error } = await supabase
+    .from("ports")
+    .select("*")
+    .eq("sub_domain_name", subdomain);
+
+  if (error) {
+    throw error;
+  }
+
+  return data as supabasePort[];
+}
+
+export async function insertPorts(ports: supabasePort[]) {
+  const { error } = await supabase.from("ports").insert(ports).select();
   if (error) {
     throw error;
   }

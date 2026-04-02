@@ -17,3 +17,14 @@ export type SupabaseSubdomain = {
   status_code?: number;
   url?: string;
 };
+
+export type supabasePort = {
+  id?: number;
+  created_at?: string;
+  port: number;
+  service: string;
+  state: string;
+  protocol: string;
+  service_version: string;
+  sub_domain_name: string;
+};
