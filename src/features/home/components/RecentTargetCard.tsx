@@ -1,4 +1,7 @@
+import { updateTarget } from "@/api/supabase";
 import { useDomain } from "@/context/DomainContext";
+import type { RecentTarget } from "@/types/types";
+import { useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "motion/react";
 import { FaArrowRight } from "react-icons/fa6";
@@ -10,7 +13,8 @@ type RecentTargetCardProps = {
   lastScanned: string;
 };
 
-const LOGO_DEV_PUBLIC_KEY = "pk_e6MtMO_tQm6SnFDQtPovWg";
+const LOGO_DEV_PUBLIC_KEY = import.meta.env.VITE_LOGO_DEV_PUBLIC_KEY;
+
 function CompanyLogo({ domain }: { domain: string }) {
   return (
     <img
@@ -20,14 +24,17 @@ function CompanyLogo({ domain }: { domain: string }) {
     />
   );
 }
+
 export default function RecentTargetCard({
   targetName,
   targetDomain,
-
   lastScanned,
 }: RecentTargetCardProps) {
   const { setDomain } = useDomain();
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
+
   return (
     <motion.div
       initial={{
@@ -75,6 +82,21 @@ export default function RecentTargetCard({
               onClick={() => {
                 setDomain(targetDomain);
                 navigate(`/reconnaissance`);
+                updateTarget(targetDomain);
+                queryClient.setQueryData(
+                  ["targets"],
+                  (oldData: RecentTarget[]) => {
+                    return oldData?.map((item) => {
+                      if (item.domain === targetDomain) {
+                        return {
+                          ...item,
+                          created_at: new Date().toISOString(),
+                        };
+                      }
+                      return item;
+                    });
+                  },
+                );
               }}
               className="small-text group border-red/30 hover:border-red/60 hover:bg-red/10 flex cursor-pointer items-center gap-1 rounded-lg border bg-black/10 px-3 py-1.5 text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_10px_rgba(206,50,50,0.3)] active:scale-95"
             >
