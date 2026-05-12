@@ -101,9 +101,8 @@ export default function useGetCompInfo() {
     queryKey: ["compInfo", domain],
     queryFn: () => fetch(url, options).then((res) => res.json()),
     throwOnError: () => {
-      setModelNumber((prev) => prev + 1);
-      if (modelNumber >= models.length) {
-        setModelNumber(0);
+      if (modelNumber < models.length - 1) {
+        setModelNumber((prev) => prev + 1);
       }
       return false; // don't propagate to error boundary
     },
