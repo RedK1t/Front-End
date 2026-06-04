@@ -27,15 +27,8 @@ COPY --from=builder /app/dist .
 # 3. Expose the port (Nginx default is 80)
 EXPOSE 5173
 
-ENV VITE_proxy_websocket_url=ws://localhost:5050/ws \
-    VITE_subdomains_websocket_url=ws://localhost:3003/ws/enumerate \
-    VITE_openPorts_REST_url=http://localhost:3004/scan \
-    VITE_endpoints_REST_url=http://localhost:3005/scan \
-    VITE_web_check_url=http://localhost:3001/api \
-    VITE_DEV_whois=http://localhost:3000 \
-    VITE_scanner_websocket_url=ws://localhost:3006 \
-    VITE_web_check_local_url=http://localhost:3001/api \
-    VITE_generateReport_REST_url=http://localhost:3002/api \
-    VITE_GROQ_API_KEY=REDACTED_GROQ_KEY
+# VITE_* env vars are read from Front-End/.env at build time (stage 1) and baked into dist.
+# Edit Front-End/.env to change them — it is the single source of truth.
+
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
