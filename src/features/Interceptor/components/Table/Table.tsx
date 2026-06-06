@@ -75,6 +75,23 @@ export default function Table() {
     },
     [markForResponseIntercept, unmarkForResponseIntercept],
   );
+
+  // Quick Scan: send the FULL captured raw request to the AI scanner so POST body
+  // params (and any method) get tested. Falls back to URL-only when raw isn't available
+  // (e.g. history rows, whose body isn't loaded at right-click time).
+  const handleQuickScan = useCallback(
+    (id: string, url: string) => {
+      const request = interceptedRequests.find((req) => req.id === id);
+      if (request?.raw) {
+        navigate("/AiScanner", {
+          state: { rawRequest: request.raw, url: request.url },
+        });
+      } else {
+        navigate(`/AiScanner?url=${url}`);
+      }
+    },
+    [interceptedRequests, navigate],
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const isHistoryMode = searchParams.get("history") === "true";
 
@@ -209,7 +226,7 @@ export default function Table() {
               handleForward={handleForward}
               handleDrop={handleDrop}
               handleToggleMark={handleToggleMark}
-              navigate={navigate}
+              handleQuickScan={handleQuickScan}
               isMarked={markedForResponseIntercept.includes(row.id)}
               {...row}
             />

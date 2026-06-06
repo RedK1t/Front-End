@@ -37,6 +37,13 @@ export default function ScannerCacheManager() {
     if (lastJsonMessage && lastJsonMessage !== lastProcessedRef.current) {
       lastProcessedRef.current = lastJsonMessage;
       const type = lastJsonMessage.type;
+
+      if (type === "scan_start") {
+        // Reset counters/results so a new scan doesn't accumulate on top of the previous one
+        queryClient.setQueryData(["vulnerabilities"], []);
+        queryClient.setQueryData(["total-payloads"], 0);
+        queryClient.setQueryData(["endpoints-scanned"], 0);
+      }
       if (type === "vulnerability_found") {
         const vulnerability = lastJsonMessage.vulnerability;
         queryClient.setQueryData(
@@ -49,16 +56,33 @@ export default function ScannerCacheManager() {
         handleNewVulnerability();
       }
       if (type === "progress") {
-        queryClient.setQueryData(
-          ["total-payloads"],
-          (oldData: number) => oldData + 1,
-        );
+        // Backend sends the cumulative count; set the max seen (robust to missed messages)
+        const tested = lastJsonMessage.tested;
+        if (typeof tested === "number") {
+          queryClient.setQueryData(["total-payloads"], (oldData: number) =>
+            Math.max(oldData || 0, tested),
+          );
+        }
       }
       if (type === "endpoint_transition") {
         queryClient.setQueryData(
           ["endpoints-scanned"],
-          (oldData: number) => oldData + 1,
+          (oldData: number) => (oldData || 0) + 1,
         );
+      }
+      if (type === "scan_complete") {
+        // Authoritative final totals from the backend
+        const result = lastJsonMessage.result;
+        if (result) {
+          queryClient.setQueryData(
+            ["total-payloads"],
+            result.total_payloads_tested ?? 0,
+          );
+          queryClient.setQueryData(
+            ["endpoints-scanned"],
+            result.total_endpoints ?? 0,
+          );
+        }
       }
     }
   }, [lastJsonMessage, queryClient]);

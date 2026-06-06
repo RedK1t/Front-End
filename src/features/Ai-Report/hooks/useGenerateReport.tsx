@@ -1,18 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 
-interface ReportData {
-  name: string;
+export interface ReportResponse {
   target_url: string;
-  severity: string;
-  cvss_score: number;
-  cwe_id: string;
-  description: string;
-  poc: string;
-  impact: string;
-  remediation: string;
-  references: string;
-  reporter_name: string;
-  owasp_category: string;
+  markdown_content: string;
+  html_content: string;
+  downloads: {
+    md: string | null;
+    docx: string | null;
+    pdf: string | null;
+  };
 }
 
 export default function useGenerateReport() {
@@ -20,9 +16,10 @@ export default function useGenerateReport() {
     mutate: generateReport,
     data,
     isError,
+    isPending,
     isSuccess,
-  } = useMutation({
-    mutationFn: async (reportData: ReportData) => {
+  } = useMutation<ReportResponse, Error, { target_url?: string } | void>({
+    mutationFn: async (payload) => {
       const response = await fetch(
         import.meta.env.VITE_generateReport_REST_url + "/generate-report",
         {
@@ -30,9 +27,12 @@ export default function useGenerateReport() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(reportData),
+          body: JSON.stringify(payload ?? {}),
         },
       );
+      if (!response.ok) {
+        throw new Error("Failed to generate report");
+      }
       return response.json();
     },
   });
@@ -41,6 +41,7 @@ export default function useGenerateReport() {
     generateReport,
     data,
     isError,
+    isPending,
     isSuccess,
   };
 }

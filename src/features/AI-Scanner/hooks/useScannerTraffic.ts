@@ -21,7 +21,7 @@ function useScannerTraffic() {
     queryKey: ["endpoints-scanned"],
     queryFn: () => 0, // Dummy function
     enabled: true,
-    initialData: 1,
+    initialData: 0,
     staleTime: Infinity,
   });
   return {

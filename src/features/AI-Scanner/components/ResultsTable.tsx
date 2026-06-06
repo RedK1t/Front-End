@@ -3,6 +3,12 @@ import { Input } from "@/components/ui/input";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useSearchParams } from "react-router-dom";
 import useScannerTraffic from "../hooks/useScannerTraffic";
+import type { vulnType } from "../types";
+
+const VULN_TYPE_LABELS: Record<vulnType, string> = {
+  sql_injection: "SQL Injection",
+  reflected_xss: "Reflected XSS",
+};
 
 export default function ResultsTable() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -41,8 +47,8 @@ export default function ResultsTable() {
           ]}
           data={vulnerabilities.map((vuln) => [
             vuln.id,
-            "-",
-            "Sql Injection",
+            vuln.severity || "-",
+            VULN_TYPE_LABELS[vuln.vuln_type] || vuln.vuln_type || "Unknown",
             vuln.url,
             vuln.payload,
           ])}
