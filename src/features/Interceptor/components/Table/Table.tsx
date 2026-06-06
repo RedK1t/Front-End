@@ -24,6 +24,7 @@ export default function Table() {
     interceptedRequests,
     interceptedResponses,
     markedForResponseIntercept,
+    history,
   } = useProxyTraffic();
 
   const {
@@ -32,6 +33,7 @@ export default function Table() {
     dropRequest,
     markForResponseIntercept,
     unmarkForResponseIntercept,
+    getHistoryDetail,
   } = useProxyActions();
 
   const handleForward = useCallback(
@@ -73,37 +75,47 @@ export default function Table() {
     },
     [markForResponseIntercept, unmarkForResponseIntercept],
   );
-  const tableRows = interceptedRequests.map((item) => ({
-    id: item.id,
-    Time: item.Time,
-    Type: item.url.split("://")[0].toUpperCase(),
-    Method: item.method,
-    Direction: "Request",
-    Host: item.host,
-    URL: item.url,
-    StatusCode: 0,
-    Params: item.url.includes("?"),
-    headers: item.headers,
-    body: item.body,
-    Length: item.raw.length,
-  }));
-  tableRows.push(
-    ...interceptedResponses.map((item) => ({
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isHistoryMode = searchParams.get("history") === "true";
+
+  const tableRows = useMemo(() => {
+    if (isHistoryMode) {
+      return history;
+    }
+
+    const rows = interceptedRequests.map((item) => ({
       id: item.id,
       Time: item.Time,
       Type: item.url.split("://")[0].toUpperCase(),
       Method: item.method,
-      Direction: "Response",
+      Direction: "Request",
       Host: item.host,
       URL: item.url,
-      StatusCode: item.status_code,
-      Length: item.raw_response.length,
+      StatusCode: 0,
       Params: item.url.includes("?"),
-      headers: item.response_headers,
-      body: item.response_body,
-    })),
-  );
-  const [searchParams, setSearchParams] = useSearchParams();
+      headers: item.headers,
+      body: item.body,
+      Length: item.raw.length,
+    }));
+    rows.push(
+      ...interceptedResponses.map((item) => ({
+        id: item.id,
+        Time: item.Time,
+        Type: item.url.split("://")[0].toUpperCase(),
+        Method: item.method,
+        Direction: "Response",
+        Host: item.host,
+        URL: item.url,
+        StatusCode: item.status_code,
+        Length: item.raw_response.length,
+        Params: item.url.includes("?"),
+        headers: item.response_headers,
+        body: item.response_body,
+      })),
+    );
+    return rows;
+  }, [isHistoryMode, history, interceptedRequests, interceptedResponses]);
+
   const sort = searchParams.get("sort");
   const search = searchParams.get("search");
   const Selected = searchParams.get("selected");
@@ -148,6 +160,12 @@ export default function Table() {
     }
   }, [sortedTable]);
 
+  useEffect(() => {
+    if (isHistoryMode && Selected) {
+      getHistoryDetail(Selected);
+    }
+  }, [Selected, isHistoryMode, getHistoryDetail]);
+
   const handleSelect = useCallback(
     (id: string) => {
       setSearchParams(
@@ -158,8 +176,11 @@ export default function Table() {
         },
         { replace: true },
       );
+      if (isHistoryMode) {
+        getHistoryDetail(id);
+      }
     },
-    [setSearchParams],
+    [setSearchParams, isHistoryMode, getHistoryDetail],
   );
 
   return (

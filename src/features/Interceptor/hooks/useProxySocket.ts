@@ -1,24 +1,5 @@
 import useWebSocket from "react-use-websocket";
-import type {
-  mark_for_response_intercept,
-  unmark_for_response_intercept,
-  intercepted_request,
-  intercepted_response,
-  forwarded,
-  dropped,
-  queue_cleared,
-  intercept_status,
-} from "../types";
-
-type message =
-  | mark_for_response_intercept
-  | unmark_for_response_intercept
-  | intercepted_request
-  | intercepted_response
-  | forwarded
-  | dropped
-  | queue_cleared
-  | intercept_status;
+import type { message } from "../types";
 
 function useProxySocket() {
   const { sendJsonMessage, lastJsonMessage, readyState } =

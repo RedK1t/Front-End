@@ -98,6 +98,25 @@ function useProxyActions() {
     });
   };
 
+  const getHistory = () => {
+    sendJsonMessage({
+      action: "get_history",
+    });
+  };
+
+  const getHistoryDetail = (id: string) => {
+    sendJsonMessage({
+      action: "get_history_detail",
+      id: Number(id),
+    });
+  };
+
+  const clearHistory = () => {
+    sendJsonMessage({
+      action: "clear_history",
+    });
+  };
+
   return {
     toggleIntercept,
     markForResponseIntercept,
@@ -110,6 +129,9 @@ function useProxyActions() {
     dropAll,
     updateInterceptedRequest,
     updateInterceptedResponse,
+    getHistory,
+    getHistoryDetail,
+    clearHistory,
   };
 }
 

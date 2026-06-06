@@ -29,8 +29,8 @@ type TrProps = {
   StatusCode: number;
   Length: number;
   Params: boolean;
-  headers: string;
-  body: string;
+  headers?: string;
+  body?: string;
 };
 
 export default memo(function Tr({
@@ -70,10 +70,19 @@ export default memo(function Tr({
                 <img src={rightArrowIcon} alt="right Arrow" />
                 <p>Request</p>
               </div>
-            ) : (
+            ) : Direction === "Response" ? (
               <div className="flex items-center gap-1">
                 <img src={leftArrowIcon} alt="left Arrow" />
                 <p>Response</p>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1">
+                <img
+                  src={rightArrowIcon}
+                  alt="History"
+                  className="opacity-50"
+                />
+                <p>History</p>
               </div>
             )}
           </Td>
@@ -91,13 +100,17 @@ export default memo(function Tr({
       <ContextMenuContent className="bg-gray rounded-6px! small-text! text-yellowish-white! z-50! border-0! drop-shadow-lg drop-shadow-black/50">
         <ContextMenuItemStyled>{URL}</ContextMenuItemStyled>
         <div className="bg-yellowish-white! h-px! w-full" />
-        <ContextMenuItemStyled onClick={() => handleForward(id, Direction)}>
-          Forward
-        </ContextMenuItemStyled>
-        <ContextMenuItemStyled onClick={() => handleDrop(id)}>
-          Drop
-        </ContextMenuItemStyled>
-        <div className="bg-yellowish-white! h-[0.5px]! w-full" />
+        {Direction !== "History" && (
+          <>
+            <ContextMenuItemStyled onClick={() => handleForward(id, Direction)}>
+              Forward
+            </ContextMenuItemStyled>
+            <ContextMenuItemStyled onClick={() => handleDrop(id)}>
+              Drop
+            </ContextMenuItemStyled>
+            <div className="bg-yellowish-white! h-[0.5px]! w-full" />
+          </>
+        )}
         <ContextMenuItemStyled
           onClick={() => {
             navigate(`/AiScanner?url=${URL}`);

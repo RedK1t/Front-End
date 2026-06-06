@@ -54,6 +54,41 @@ export type queue_cleared = {
   type: "queue_cleared";
 };
 
+export type history_item = {
+  id: string;
+  Time: string;
+  Type: string;
+  Method: string;
+  Direction: string;
+  Host: string;
+  URL: string;
+  StatusCode: number;
+  Length: number;
+  Params: boolean;
+};
+
+export type history_message = {
+  type: "history";
+  data: history_item[];
+};
+
+export type history_new_message = {
+  type: "history_new";
+  row: history_item;
+};
+
+export type history_detail_message = {
+  type: "history_detail";
+  request_headers: string;
+  request_body: string;
+  response_headers: string;
+  response_body: string;
+};
+
+export type history_cleared_message = {
+  type: "history_cleared";
+};
+
 export type message =
   | intercept_status
   | mark_for_response_intercept
@@ -62,4 +97,8 @@ export type message =
   | intercepted_response
   | forwarded
   | dropped
-  | queue_cleared;
+  | queue_cleared
+  | history_message
+  | history_new_message
+  | history_detail_message
+  | history_cleared_message;

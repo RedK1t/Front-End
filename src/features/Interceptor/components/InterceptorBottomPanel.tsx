@@ -7,8 +7,45 @@ export default function InterceptorBottomPanel() {
   const { updateInterceptedRequest, updateInterceptedResponse } =
     useProxyActions();
   const [searchParams] = useSearchParams();
-  const { interceptedRequests, interceptedResponses } = useProxyTraffic();
+  const isHistoryMode = searchParams.get("history") === "true";
+  const { interceptedRequests, interceptedResponses, historyDetail } =
+    useProxyTraffic();
   const selected = searchParams.get("selected") || "";
+
+  if (isHistoryMode) {
+    if (!historyDetail) return null;
+    const request =
+      historyDetail.request_headers + "\n\n" + historyDetail.request_body;
+    const response =
+      historyDetail.response_headers + "\n\n" + historyDetail.response_body;
+
+    return (
+      <div className="flex h-full flex-col">
+        <div className="h-full w-full overflow-y-hidden">
+          <div className="flex h-full w-full items-start justify-between space-x-5 pr-8 pl-14">
+            <div className="h-full w-1/2">
+              <ReqResContent
+                type="Request"
+                editableProp={false}
+                text={request}
+                requestAndResponse={false}
+              />
+            </div>
+            <div className="border-red h-full border-r" />
+            <div className="h-full w-1/2 overflow-hidden">
+              <ReqResContent
+                type="Response"
+                text={response}
+                editableProp={false}
+                requestAndResponse={false}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const selectedItemRequest = interceptedRequests.find(
     (item) => item.id === selected,
   );

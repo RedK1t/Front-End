@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import useProxySocket from "./useProxySocket";
 import type {
+  history_item,
   intercepted_request,
   intercepted_response,
   message,
@@ -94,6 +95,30 @@ export default function ProxyCacheManager() {
       if (type === "queue_cleared") {
         queryClient.setQueryData(["intercepted_request"], () => []);
         queryClient.setQueryData(["intercepted_response"], () => []);
+      }
+
+      if (type === "history") {
+        queryClient.setQueryData(["history"], () => lastJsonMessage.data);
+      }
+
+      if (type === "history_new") {
+        queryClient.setQueryData(
+          ["history"],
+          (oldData: history_item[] = []) => {
+            if (oldData.some((item) => item.id === lastJsonMessage.row.id))
+              return oldData;
+            return [lastJsonMessage.row, ...oldData];
+          },
+        );
+      }
+
+      if (type === "history_detail") {
+        queryClient.setQueryData(["history_detail"], () => lastJsonMessage);
+      }
+
+      if (type === "history_cleared") {
+        queryClient.setQueryData(["history"], () => []);
+        queryClient.setQueryData(["history_detail"], () => null);
       }
     }
   }, [lastJsonMessage, queryClient]);

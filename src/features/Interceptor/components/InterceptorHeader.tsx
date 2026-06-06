@@ -22,12 +22,12 @@ export default function InterceptorHeader() {
   } = useProxyActions();
   const { interceptedRequests, interceptedResponses, interceptStatus } =
     useProxyTraffic();
-  const interceptor = searchParams.get("Interceptor") === "true";
+  const historyMode = searchParams.get("history") === "true";
   const id = searchParams.get("selected");
 
   return (
     <div
-      className={`flex items-center justify-between overflow-hidden text-nowrap transition-all duration-700 ${!interceptor ? "w-full opacity-100" : "w-0 opacity-0"}`}
+      className={`flex items-center justify-between overflow-hidden text-nowrap transition-all duration-700 ${!historyMode ? "w-full opacity-100" : "w-0 opacity-0"}`}
     >
       <div className="flex items-center gap-x-3">
         <SwitchButton
