@@ -189,6 +189,53 @@ function useProxyActions() {
     [sendJsonMessage],
   );
 
+  const getScope = useCallback(() => {
+    sendJsonMessage({
+      action: "get_scope",
+    });
+  }, [sendJsonMessage]);
+
+  const toggleScope = useCallback(
+    (enabled: boolean) => {
+      sendJsonMessage({
+        action: "toggle_scope",
+        enabled,
+      });
+    },
+    [sendJsonMessage],
+  );
+
+  const toggleExtensionExclude = useCallback(
+    (enabled: boolean) => {
+      sendJsonMessage({
+        action: "toggle_extension_exclude",
+        enabled,
+      });
+    },
+    [sendJsonMessage],
+  );
+
+  const addScopeRule = useCallback(
+    (rule_type: "include" | "exclude" | "extension", pattern: string) => {
+      sendJsonMessage({
+        action: "add_scope_rule",
+        rule_type,
+        pattern,
+      });
+    },
+    [sendJsonMessage],
+  );
+
+  const removeScopeRule = useCallback(
+    (id: number) => {
+      sendJsonMessage({
+        action: "remove_scope_rule",
+        id,
+      });
+    },
+    [sendJsonMessage],
+  );
+
   return {
     toggleIntercept,
     markForResponseIntercept,
@@ -207,6 +254,11 @@ function useProxyActions() {
     startIntruderAttack,
     stopIntruderAttack,
     getIntruderResponse,
+    getScope,
+    toggleScope,
+    toggleExtensionExclude,
+    addScopeRule,
+    removeScopeRule,
   };
 }
 

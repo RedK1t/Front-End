@@ -147,6 +147,20 @@ export type intruder_result = {
   id?: string;
 };
 
+export type scope_rule = {
+  id: number;
+  pattern: string;
+};
+
+export type scope_message = {
+  type: "scope";
+  enabled: boolean;
+  extension_enabled: boolean;
+  include: scope_rule[];
+  exclude: scope_rule[];
+  extensions: scope_rule[];
+};
+
 export type message =
   | intercept_status
   | mark_for_response_intercept
@@ -166,4 +180,5 @@ export type message =
   | intruder_response
   | intruder_started
   | intruder_complete
-  | intruder_result;
+  | intruder_result
+  | scope_message;

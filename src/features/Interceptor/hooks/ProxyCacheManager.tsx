@@ -169,6 +169,10 @@ export default function ProxyCacheManager() {
       if (type === "intruder_complete") {
         queryClient.setQueryData(["intruder_is_running"], false);
       }
+
+      if (type === "scope") {
+        queryClient.setQueryData(["scope"], lastJsonMessage);
+      }
     }
   }, [lastJsonMessage, queryClient]);
 

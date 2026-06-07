@@ -1,70 +1,54 @@
 import { useState } from "react";
-
 import { FaMinus, FaPlus } from "react-icons/fa";
 import ScopeItem from "./ScopeItem";
 import Header from "./Header";
 import Button from "./Button";
-import { useSearchParams } from "react-router-dom";
+import useProxyTraffic from "../../Interceptor/hooks/useProxyTraffic";
+import useProxyActions from "../../Interceptor/hooks/useProxyActions";
 
 export default function TargetPanel() {
-  const [isInclude, setIsInclude] = useState<string[]>([
-    ".*fawry\\.com",
-    ".*paypal\\.com",
-    ".*stripe\\.com",
-    ".*braintree\\.com",
-    ".*adyen\\.com",
-  ]);
-  const [isExclude, setIsExclude] = useState<string[]>([
-    ".*google\\.com",
-    ".*facebook\\.com",
-    ".*amazon\\.com",
-    ".*apple\\.com",
-  ]);
+  const { scope } = useProxyTraffic();
+  const { addScopeRule, removeScopeRule, toggleScope } = useProxyActions();
   const [input, setInput] = useState("");
-  const [searchParams] = useSearchParams();
-  const isOn = searchParams.get("isScopeOn") === "true";
+
+  const isInclude = scope?.include || [];
+  const isExclude = scope?.exclude || [];
+  const isOn = scope?.enabled || false;
 
   // handle add button click
   function handleAdd() {
     if (input) {
-      if (isInclude.includes(input)) {
-        setInput("");
-      } else if (isExclude.includes(input)) {
-        setIsExclude(isExclude.filter((item) => item !== input));
-        setIsInclude([...isInclude, input]);
-      } else {
-        setIsInclude([...isInclude, input]);
-      }
+      addScopeRule("include", input);
       setInput("");
     }
   }
+
   // handle exclude button click
   function handleExclude() {
     if (input) {
-      if (isExclude.includes(input)) {
-        setInput("");
-      } else if (isInclude.includes(input)) {
-        setIsInclude(isInclude.filter((item) => item !== input));
-        setIsExclude([...isExclude, input]);
-      } else {
-        setIsExclude([...isExclude, input]);
-      }
+      addScopeRule("exclude", input);
       setInput("");
     }
   }
+
   // handle delete include button click
-  function deleteInclude(string: string) {
-    setIsInclude(isInclude.filter((item) => item !== string));
+  function deleteInclude(id: number) {
+    removeScopeRule(id);
   }
+
   // handle delete exclude button click
-  function deleteExclude(string: string) {
-    setIsExclude(isExclude.filter((item) => item !== string));
+  function deleteExclude(id: number) {
+    removeScopeRule(id);
   }
 
   return (
-    <div className="flex h-full w-full flex-col gap-y-5 lg:w-1/2">
+    <div className="flex h-full w-full flex-col gap-y-5">
       {/* header */}
-      <Header title="Target Scope" param="isScopeOn" />
+      <Header
+        title="Target Scope"
+        isOn={isOn}
+        onToggle={(enabled) => toggleScope(enabled)}
+      />
       {/* description */}
       <div className="relative flex h-full w-full flex-col gap-y-5">
         <p className="normal-text text-yellowish-white">
@@ -100,34 +84,40 @@ export default function TargetPanel() {
         </div>
 
         {/* scope list */}
-        <div className="bg-gray rounded-6px flex h-full w-full gap-x-5 overflow-auto px-6 py-3">
-          <div className="flex h-full w-1/2 flex-col items-center gap-3">
-            {/* include list */}
-            <p className="mid-text text-yellowish-white">Include</p>
-            <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto">
-              {isInclude.map((scope) => (
-                <ScopeItem
-                  key={scope}
-                  scope={scope}
-                  deleteScope={deleteInclude}
-                />
-              ))}
+        <div className="flex h-full items-center gap-5">
+          <div className="bg-gray rounded-6px flex h-full w-full items-center gap-x-5 overflow-auto px-6 py-3">
+            <div className="flex h-full w-full flex-col items-center gap-3">
+              {/* include list */}
+              <p className="mid-text text-yellowish-white">Include</p>
+              <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto">
+                {isInclude.map((item) => (
+                  <ScopeItem
+                    key={item.id}
+                    scope={item.pattern}
+                    deleteScope={() => deleteInclude(item.id)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-          {/* exclude list */}
-          <div className="flex h-full w-1/2 flex-col items-center gap-3 overflow-auto">
-            <p className="mid-text text-yellowish-white">Exclude</p>
-            <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto">
-              {isExclude.map((scope) => (
-                <ScopeItem
-                  key={scope}
-                  scope={scope}
-                  deleteScope={deleteExclude}
-                />
-              ))}
+
+          <div className="bg-gray rounded-6px flex h-full w-full gap-x-5 overflow-auto px-6 py-3">
+            {/* exclude list */}
+            <div className="flex h-full w-full flex-col items-center gap-3 overflow-auto">
+              <p className="mid-text text-yellowish-white">Exclude</p>
+              <div className="flex h-full w-full flex-col gap-y-2 overflow-y-auto">
+                {isExclude.map((item) => (
+                  <ScopeItem
+                    key={item.id}
+                    scope={item.pattern}
+                    deleteScope={() => deleteExclude(item.id)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
+
         <div
           className={`absolute top-0 left-0 transition-all duration-300 ${isOn ? "h-0 w-full" : "h-full w-full bg-black/50"}`}
         ></div>

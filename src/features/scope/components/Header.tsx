@@ -5,26 +5,16 @@ import offIcon from "@/assets/offIcon.svg";
 
 type HeaderProps = {
   title: string;
-  param: string;
+  isOn: boolean;
+  onToggle: (enabled: boolean) => void;
 };
 
-export default function Header({ title, param }: HeaderProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const isOnParam = searchParams.get(param);
-  const [isOn, setIsOn] = useState(isOnParam === "true");
-
-  // update search params when isOn changes
-  useEffect(() => {
-    const newSearchParams = new URLSearchParams(searchParams);
-    newSearchParams.set(param, isOn.toString());
-    setSearchParams(newSearchParams, { replace: true });
-  }, [isOn, setSearchParams, searchParams, param]);
-
+export default function Header({ title, isOn, onToggle }: HeaderProps) {
   return (
     <div className="border-dark-yellowish-white text-yellowish-white flex items-center justify-between border-b">
       <p className="heading-text">{title}</p>
       <button
-        onClick={() => setIsOn(!isOn)}
+        onClick={() => onToggle(!isOn)}
         className={`bg-gray small-text text-yellowish-white rounded-6px flex w-16 cursor-pointer items-center justify-between py-0.5 pr-0.5 pl-1.5`}
       >
         <p

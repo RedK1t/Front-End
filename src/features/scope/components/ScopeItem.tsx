@@ -2,7 +2,7 @@ import { LuTrash2 } from "react-icons/lu";
 
 type ScopeItemProps = {
   scope: string;
-  deleteScope: (string: string) => void;
+  deleteScope: (scope: string) => void;
 };
 export default function ScopeItem({ scope, deleteScope }: ScopeItemProps) {
   return (

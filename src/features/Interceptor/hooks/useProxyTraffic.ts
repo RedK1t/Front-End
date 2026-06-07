@@ -6,6 +6,7 @@ import type {
   intercepted_response,
   intruder_result,
   intruder_response,
+  scope_message,
 } from "../types";
 
 function useProxyTraffic() {
@@ -73,6 +74,13 @@ function useProxyTraffic() {
     initialData: false,
     staleTime: Infinity,
   });
+  const { data: scope = null } = useQuery<scope_message | null>({
+    queryKey: ["scope"],
+    queryFn: () => null,
+    enabled: true,
+    initialData: null,
+    staleTime: Infinity,
+  });
 
   return {
     markedForResponseIntercept,
@@ -84,6 +92,7 @@ function useProxyTraffic() {
     intruderResults,
     intruderResponse,
     intruderIsRunning,
+    scope,
   };
 }
 
