@@ -4,6 +4,8 @@ import type {
   history_detail_message,
   intercepted_request,
   intercepted_response,
+  intruder_result,
+  intruder_response,
 } from "../types";
 
 function useProxyTraffic() {
@@ -50,6 +52,27 @@ function useProxyTraffic() {
       initialData: null,
       staleTime: Infinity,
     });
+  const { data: intruderResults = [] } = useQuery<intruder_result[]>({
+    queryKey: ["intruder_results"],
+    queryFn: () => [],
+    enabled: true,
+    initialData: [],
+    staleTime: Infinity,
+  });
+  const { data: intruderResponse = null } = useQuery<intruder_response | null>({
+    queryKey: ["intruder_response"],
+    queryFn: () => null,
+    enabled: true,
+    initialData: null,
+    staleTime: Infinity,
+  });
+  const { data: intruderIsRunning = false } = useQuery<boolean>({
+    queryKey: ["intruder_is_running"],
+    queryFn: () => false,
+    enabled: true,
+    initialData: false,
+    staleTime: Infinity,
+  });
 
   return {
     markedForResponseIntercept,
@@ -58,6 +81,9 @@ function useProxyTraffic() {
     interceptStatus,
     history,
     historyDetail,
+    intruderResults,
+    intruderResponse,
+    intruderIsRunning,
   };
 }
 

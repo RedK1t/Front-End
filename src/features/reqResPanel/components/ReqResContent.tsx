@@ -3,9 +3,10 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import SwitchButton from "@/components/SwitchButton";
 import ArrowsRightLeft from "@/assets/ArrowsRightLeft.svg";
+import type { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 
 type requestOrResponse = {
   requestAndResponse: false;
@@ -25,6 +26,7 @@ type ReqResContentProps = (requestOrResponse | requestAndResponse) & {
   editableProp?: boolean;
   comment?: string;
   onBlur?: (value: string) => void;
+  onChange?: (value: string) => void;
 };
 
 export default function ReqResContent({
@@ -32,9 +34,11 @@ export default function ReqResContent({
   editableProp = true,
   comment,
   onBlur,
+  onChange,
   ...props
 }: ReqResContentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
   // Determine which text to display based on mode and current view
   const displayText = props.requestAndResponse
@@ -46,20 +50,55 @@ export default function ReqResContent({
     searchParams.get("isItRes") === "true" ? "Response" : "Request";
   const [query, setQuery] = useState("");
   const ref = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<ReactCodeMirrorRef>(null);
   const [count, setCount] = useState(0);
   const [index, setIndex] = useState(0);
+
+  const addIntruderPosition = () => {
+    const view = editorRef.current?.view;
+    if (!view) return;
+
+    const { from, to } = view.state.selection.main;
+    const selectedText = view.state.sliceDoc(from, to);
+
+    const insertion = `§${selectedText}§`;
+    view.dispatch({
+      changes: {
+        from,
+        to,
+        insert: insertion,
+      },
+      selection: { anchor: from + insertion.length },
+    });
+    view.focus();
+
+    // Trigger onChange if it exists after the change
+    if (onChange) {
+      onChange(view.state.doc.toString());
+    }
+  };
 
   useEffect(() => {
     setQuery("");
     setCount(0);
     setIndex(0);
 
-    const newURL = new URLSearchParams(searchParams);
+    // Only clear search queries if they actually exist to avoid unnecessary navigation on mount
+    const hasRequestQuery = searchParams.has("Requestquery");
+    const hasResponseQuery = searchParams.has("Responsequery");
 
-    newURL.delete(`Requestquery`);
-    newURL.delete(`Responsequery`);
-    setSearchParams(newURL, { replace: true });
-  }, [resOrReq]);
+    if (hasRequestQuery || hasResponseQuery) {
+      const newURL = new URLSearchParams(searchParams);
+      newURL.delete(`Requestquery`);
+      newURL.delete(`Responsequery`);
+      // Use a small timeout to move the update out of the render/mount cycle
+      // to avoid "Calling setSearchParams during render" error.
+      const timeoutId = setTimeout(() => {
+        setSearchParams(newURL, { replace: true, state: location.state });
+      }, 0);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [resOrReq]); // Only trigger when switching between Request/Response tabs
 
   useEffect(() => {
     // wait until the classes are loaded
@@ -81,7 +120,7 @@ export default function ReqResContent({
     } else {
       newURL.set(`${type || resOrReq}query`, e.target.value);
     }
-    setSearchParams(newURL, { replace: true });
+    setSearchParams(newURL, { replace: true, state: location.state });
   }
 
   function handleClear() {
@@ -90,7 +129,7 @@ export default function ReqResContent({
     setIndex(0);
     const newURL = new URLSearchParams(searchParams);
     newURL.delete(`${type || resOrReq}query`);
-    setSearchParams(newURL, { replace: true });
+    setSearchParams(newURL, { replace: true, state: location.state });
   }
 
   function handlePrev() {
@@ -131,6 +170,14 @@ export default function ReqResContent({
             buttonClassName="w-26"
           />
         )}
+        {type === "Request Template" && (
+          <button
+            onClick={addIntruderPosition}
+            className="rounded-6px bg-red hover:bg-light-red small-text cursor-pointer px-3 py-1 text-white transition-colors"
+          >
+            Add §
+          </button>
+        )}
       </div>
 
       {/* code */}
@@ -144,6 +191,8 @@ export default function ReqResContent({
           editableProp={editableProp}
           type={type || resOrReq}
           onBlur={onBlur}
+          onChange={onChange}
+          editorRef={editorRef}
         />
       </div>
 
@@ -176,6 +225,7 @@ export default function ReqResContent({
         <p className="normal-text ml-2.5 text-nowrap text-white">
           {count} matches found
         </p>
+        <button></button>
       </div>
     </div>
   );

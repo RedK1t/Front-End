@@ -1,13 +1,11 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Filters from "./components/Filters";
 import Table from "./components/Table/Table";
-import ProxyCacheManager from "./hooks/ProxyCacheManager";
 import InterceptorBottomPanel from "./components/InterceptorBottomPanel";
 
 export default function Interceptor() {
   return (
     <div className="h-dvh w-full overflow-hidden">
-      <ProxyCacheManager />
       <PanelGroup autoSaveId="sitemap" direction="vertical">
         <Panel className="overflow-hidden">
           <div className="mx-auto flex h-full w-11/12 flex-col gap-2.5 py-2.5">

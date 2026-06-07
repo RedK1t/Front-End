@@ -19,6 +19,7 @@ type TrProps = {
   handleToggleMark: (id: string, isMarked: boolean) => void;
   isMarked: boolean;
   handleQuickScan: (id: string, url: string) => void;
+  handleSendToIntruder: (id: string) => void;
   id: string;
   Time: string;
   Type: string;
@@ -41,6 +42,7 @@ export default memo(function Tr({
   handleDrop,
   handleToggleMark,
   handleQuickScan,
+  handleSendToIntruder,
   isMarked,
   id,
   Time,
@@ -130,7 +132,9 @@ export default memo(function Tr({
         )}
         <div className="bg-yellowish-white! h-px! w-full" />
         <ContextMenuItemStyled>Send to Repeater</ContextMenuItemStyled>
-        <ContextMenuItemStyled>Send to Intruder</ContextMenuItemStyled>
+        <ContextMenuItemStyled onClick={() => handleSendToIntruder(id)}>
+          Send to Intruder
+        </ContextMenuItemStyled>
       </ContextMenuContent>
     </ContextMenu>
   );

@@ -12,12 +12,16 @@ type SelectFilterProps = {
   placeholder: string;
   options: string[] | number[];
   fullWidth?: boolean;
+  onValueChange?: (value: string) => void;
+  value?: string;
 };
 
 export default function SelectFilter({
   placeholder,
   options,
   fullWidth = false,
+  onValueChange,
+  value: valueProp,
 }: SelectFilterProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   return (
@@ -39,8 +43,12 @@ export default function SelectFilter({
 
       {/* SelectFilter */}
       <Select
-        value={searchParams.get(placeholder) || ""}
+        value={valueProp || searchParams.get(placeholder) || ""}
         onValueChange={(value) => {
+          if (onValueChange) {
+            onValueChange(value);
+            return;
+          }
           // Set Filter to Search Params
           const newParams = new URLSearchParams(searchParams);
           newParams.set(placeholder, value);

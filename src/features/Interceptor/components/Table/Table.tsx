@@ -25,6 +25,7 @@ export default function Table() {
     interceptedResponses,
     markedForResponseIntercept,
     history,
+    historyDetail,
   } = useProxyTraffic();
 
   const {
@@ -35,6 +36,9 @@ export default function Table() {
     unmarkForResponseIntercept,
     getHistoryDetail,
   } = useProxyActions();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isHistoryMode = searchParams.get("history") === "true";
 
   const handleForward = useCallback(
     (id: string, direction: string) => {
@@ -92,8 +96,41 @@ export default function Table() {
     },
     [interceptedRequests, navigate],
   );
-  const [searchParams, setSearchParams] = useSearchParams();
-  const isHistoryMode = searchParams.get("history") === "true";
+
+  const handleSendToIntruder = useCallback(
+    (id: string) => {
+      if (isHistoryMode) {
+        const item = history.find((h) => h.id === id);
+        if (item && historyDetail) {
+          let u;
+          try {
+            u = new URL(item.URL);
+          } catch {
+            return;
+          }
+          const pathQuery = (u.pathname || "/") + (u.search || "");
+          let raw = `${item.Method} ${pathQuery} HTTP/1.1\n`;
+          raw += historyDetail.request_headers;
+          if (!historyDetail.request_headers.toLowerCase().includes("host:")) {
+            raw += `Host: ${item.Host}\n`;
+          }
+          raw += `\n${historyDetail.request_body}`;
+
+          navigate("/proxy/intruder", {
+            state: { rawRequest: raw },
+          });
+        }
+      } else {
+        const request = interceptedRequests.find((req) => req.id === id);
+        if (request?.raw) {
+          navigate("/proxy/intruder", {
+            state: { rawRequest: request.raw },
+          });
+        }
+      }
+    },
+    [isHistoryMode, history, historyDetail, interceptedRequests, navigate],
+  );
 
   const tableRows = useMemo(() => {
     if (isHistoryMode) {
@@ -173,9 +210,12 @@ export default function Table() {
     if (!selectedRow) {
       const newSearchParams = new URLSearchParams(searchParams);
       newSearchParams.set("selected", sortedTable[0]?.id || "");
-      setSearchParams(newSearchParams, { replace: true });
+      const timeoutId = setTimeout(() => {
+        setSearchParams(newSearchParams, { replace: true });
+      }, 0);
+      return () => clearTimeout(timeoutId);
     }
-  }, [sortedTable]);
+  }, [sortedTable, Selected, searchParams, setSearchParams]);
 
   useEffect(() => {
     if (isHistoryMode && Selected) {
@@ -227,6 +267,7 @@ export default function Table() {
               handleDrop={handleDrop}
               handleToggleMark={handleToggleMark}
               handleQuickScan={handleQuickScan}
+              handleSendToIntruder={handleSendToIntruder}
               isMarked={markedForResponseIntercept.includes(row.id)}
               {...row}
             />

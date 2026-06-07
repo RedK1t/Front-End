@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import CodeMirror from "@uiw/react-codemirror";
+import { useEffect, useRef, useState } from "react";
+import CodeMirror, { type ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
@@ -14,12 +14,16 @@ export default function CodeWrapper({
   editableProp = true,
   type = "Request",
   onBlur,
+  onChange: onChangeProp,
+  editorRef,
 }: {
   language?: "html" | "css" | "javascript" | "js" | "json" | "http";
   initialValue?: string;
   editableProp?: boolean;
   type?: "Request" | "Response" | "Request Template";
   onBlur?: (value: string) => void;
+  onChange?: (value: string) => void;
+  editorRef?: React.RefObject<ReactCodeMirrorRef | null>;
 }) {
   const [value, setValue] = useState(initialValue);
 
@@ -51,6 +55,7 @@ export default function CodeWrapper({
 
   return (
     <CodeMirror
+      ref={editorRef}
       value={value}
       height="100%"
       className="bg-gray text-rem-[0.875] h-full"
@@ -85,7 +90,12 @@ export default function CodeWrapper({
         // Custom highlight extension applied last
       ]}
       editable={editableProp}
-      onChange={(val) => setValue(val)}
+      onChange={(val) => {
+        setValue(val);
+        if (onChangeProp) {
+          onChangeProp(val);
+        }
+      }}
       onBlur={() => onBlur?.(value)}
       basicSetup={{
         autocompletion: true,

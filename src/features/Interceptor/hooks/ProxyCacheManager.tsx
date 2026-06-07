@@ -5,6 +5,7 @@ import type {
   history_item,
   intercepted_request,
   intercepted_response,
+  intruder_result,
   message,
 } from "../types";
 
@@ -119,6 +120,54 @@ export default function ProxyCacheManager() {
       if (type === "history_cleared") {
         queryClient.setQueryData(["history"], () => []);
         queryClient.setQueryData(["history_detail"], () => null);
+      }
+
+      if (type === "intruder_result") {
+        console.log("RECEIVED INTRUDER RESULT MESSAGE:", lastJsonMessage);
+        queryClient.setQueryData(
+          ["intruder_results"],
+          (oldData: intruder_result[] = []) => {
+            // Log for debugging
+            console.log("Existing data in cache:", oldData);
+
+            // The backend sends 'result' object. We'll use the request number as a temporary ID
+            // if the backend doesn't provide a unique ID for the result.
+            const resultId =
+              lastJsonMessage.id || String(lastJsonMessage.result.request);
+
+            // Prevent duplicates
+            if (
+              oldData.some(
+                (item) => (item.id || String(item.result.request)) === resultId,
+              )
+            ) {
+              console.log("Duplicate result ignored:", resultId);
+              return oldData;
+            }
+
+            // Append the new result to the existing results
+            const newData = [...oldData, lastJsonMessage];
+            console.log(
+              "Updated intruder results cache with new data:",
+              newData,
+            );
+            return newData;
+          },
+        );
+      }
+
+      if (type === "intruder_response") {
+        console.log("RECEIVED INTRUDER RESPONSE:", lastJsonMessage);
+        queryClient.setQueryData(["intruder_response"], lastJsonMessage);
+      }
+
+      if (type === "intruder_started") {
+        queryClient.setQueryData(["intruder_is_running"], true);
+        queryClient.setQueryData(["intruder_results"], []); // Clear results on new attack
+      }
+
+      if (type === "intruder_complete") {
+        queryClient.setQueryData(["intruder_is_running"], false);
       }
     }
   }, [lastJsonMessage, queryClient]);

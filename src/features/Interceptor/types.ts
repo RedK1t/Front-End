@@ -89,6 +89,64 @@ export type history_cleared_message = {
   type: "history_cleared";
 };
 
+export type intruder_attack_action = {
+  type: "intruder_attack_action";
+  action: "intruder_attack";
+  raw: string;
+  attack_type: string;
+  payload_sets: string[][];
+  target?: string;
+  grep?: string;
+  threads?: number;
+  timeout?: number;
+  follow_redirects?: boolean;
+};
+
+export type intruder_stop_action = {
+  type: "intruder_stop_action";
+  action: "intruder_stop";
+};
+
+export type intruder_get_response_action = {
+  type: "intruder_get_response_action";
+  action: "intruder_get_response";
+  index: number;
+};
+
+export type intruder_response = {
+  type: "intruder_response";
+  index: number;
+  payload: string;
+  status_code: number;
+  request: string;
+  response: string;
+};
+
+export type intruder_started = {
+  type: "intruder_started";
+};
+
+export type intruder_complete = {
+  type: "intruder_complete";
+  total: number;
+  errors: number;
+  stopped: boolean;
+};
+
+export type intruder_result = {
+  type: "intruder_result";
+  result: {
+    request: number;
+    payload: string;
+    status_code: number;
+    length: number;
+    time: number;
+    grep: string | null;
+    error: string | null;
+  };
+  id?: string;
+};
+
 export type message =
   | intercept_status
   | mark_for_response_intercept
@@ -101,4 +159,11 @@ export type message =
   | history_message
   | history_new_message
   | history_detail_message
-  | history_cleared_message;
+  | history_cleared_message
+  | intruder_attack_action
+  | intruder_stop_action
+  | intruder_get_response_action
+  | intruder_response
+  | intruder_started
+  | intruder_complete
+  | intruder_result;

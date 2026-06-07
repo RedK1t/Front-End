@@ -2,6 +2,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import useProxySocket from "./Interceptor/hooks/useProxySocket";
 import ProxyDisconnected from "./Interceptor/components/ProxyDisconnected";
 import { useState } from "react";
+import ProxyCacheManager from "./Interceptor/hooks/ProxyCacheManager";
 
 export default function ProxyLayout() {
   const { readyState } = useProxySocket();
@@ -25,13 +26,21 @@ export default function ProxyLayout() {
   // If we are disconnected AND not on the sitemap page, show the fallback
   if (isDisconnected && isNotSitemap) {
     return (
-      <ProxyDisconnected
-        onRetry={handleRetry}
-        isConnecting={isRetrying || readyState === WebSocket.CONNECTING}
-      />
+      <>
+        <ProxyCacheManager />
+        <ProxyDisconnected
+          onRetry={handleRetry}
+          isConnecting={isRetrying || readyState === WebSocket.CONNECTING}
+        />
+      </>
     );
   }
 
   // Otherwise (connected OR on sitemap page), show the actual content
-  return <Outlet />;
+  return (
+    <>
+      <ProxyCacheManager />
+      <Outlet />
+    </>
+  );
 }
