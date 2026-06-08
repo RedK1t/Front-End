@@ -1,5 +1,6 @@
 import type { RefObject } from "react";
 import Markdown from "react-markdown";
+import { useState, useEffect } from "react";
 
 type MessageListProps = {
   messages: { role: string; content: string }[];
@@ -20,21 +21,22 @@ function MessageList({ messages, messagesRef, isLoading }: MessageListProps) {
               <div
                 dir="auto"
                 style={{ unicodeBidi: "isolate" }}
-                className="text-yellowish-white max-w-[95%] rounded-2xl rounded-bl-none bg-black/30 px-4 py-2 text-start text-sm shadow-sm"
+                className="bg-red/80 animate-in slide-in-from-left-2 max-w-[95%] rounded-2xl rounded-tl-none px-4 py-2 text-start text-sm text-white shadow-md transition-all"
               >
                 {item.content.replace(/\[\[.*?\]\]/g, "")}
               </div>
             </div>
           );
         if (item.role === "assistant") {
+          const isLast = index === messages.length - 1 && !isLoading;
           return (
             <div key={index} className="flex justify-end">
               <div
-                dir="rtl"
+                dir="auto"
                 style={{ unicodeBidi: "isolate", display: "inline-block" }}
-                className="bg-red/70 max-w-[95%] rounded-2xl px-4 py-2 text-start text-sm wrap-break-word whitespace-normal text-white shadow-md"
+                className="chat-markdown text-yellowish-white animate-in slide-in-from-right-2 max-w-[95%] rounded-2xl rounded-tr-none bg-black/40 px-4 py-3 text-start text-sm shadow-lg ring-1 ring-white/10 transition-all"
               >
-                <Markdown>{item.content}</Markdown>
+                <AssistantMessage content={item.content} isLast={isLast} />
               </div>
             </div>
           );
@@ -49,6 +51,38 @@ function MessageList({ messages, messagesRef, isLoading }: MessageListProps) {
       )}
     </div>
   );
+}
+
+function AssistantMessage({
+  content,
+  isLast,
+}: {
+  content: string;
+  isLast: boolean;
+}) {
+  const [displayedContent, setDisplayedContent] = useState(
+    isLast ? "" : content,
+  );
+
+  useEffect(() => {
+    if (!isLast) {
+      setDisplayedContent(content);
+      return;
+    }
+
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayedContent(content.slice(0, i));
+      i++;
+      if (i > content.length) {
+        clearInterval(interval);
+      }
+    }, 5);
+
+    return () => clearInterval(interval);
+  }, [content, isLast]);
+
+  return <Markdown>{displayedContent}</Markdown>;
 }
 
 export default MessageList;

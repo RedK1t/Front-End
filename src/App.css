@@ -79,6 +79,62 @@
     display: none;
     /* Chrome, Safari, and Opera */
   }
+
+  .chat-markdown {
+    @apply text-yellowish-white leading-relaxed;
+    text-align: start;
+  }
+
+  .chat-markdown p {
+    @apply mb-7 last:mb-0;
+  }
+
+  .chat-markdown ul,
+  .chat-markdown ol {
+    @apply mb-7 ml-6 list-outside;
+  }
+
+  .chat-markdown li {
+    @apply mb-4 last:mb-0;
+  }
+
+  .chat-markdown code {
+    @apply rounded bg-black/40 px-1.5 py-0.5 font-jetbrains-mono text-[13px] text-red/90;
+    direction: ltr;
+    display: inline-block;
+  }
+
+  .chat-markdown pre {
+    @apply my-6 overflow-x-auto rounded-xl bg-black/60 p-4 ring-1 ring-white/10;
+    direction: ltr;
+  }
+
+  .chat-markdown pre code {
+    @apply bg-transparent p-0 text-white;
+    display: block;
+  }
+
+  .chat-markdown strong {
+    @apply font-bold text-red;
+  }
+
+  .chat-markdown h1,
+  .chat-markdown h2,
+  .chat-markdown h3 {
+    @apply mb-5 mt-10 font-bold text-white first:mt-0;
+  }
+
+  .chat-markdown h1 {
+    @apply text-xl;
+  }
+
+  .chat-markdown h2 {
+    @apply text-lg;
+  }
+
+  .chat-markdown h3 {
+    @apply text-base;
+  }
 }
 
 @layer base {

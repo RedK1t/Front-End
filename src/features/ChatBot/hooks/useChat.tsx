@@ -86,6 +86,7 @@ function useChat() {
     handleSendMessage,
     messagesRef,
     isLoading,
+    setMessages,
   };
 }
 

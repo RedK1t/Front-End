@@ -40,9 +40,12 @@ function ChatInput({ handleSendMessage, input, setInput }: ChatInputProps) {
       </button>
       <button
         onClick={() => handleSendMessage()}
-        className="bg-red hover:bg-light-red cursor-pointer rounded-full p-2 text-white transition-colors"
+        disabled={!input.trim()}
+        className="bg-red hover:bg-light-red disabled:bg-gray cursor-pointer rounded-full p-2 text-white transition-all active:scale-90 disabled:cursor-not-allowed"
       >
-        <FaPaperPlane className="h-4 w-4" />
+        <FaPaperPlane
+          className={`h-4 w-4 ${input.trim() ? "translate-x-0.5 -translate-y-0.5" : ""}`}
+        />
       </button>
     </div>
   );

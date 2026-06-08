@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import onIcon from "@/assets/onIcon.svg";
 import offIcon from "@/assets/offIcon.svg";
 
