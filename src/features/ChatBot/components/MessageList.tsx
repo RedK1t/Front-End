@@ -1,6 +1,7 @@
 import type { RefObject } from "react";
 import Markdown from "react-markdown";
 import { useState, useEffect } from "react";
+import remarkGfm from "remark-gfm";
 
 type MessageListProps = {
   messages: { role: string; content: string }[];
@@ -82,7 +83,28 @@ function AssistantMessage({
     return () => clearInterval(interval);
   }, [content, isLast]);
 
-  return <Markdown>{displayedContent}</Markdown>;
+  return (
+    <Markdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        input: ({ ...props }) => {
+          if (props.type === "checkbox") {
+            return (
+              <input
+                type="checkbox"
+                defaultChecked={props.checked}
+                className="checkbox checkbox-xs checkbox-error mr-2 border-white/20 align-middle"
+                onClick={(e) => e.stopPropagation()}
+              />
+            );
+          }
+          return <input {...props} />;
+        },
+      }}
+    >
+      {displayedContent}
+    </Markdown>
+  );
 }
 
 export default MessageList;

@@ -90,4 +90,18 @@ function useChat() {
   };
 }
 
+export const getAutoSummary = (pathname: string) => {
+  const summaries: Record<string, string> = {
+    "/Reconnaissance": "أنا هنا في **Reconnaissance**. أقدر أساعدك في البحث عن الـ subdomains والـ DNS records لأي target.",
+    "/proxy/interceptor": "إحنا دلوقتي في الـ **Interceptor**. أقدر أشرحلك إزاي تعمل intercept للـ requests وتعدل عليها.",
+    "/proxy/sitemap": "دي الـ **Sitemap**. هنا بنرسم خريطة لكل الـ endpoints اللي اكتشفناها للـ target.",
+    "/AiScanner": "وصلنا للـ **AI Scanner**. أقدر أبدأ معاك فحص ذكي للثغرات وأشرحلك النتائج.",
+    "/AiReport": "هنا الـ **Ai Report**. أقدر أساعدك تجمع كل اللي لقيناه وتطلعه في PDF محترم.",
+    "/tools": "دي صفحة الـ **Tools**. فيها أدوات سريعة زي الـ Encoder والـ Hash Generator.",
+  };
+
+  const matchedKey = Object.keys(summaries).find((key) => pathname.startsWith(key));
+  return summaries[matchedKey || ""] || "أهلاً بك في **RedKit**! أنا مساعدك الذكي في عمليات الـ Red Teaming والـ Pentesting. أقدر أساعدك إزاي النهاردة؟";
+};
+
 export default useChat;

@@ -1,11 +1,11 @@
 import { Popover, PopoverContent } from "@/components/ui/popover";
-import useChat from "./hooks/useChat";
+import useChat, { getAutoSummary } from "./hooks/useChat";
 import ChatTrigger from "./components/ChatTrigger";
 import MessageList from "./components/MessageList";
 import ChatInput from "./components/ChatInput";
 import { FaTrashAlt } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 
 export default function ChatBot() {
   const { pathname } = useLocation();
@@ -18,6 +18,24 @@ export default function ChatBot() {
     isLoading,
     setMessages,
   } = useChat();
+
+  useEffect(() => {
+    // Automatically update the first assistant message based on the current page
+    // only if there's only one message (the initial greeting)
+    if (messages.length <= 2) {
+      const summary = getAutoSummary(pathname);
+      setMessages([
+        {
+          role: "system",
+          content: import.meta.env.VITE_SYSTEM_PROMPT,
+        },
+        {
+          role: "assistant",
+          content: summary,
+        },
+      ]);
+    }
+  }, [pathname, setMessages]); // Re-run when page changes
 
   const quickSuggestions = useMemo(() => {
     const baseSuggestions = [
@@ -33,8 +51,8 @@ export default function ChatBot() {
     > = {
       "/Reconnaissance": [
         {
-          label: "How to scan subdomains?",
-          text: "How do I use the Reconnaissance tool to find subdomains?",
+          label: "Checklist: Recon",
+          text: "Give me a step-by-step checklist for performing reconnaissance on a new target.",
         },
         {
           label: "What is WHOIS?",
@@ -43,8 +61,8 @@ export default function ChatBot() {
       ],
       "/proxy/interceptor": [
         {
-          label: "How to intercept?",
-          text: "How do I intercept and modify HTTP requests here?",
+          label: "Checklist: XSS",
+          text: "Give me a checklist for testing XSS using the Interceptor.",
         },
         {
           label: "What is 'Forward'?",
@@ -59,8 +77,8 @@ export default function ChatBot() {
       ],
       "/AiScanner": [
         {
-          label: "How to start a scan?",
-          text: "How do I start an AI-powered vulnerability scan?",
+          label: "Checklist: AI Scan",
+          text: "Give me a checklist for performing a manual vulnerability scan with the AI Scanner.",
         },
         {
           label: "What can it find?",

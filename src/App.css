@@ -98,6 +98,19 @@
     @apply mb-4 last:mb-0;
   }
 
+  .chat-markdown li:has(input[type="checkbox"]) {
+    @apply list-none ml-0;
+  }
+
+  .chat-markdown li input[type="checkbox"] {
+    @apply cursor-pointer transition-all;
+  }
+
+  .chat-markdown li input[type="checkbox"]:checked + span,
+  .chat-markdown li input[type="checkbox"]:checked + label {
+    @apply text-white/40 line-through transition-all;
+  }
+
   .chat-markdown code {
     @apply rounded bg-black/40 px-1.5 py-0.5 font-jetbrains-mono text-[13px] text-red/90;
     direction: ltr;
