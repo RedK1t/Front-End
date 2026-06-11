@@ -5,10 +5,12 @@ export default function BottomPanel({
   editable = false,
   requestText = "",
   responseText = "",
+  onRequestChange,
 }: {
   editable?: boolean;
   requestText?: string;
   responseText?: string;
+  onRequestChange?: (value: string) => void;
 }) {
   return (
     <div className="flex h-full flex-col">
@@ -23,6 +25,7 @@ export default function BottomPanel({
               type="Request"
               editableProp={editable}
               text={requestText}
+              onChange={onRequestChange}
             />
           </div>
           {/* Border */}
@@ -32,7 +35,7 @@ export default function BottomPanel({
               requestAndResponse={false}
               type="Response"
               text={responseText}
-              editableProp={editable}
+              editableProp={false}
             />
           </div>
         </div>

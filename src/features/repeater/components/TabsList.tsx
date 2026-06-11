@@ -1,8 +1,25 @@
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useRef } from "react";
 import Tab from "./Tab";
+import type { RepeaterTab } from "../types";
 
-export default function TabsList({ isExtended }: { isExtended: boolean }) {
+type TabsListProps = {
+  isExtended: boolean;
+  tabs: RepeaterTab[];
+  activeTabId: string;
+  onTabClick: (tabId: string) => void;
+  onTabClose: (tabId: string) => void;
+  onTabRename: (tabId: string, newName: string) => void;
+};
+
+export default function TabsList({
+  isExtended,
+  tabs,
+  activeTabId,
+  onTabClick,
+  onTabClose,
+  onTabRename,
+}: TabsListProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollLeft = () => {
@@ -31,66 +48,16 @@ export default function TabsList({ isExtended }: { isExtended: boolean }) {
         ref={scrollContainerRef}
         className={`hide-scrollbar flex h-full w-full items-start justify-start gap-1 ${isExtended ? "flex-wrap overflow-x-hidden overflow-y-auto" : "overflow-auto"}`}
       >
-        <Tab text="DELETE /media/:id" />
-        <Tab text="GET /reports" />
-        <Tab text="POST /graphql" />
-        <Tab text="GET /users" />
-        <Tab text="POST /users" />
-        <Tab text="PUT /users/:id" />
-        <Tab text="DELETE /users/:id" />
-        <Tab text="GET /products" />
-        <Tab text="POST /auth/login" />
-        <Tab text="GET /orders" />
-        <Tab text="PATCH /orders/:id" />
-        <Tab text="GET /inventory" />
-        <Tab text="POST /checkout" />
-        <Tab text="GET /analytics" />
-        <Tab text="POST /webhooks" />
-        <Tab text="GET /search" />
-        <Tab text="PUT /settings" />
-        <Tab text="GET /health" />
-        <Tab text="POST /upload" />
-        <Tab text="DELETE /media/:id" />
-        <Tab text="GET /reports" />
-        <Tab text="POST /graphql" />
-        <Tab text="GET /users" />
-        <Tab text="POST /users" />
-        <Tab text="PUT /users/:id" />
-        <Tab text="DELETE /users/:id" />
-        <Tab text="GET /products" />
-        <Tab text="POST /auth/login" />
-        <Tab text="GET /orders" />
-        <Tab text="PATCH /orders/:id" />
-        <Tab text="GET /inventory" />
-        <Tab text="POST /checkout" />
-        <Tab text="GET /analytics" />
-        <Tab text="POST /webhooks" />
-        <Tab text="GET /search" />
-        <Tab text="PUT /settings" />
-        <Tab text="GET /health" />
-        <Tab text="POST /upload" />
-        <Tab text="DELETE /media/:id" />
-        <Tab text="GET /reports" />
-        <Tab text="POST /graphql" />
-        <Tab text="GET /users" />
-        <Tab text="POST /users" />
-        <Tab text="PUT /users/:id" />
-        <Tab text="DELETE /users/:id" />
-        <Tab text="GET /products" />
-        <Tab text="POST /auth/login" />
-        <Tab text="GET /orders" />
-        <Tab text="PATCH /orders/:id" />
-        <Tab text="GET /inventory" />
-        <Tab text="POST /checkout" />
-        <Tab text="GET /analytics" />
-        <Tab text="POST /webhooks" />
-        <Tab text="GET /search" />
-        <Tab text="PUT /settings" />
-        <Tab text="GET /health" />
-        <Tab text="POST /upload" />
-        <Tab text="DELETE /media/:id" />
-        <Tab text="GET /reports" />
-        <Tab text="POST /graphql" />
+        {tabs.map((tab) => (
+          <Tab
+            key={tab.id}
+            text={tab.name}
+            isActive={tab.id === activeTabId}
+            onClose={() => onTabClose(tab.id)}
+            onClick={() => onTabClick(tab.id)}
+            onRename={(newName) => onTabRename(tab.id, newName)}
+          />
+        ))}
       </div>
       {!isExtended && (
         <button

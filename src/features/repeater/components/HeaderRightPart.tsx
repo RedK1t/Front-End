@@ -6,16 +6,31 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import type { RepeaterTab } from "../types";
 
 type HeaderRightPartProps = {
   isExtended: boolean;
   setIsExtended: (isExtended: boolean) => void;
+  tabs: RepeaterTab[];
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  onSelectTab: (tabId: string) => void;
 };
 
 export default function HeaderRightPart({
   isExtended,
   setIsExtended,
+  tabs,
+  searchQuery,
+  setSearchQuery,
+  onSelectTab,
 }: HeaderRightPartProps) {
+  const filteredTabs = tabs.filter(
+    (tab) =>
+      tab.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tab.request.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
   return (
     <div className="flex h-full items-center gap-1">
       <p className="h-full w-px bg-white"></p>
@@ -38,19 +53,26 @@ export default function HeaderRightPart({
             <Input
               placeholder="Search"
               className="small-text focus-visible:ring-none border-yellowish-white mb-2 h-7 w-full rounded-md px-2 py-1 text-white ring-transparent"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
             />
             <div className="text-yellowish-white *:hover:bg-yellowish-white *:hover:text-gray flex h-full w-full flex-col gap-y-1 *:cursor-pointer *:rounded-sm *:px-1">
-              <p className="">Search results</p>
-              <p className="">Search results</p>
-              <p className="">Search results</p>
-              <p className="">Search results</p>
-              <p className="">Search results</p>
-              <p className="">Search results</p>
-              <p className="">Search results</p>
-              <p className="">Search results</p>
-              <p className="">Search results</p>
-              <p className="">Search results</p>
-              <p className="">Search results</p>
+              {filteredTabs.length > 0 ? (
+                filteredTabs.map((tab) => (
+                  <p
+                    key={tab.id}
+                    onClick={() => {
+                      onSelectTab(tab.id);
+                      setSearchQuery("");
+                    }}
+                  >
+                    {tab.name}
+                  </p>
+                ))
+              ) : (
+                <p className="text-gray-500">No tabs found</p>
+              )}
             </div>
           </PopoverContent>
         </Popover>
