@@ -1,13 +1,25 @@
-import { FaPlug, FaRotateRight, FaCircleExclamation } from "react-icons/fa6";
+import {
+  FaPlug,
+  FaRotateRight,
+  FaCircleExclamation,
+  FaGlobe,
+} from "react-icons/fa6";
 
 interface ProxyDisconnectedProps {
   onRetry: () => void;
   isConnecting: boolean;
+  onOpenBrowser: () => void;
+  isOpening: boolean;
+  /** True when no browser session has ever connected (vs. a dropped link). */
+  neverConnected: boolean;
 }
 
 export default function ProxyDisconnected({
   onRetry,
   isConnecting,
+  onOpenBrowser,
+  isOpening,
+  neverConnected,
 }: ProxyDisconnectedProps) {
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center bg-black p-6 transition-all duration-500">
@@ -27,30 +39,52 @@ export default function ProxyDisconnected({
 
       <div className="max-w-md space-y-4 text-center">
         <h1 className="heading-text tracking-tight text-white">
-          Connection Lost
+          {neverConnected ? "No Active Browser Session" : "Connection Lost"}
         </h1>
         <p className="normal-text text-dark-yellowish-white leading-relaxed">
-          The Interceptor proxy is currently unreachable. Make sure your backend
-          service is running and try again.
+          {neverConnected
+            ? "Start a browser session to launch your isolated browser and begin intercepting traffic."
+            : "The Interceptor proxy is currently unreachable. Your session may have stopped after being idle — start it again or retry the connection."}
         </p>
       </div>
 
       <div className="mt-10 flex flex-col items-center gap-4">
+        {/* Primary action: start/restart the user's container. This is what makes
+            the proxy reachable, so it must live on this screen. */}
+        <button
+          onClick={onOpenBrowser}
+          disabled={isOpening}
+          className={`group rounded-6px relative flex items-center gap-3 overflow-hidden px-8 py-3 transition-all active:scale-95 ${
+            isOpening
+              ? "bg-gray border-yellowish-white/10 cursor-wait border"
+              : "bg-red hover:bg-light-red cursor-pointer shadow-[0_0_20px_rgba(206,50,50,0.3)] hover:shadow-[0_0_30px_rgba(206,50,50,0.5)]"
+          }`}
+          aria-label="Open browser session"
+        >
+          <FaGlobe
+            className={`text-lg text-white transition-transform duration-500 ${isOpening ? "animate-spin" : "group-hover:rotate-12"}`}
+          />
+          <span className="mid-text text-white">
+            {isOpening ? "Opening…" : "Open Browser"}
+          </span>
+        </button>
+
+        {/* Secondary action: retry the WebSocket for transient drops. */}
         <button
           onClick={onRetry}
           disabled={isConnecting}
-          className={`group rounded-6px relative flex items-center gap-3 overflow-hidden px-8 py-3 transition-all active:scale-95 ${
+          className={`group flex items-center gap-2 px-4 py-2 transition-all active:scale-95 ${
             isConnecting
-              ? "bg-gray border-yellowish-white/10 cursor-wait border"
-              : "bg-red hover:bg-light-red shadow-[0_0_20px_rgba(206,50,50,0.3)] hover:shadow-[0_0_30px_rgba(206,50,50,0.5)]"
+              ? "cursor-wait"
+              : "text-dark-yellowish-white hover:text-white cursor-pointer"
           }`}
           aria-label="Retry connection"
         >
           <FaRotateRight
-            className={`text-lg text-white transition-transform duration-700 ${isConnecting ? "animate-spin" : "group-hover:rotate-180"}`}
+            className={`text-sm transition-transform duration-700 ${isConnecting ? "text-yellow animate-spin" : "group-hover:rotate-180"}`}
           />
-          <span className="mid-text text-white">
-            {isConnecting ? "Reconnecting..." : "Try Reconnect"}
+          <span className="small-text">
+            {isConnecting ? "Reconnecting…" : "Try Reconnect"}
           </span>
         </button>
 

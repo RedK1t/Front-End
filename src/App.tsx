@@ -14,6 +14,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ErrorFallback from "./features/ErrorFallback";
 import { SubdomainProvider } from "./context/SubdomainContext";
 import { DomainProvider } from "./context/DomainContext";
+import { ProxySessionProvider } from "./features/Interceptor/context/ProxySessionContext";
 import Repeater from "./features/repeater/Repeater";
 import Intruder from "./features/intruder/Intruder";
 import Tools from "./features/tools/Tools";
@@ -111,7 +112,9 @@ export default function App() {
         <ReactQueryDevtools initialIsOpen={false} />
         <DomainProvider>
           <SubdomainProvider>
-            <RouterProvider router={router} />
+            <ProxySessionProvider>
+              <RouterProvider router={router} />
+            </ProxySessionProvider>
           </SubdomainProvider>
         </DomainProvider>
       </QueryClientProvider>

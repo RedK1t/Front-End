@@ -9,9 +9,11 @@ import SwitchButton from "@/components/SwitchButton";
 import { useSearchParams } from "react-router-dom";
 import useProxyActions from "../hooks/useProxyActions";
 import useProxyTraffic from "../hooks/useProxyTraffic";
+import { useProxySession } from "../context/ProxySessionContext";
 
 export default function InterceptorHeader() {
   const [searchParams] = useSearchParams();
+  const { openBrowser, isOpening, error: browserError } = useProxySession();
   const {
     forwardRequest,
     forwardResponse,
@@ -133,15 +135,17 @@ export default function InterceptorHeader() {
           Drop All
           <img src={dropAllIcon} alt="dropAllIcon" className="h-4 w-4" />
         </button>
-        <a
-          href="http://localhost:6080/vnc.html"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`bg-gray small-text text-yellowish-white rounded-6px flex w-32 cursor-pointer items-center justify-between px-3 py-2`}
+        <button
+          onClick={() => openBrowser()}
+          disabled={isOpening}
+          title={browserError ?? undefined}
+          className={`bg-gray small-text text-yellowish-white rounded-6px flex w-32 items-center justify-between px-3 py-2 ${
+            isOpening ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+          }`}
         >
-          Open Browser
+          {isOpening ? "Opening…" : "Open Browser"}
           <img src={browserIcon} alt="browserIcon" className="h-4 w-4" />
-        </a>
+        </button>
       </div>
     </div>
   );

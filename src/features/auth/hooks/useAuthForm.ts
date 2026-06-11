@@ -120,10 +120,9 @@ export const useAuthForm = () => {
       setIsLoading(false);
       throw error;
     }
-    // Revalidate the targets query after sign-out
-    await queryClient.refetchQueries({ queryKey: ["targets"] });
-    // Also invalidate other user-related queries
-    await queryClient.refetchQueries({ queryKey: ["user"] });
+    // Wipe ANY cached queries from a previous user before entering the app, so the
+    // new user always fetches their own data (cache is global, staleTime: Infinity).
+    queryClient.clear();
     setIsLoading(false);
     navigate("/");
   }
@@ -147,10 +146,9 @@ export const useAuthForm = () => {
       setIsLoading(false);
       throw error;
     }
-    // Revalidate the targets query after sign-out
-    await queryClient.refetchQueries({ queryKey: ["targets"] });
-    // Also invalidate other user-related queries
-    await queryClient.refetchQueries({ queryKey: ["user"] });
+    // Wipe ANY cached queries from a previous user before entering the app, so the
+    // new user always fetches their own data (cache is global, staleTime: Infinity).
+    queryClient.clear();
     setIsLoading(false);
     navigate("/");
   }

@@ -24,7 +24,7 @@ export default function PayloadsPanel({
 }: {
   requestTemplate: string;
 }) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const { startIntruderAttack, stopIntruderAttack } = useProxyActions();
   const { intruderIsRunning } = useProxyTraffic();
   const queryClient = useQueryClient();
