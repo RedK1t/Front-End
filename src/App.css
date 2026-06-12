@@ -106,8 +106,8 @@
     @apply cursor-pointer transition-all;
   }
 
-  .chat-markdown li input[type="checkbox"]:checked + span,
-  .chat-markdown li input[type="checkbox"]:checked + label {
+  .chat-markdown li input[type="checkbox"]:checked+span,
+  .chat-markdown li input[type="checkbox"]:checked+label {
     @apply text-white/40 line-through transition-all;
   }
 
@@ -155,6 +155,14 @@
   html,
   body {
     @apply bg-black text-white;
+  }
+
+  ::selection {
+    @apply bg-red text-white;
+  }
+
+  ::-moz-selection {
+    @apply bg-red text-white;
   }
 }
 
