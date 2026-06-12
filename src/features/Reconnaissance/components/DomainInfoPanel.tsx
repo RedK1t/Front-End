@@ -8,7 +8,7 @@ import CrtRow from "./CrtRow";
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
 import useGetCompInfo from "../hooks/useGetCompInfo";
-import Markdown from "react-markdown";
+import CompanyInfoView from "./CompanyInfo";
 import Loader from "@/components/Loader";
 
 export default function DomainInfoPanel() {
@@ -219,25 +219,7 @@ export default function DomainInfoPanel() {
           <p className="text-red text-center">{compInfoError.message}</p>
         )}
         {compInfo !== undefined && filter === "INFO" && (
-          <Markdown
-            components={{
-              strong: ({ children }) => (
-                <span className="text-red mid-text font-bold">{children}</span>
-              ),
-              p: ({ children }) => (
-                <span className="normal-text text-yellowish-white">
-                  {children}
-                </span>
-              ),
-              ul: ({ children }) => (
-                <span className="normal-text text-yellowish-white">
-                  {children}
-                </span>
-              ),
-            }}
-          >
-            {compInfo.choices[0].message.content}
-          </Markdown>
+          <CompanyInfoView data={compInfo.companyInfo} />
         )}
       </div>
     </div>

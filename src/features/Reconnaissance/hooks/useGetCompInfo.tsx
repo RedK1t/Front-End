@@ -2,21 +2,53 @@ import { useDomain } from "@/context/DomainContext";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-type response = {
+export type CompanyInfo = {
+  companyName: string | null;
+  industry: string | null;
+  headquarters: string | null;
+  yearFounded: string | null;
+  founders: string[] | null;
+  keyExecutives: string[] | null;
+  website: string | null;
+  description: string | null;
+  servicesAndProducts: string[] | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  socialMedia: {
+    linkedin: string | null;
+    twitter: string | null;
+    facebook: string | null;
+    instagram: string | null;
+    youtube: string | null;
+    github: string | null;
+    [key: string]: string | null;
+  } | null;
+  employeeCount: string | null;
+  revenue: string | null;
+  parentCompany: string | null;
+  subsidiaries: string[] | null;
+  stockSymbol: string | null;
+  certifications: string[] | null;
+  awards: string[] | null;
+};
+
+type OpenAIChoice = {
+  index: number;
+  message: {
+    role: string;
+    content: string;
+    reasoning?: string;
+  };
+  logprobs: null;
+  finish_reason: string;
+};
+
+type OpenAIResponse = {
   id: string;
   object: string;
   created: number;
   model: string;
-  choices: {
-    index: number;
-    message: {
-      role: string;
-      content: string;
-      reasoning?: string;
-    };
-    logprobs: null;
-    finish_reason: string;
-  }[];
+  choices: OpenAIChoice[];
   usage: {
     queue_time: number;
     prompt_tokens: number;
@@ -63,20 +95,45 @@ export default function useGetCompInfo() {
     {
       role: "system",
       content: `
-        You are a company research assistant.
-        For every domain name I provide, your task is to return all publicly available factual information about the company associated with that domain.
-        Rules:
-        Only provide verified, real, publicly available information.
-        Do NOT guess, assume, or fabricate any details.
-        Clearly structure the output using section headers followed by plain text data (e.g., Company Name, Industry, Location, Founders, Year Founded, Services, Contact Information, Social Media, etc.).
-        Do NOT use tables in the response. Use headers and structured text only.
-        If some fields are available and others are not, include the available data and write “No information found” for the missing fields.
-        Keep the response factual, neutral, and concise.
-        Do not include opinions or marketing language.
-        Never end the response with follow-up offers, suggestions,
-        or phrases such as “If you need more information, let me know.”
-        End the output immediately after providing the requested data.
-        `,
+You are a company research assistant.
+For the given domain name, return ONLY valid JSON containing all publicly available factual information about the associated company.
+
+Response must strictly follow this JSON schema:
+{
+  "companyName": string or null,
+  "industry": string or null,
+  "headquarters": string or null,
+  "yearFounded": string or null,
+  "founders": array of strings or null,
+  "keyExecutives": array of strings or null,
+  "website": string or null,
+  "description": string or null,
+  "servicesAndProducts": array of strings or null,
+  "contactEmail": string or null,
+  "contactPhone": string or null,
+  "socialMedia": {
+    "linkedin": string or null,
+    "twitter": string or null,
+    "facebook": string or null,
+    "instagram": string or null,
+    "youtube": string or null,
+    "github": string or null
+  } or null,
+  "employeeCount": string or null,
+  "revenue": string or null,
+  "parentCompany": string or null,
+  "subsidiaries": array of strings or null,
+  "stockSymbol": string or null,
+  "certifications": array of strings or null,
+  "awards": array of strings or null
+}
+
+Rules:
+1. Only include VERIFIED, publicly available factual information
+2. If a field is unknown, set it to null (do NOT guess or fabricate)
+3. Return ONLY valid JSON, no extra text, no markdown, no explanations
+4. Do NOT wrap in code blocks or backticks
+`,
     },
     {
       role: "user",
@@ -93,18 +150,35 @@ export default function useGetCompInfo() {
     body: JSON.stringify({
       model: models[modelNumber],
       messages,
-      temperature: 0.5,
+      temperature: 0.3,
+      response_format: { type: "json_object" },
     }),
   };
 
-  const { data, isLoading, error } = useQuery<response>({
+  const { data, isLoading, error } = useQuery<{
+    openAIResponse: OpenAIResponse;
+    companyInfo: CompanyInfo | null;
+  }>({
     queryKey: ["compInfo", domain],
-    queryFn: () => fetch(url, options).then((res) => res.json()),
+    queryFn: async () => {
+      const res = await fetch(url, options);
+      const openAIResponse: OpenAIResponse = await res.json();
+      let companyInfo: CompanyInfo | null = null;
+      try {
+        const content = openAIResponse.choices[0]?.message.content;
+        if (content) {
+          companyInfo = JSON.parse(content);
+        }
+      } catch {
+        companyInfo = null;
+      }
+      return { openAIResponse, companyInfo };
+    },
     throwOnError: () => {
       if (modelNumber < models.length - 1) {
         setModelNumber((prev) => prev + 1);
       }
-      return false; // don't propagate to error boundary
+      return false;
     },
   });
   return {
