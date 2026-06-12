@@ -110,6 +110,24 @@ export async function updateTarget(domain: string) {
   }
 }
 
+export async function deleteTarget(domain: string) {
+  const user = await getUser();
+  if (!user) {
+    return [];
+  }
+
+  const { error } = await supabase
+    .from("targets")
+    .delete()
+    .eq("user_id", user?.id)
+    .eq("domain", domain)
+    .select();
+
+  if (error) {
+    throw error;
+  }
+}
+
 export async function insertNewTarget(domain: string) {
   const user = await getUser();
   if (!user) {
