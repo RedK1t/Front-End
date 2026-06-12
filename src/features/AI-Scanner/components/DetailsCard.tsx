@@ -10,9 +10,15 @@ export default function DetailsCard() {
   const response = vulnerabilities[Number(selectedIndex)]?.raw_response || "";
   const explanation = vulnerabilities[Number(selectedIndex)]?.explanation || "";
   return (
-    <div className="bg-gray rounded-6px flex h-125 flex-col gap-3 overflow-hidden p-3">
-      <div className="flex h-full w-full items-center gap-3 overflow-hidden">
-        <div className="rounded-6px h-full w-1/2 overflow-hidden bg-black px-3">
+    <div className="flex w-full flex-col gap-5 rounded-2xl border border-white/10 bg-gray p-6">
+      <div>
+        <h2 className="mid-text text-white">Request & Response</h2>
+        <p className="small-text text-dark-yellowish-white mt-1">
+          Raw details for the selected vulnerability
+        </p>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="h-80 overflow-hidden rounded-xl border border-white/5 bg-black/50 p-4">
           <ReqResContent
             requestAndResponse={false}
             type="Request"
@@ -20,7 +26,7 @@ export default function DetailsCard() {
             editableProp={false}
           />
         </div>
-        <div className="rounded-6px h-full w-1/2 overflow-hidden bg-black px-3">
+        <div className="h-80 overflow-hidden rounded-xl border border-white/5 bg-black/50 p-4">
           <ReqResContent
             requestAndResponse={false}
             type="Response"
@@ -29,9 +35,9 @@ export default function DetailsCard() {
           />
         </div>
       </div>
-      <div className="rounded-6px flex w-full flex-col gap-1 bg-black p-3">
-        <p className="text-yellowish-white mid-text">Explanation</p>
-        <p className="text-dark-yellowish-white normal-text">{explanation}</p>
+      <div className="rounded-xl border border-white/5 bg-black/50 p-5">
+        <h3 className="mid-text text-yellowish-white mb-2">Explanation</h3>
+        <p className="text-dark-yellowish-white normal-text leading-relaxed">{explanation || "Select a vulnerability from the table above to view its explanation."}</p>
       </div>
     </div>
   );

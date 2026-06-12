@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import useScannerActions from "./hooks/useScannerActions";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import InfoCardsList from "./components/InfoCardsList";
+import { FaFileAlt } from "react-icons/fa";
 
 type QuickScanState = { rawRequest?: string; url?: string } | null;
 
@@ -26,21 +27,31 @@ export default function AIScanner() {
   return (
     <>
       <ScannerCacheManager />
-      <div className="mx-auto flex h-full w-11/12 flex-col gap-2.5 overflow-hidden py-5">
-        {/* Header actions */}
-        <div className="flex items-center justify-end">
+      <div className="mx-auto flex h-full w-11/12 flex-col gap-6 overflow-hidden py-8">
+        {/* Header */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="heading-text text-white">AI Vulnerability Scanner</h1>
+            <p className="small-text text-dark-yellowish-white mt-1">
+              Automated security testing for your endpoints
+            </p>
+          </div>
           <button
             type="button"
             onClick={() => navigate("/AiReport")}
-            className="small-text rounded-6px bg-red hover:bg-light-red cursor-pointer px-4 py-2 text-white transition-colors"
+            className="flex items-center gap-2 rounded-xl bg-red px-6 py-3 text-white transition-all hover:bg-light-red hover:shadow-lg hover:shadow-red/20"
           >
-            Generate Report
+            <FaFileAlt className="h-4 w-4" />
+            <span className="small-text font-medium">Generate Report</span>
           </button>
         </div>
+
         {/* Info Cards */}
         <InfoCardsList />
+
         {/* Table */}
         <ResultsTable />
+
         {/* Req & Res */}
         <DetailsCard />
       </div>
