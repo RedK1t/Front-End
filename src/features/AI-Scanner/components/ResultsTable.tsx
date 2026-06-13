@@ -15,13 +15,19 @@ export default function ResultsTable() {
   const { vulnerabilities } = useScannerTraffic();
 
   return (
-    <div className="bg-gray flex w-full flex-col gap-3 rounded-xl p-3">
-      <div className="flex w-full items-center justify-between">
-        <p className="text-yellowish-white mid-text">Vulnerabilities Found</p>
-        <div className="rounded-6px flex w-full max-w-80 items-center justify-between bg-black pr-2">
+    <div className="flex w-full flex-col gap-5 rounded-2xl border border-white/10 bg-gray p-6">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h2 className="mid-text text-white">Vulnerabilities Found</h2>
+          <p className="small-text text-dark-yellowish-white mt-1">
+            {vulnerabilities.length} potential issues detected
+          </p>
+        </div>
+        <div className="flex w-full items-center gap-2 rounded-xl border border-white/10 bg-black/50 px-4 py-3 md:w-80">
+          <FaMagnifyingGlass className="text-white/40" />
           <Input
             placeholder="Search by path or vulnerability type"
-            className="small-text col-span-2 border-0 focus-visible:ring-0"
+            className="small-text flex-1 border-0 bg-transparent p-0 text-white placeholder:text-white/30 focus-visible:ring-0"
             value={searchParams.get("search") || ""}
             onChange={(e) => {
               const newSearchParams = new URLSearchParams(searchParams);
@@ -33,10 +39,9 @@ export default function ResultsTable() {
               setSearchParams(newSearchParams, { replace: true });
             }}
           />
-          <FaMagnifyingGlass />
         </div>
       </div>
-      <div className="rounded-6px h-52 overflow-hidden bg-black">
+      <div className="h-56 overflow-hidden rounded-xl border border-white/5 bg-black/30">
         <Table
           headers={[
             "id",

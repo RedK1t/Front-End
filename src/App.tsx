@@ -23,6 +23,7 @@ import ProxyLayout from "./features/ProxyLayout";
 import AIScanner from "./features/AI-Scanner/AIScanner";
 import AiReport from "./features/Ai-Report/AiReport";
 import { Login, Signup } from "./features/auth";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -121,6 +122,7 @@ export default function App() {
           </DomainProvider>
         </ThemeProvider>
       </QueryClientProvider>
+      <Toaster />
     </>
   );
 }
