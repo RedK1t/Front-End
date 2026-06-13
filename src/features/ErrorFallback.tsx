@@ -3,11 +3,17 @@ import {
   useNavigate,
   useRouteError,
 } from "react-router-dom";
-import logo from "@/assets/redKitLogo.svg";
+import iconLight from "@/assets/logo/icon-light.svg";
+import iconDark from "@/assets/logo/icon-dark.svg";
 
 export default function RootErrorBoundary() {
   const error = useRouteError();
   const navigate = useNavigate();
+  // This boundary may render outside the ThemeProvider, so read the applied
+  // theme straight off the <html> class instead of the useTheme() hook.
+  const logo = document.documentElement.classList.contains("dark")
+    ? iconLight
+    : iconDark;
   if (isRouteErrorResponse(error)) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center gap-2">

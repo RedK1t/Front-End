@@ -4,10 +4,13 @@ import ProxyDisconnected from "./Interceptor/components/ProxyDisconnected";
 import { useEffect, useState } from "react";
 import ProxyCacheManager from "./Interceptor/hooks/ProxyCacheManager";
 import { useProxySession } from "./Interceptor/context/ProxySessionContext";
+import useAutoAddScope from "./Interceptor/hooks/useAutoAddScope";
 
 export default function ProxyLayout() {
   const { readyState } = useProxySocket();
   const { openBrowser, isOpening, isCheckingSession } = useProxySession();
+  // Auto-add the current working domain to the Target Scope (Include).
+  useAutoAddScope();
   const location = useLocation();
   const [isRetrying, setIsRetrying] = useState(false);
   // Track whether the proxy has ever connected so we can tell "no session yet"

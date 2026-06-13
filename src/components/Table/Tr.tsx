@@ -50,7 +50,6 @@ export default function Tr({ index, children }: TrProps) {
           </>
         )} */}
         <div className="bg-yellowish-white! h-px! w-full" />
-        <ContextMenuItemStyled>Send to Repeater</ContextMenuItemStyled>
         <ContextMenuItemStyled>Send to Intruder</ContextMenuItemStyled>
       </ContextMenuContent>
     </ContextMenu>

@@ -3,7 +3,7 @@ import useGetUserLocally from "@/hooks/useGetUserLocally";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
-import redKitLogo from "../../../assets/redKitLogo.svg";
+import Logo from "@/components/Logo";
 import searchIcon from "../../../assets/SearchIcon.svg";
 import { useState } from "react";
 
@@ -30,11 +30,7 @@ export default function Navbar() {
   return (
     <div className="bg-gray mx-auto mt-6 flex w-11/12 items-center justify-between rounded-2xl px-3 py-2">
       <div className="flex cursor-pointer items-center gap-1">
-        <img src={redKitLogo} alt="RedKit Logo" />
-        <h1 className="large-text text-white">
-          <span className="text-dark-red">Red</span>
-          Kit
-        </h1>
+        <Logo variant="wordmark" className="h-9 w-auto" />
       </div>
 
       <div className="hidden items-center gap-2 rounded-xl bg-black px-1 py-1.5 md:flex md:w-5/12 lg:w-4/12">

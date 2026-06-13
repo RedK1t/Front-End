@@ -9,6 +9,10 @@ import type {
   message,
 } from "../types";
 
+// Max history rows kept in memory / rendered. The full request/response for any row
+// is still in the backend DB and fetched on click via get_history_detail.
+const HISTORY_CACHE_LIMIT = 500;
+
 export default function ProxyCacheManager() {
   const { lastJsonMessage } = useProxySocket();
   const queryClient = useQueryClient();
@@ -19,7 +23,6 @@ export default function ProxyCacheManager() {
   useEffect(() => {
     if (lastJsonMessage && lastJsonMessage !== lastProcessedRef.current) {
       lastProcessedRef.current = lastJsonMessage;
-      console.log(lastProcessedRef.current);
 
       const type = lastJsonMessage.type;
 
@@ -99,7 +102,11 @@ export default function ProxyCacheManager() {
       }
 
       if (type === "history") {
-        queryClient.setQueryData(["history"], () => lastJsonMessage.data);
+        // Keep the in-memory list bounded so switching to HTTP History can't
+        // render an unbounded DOM and crash the tab.
+        queryClient.setQueryData(["history"], () =>
+          (lastJsonMessage.data || []).slice(0, HISTORY_CACHE_LIMIT),
+        );
       }
 
       if (type === "history_new") {
@@ -108,7 +115,10 @@ export default function ProxyCacheManager() {
           (oldData: history_item[] = []) => {
             if (oldData.some((item) => item.id === lastJsonMessage.row.id))
               return oldData;
-            return [lastJsonMessage.row, ...oldData];
+            return [lastJsonMessage.row, ...oldData].slice(
+              0,
+              HISTORY_CACHE_LIMIT,
+            );
           },
         );
       }
@@ -123,13 +133,9 @@ export default function ProxyCacheManager() {
       }
 
       if (type === "intruder_result") {
-        console.log("RECEIVED INTRUDER RESULT MESSAGE:", lastJsonMessage);
         queryClient.setQueryData(
           ["intruder_results"],
           (oldData: intruder_result[] = []) => {
-            // Log for debugging
-            console.log("Existing data in cache:", oldData);
-
             // The backend sends 'result' object. We'll use the request number as a temporary ID
             // if the backend doesn't provide a unique ID for the result.
             const resultId =
@@ -141,23 +147,16 @@ export default function ProxyCacheManager() {
                 (item) => (item.id || String(item.result.request)) === resultId,
               )
             ) {
-              console.log("Duplicate result ignored:", resultId);
               return oldData;
             }
 
             // Append the new result to the existing results
-            const newData = [...oldData, lastJsonMessage];
-            console.log(
-              "Updated intruder results cache with new data:",
-              newData,
-            );
-            return newData;
+            return [...oldData, lastJsonMessage];
           },
         );
       }
 
       if (type === "intruder_response") {
-        console.log("RECEIVED INTRUDER RESPONSE:", lastJsonMessage);
         queryClient.setQueryData(["intruder_response"], lastJsonMessage);
       }
 

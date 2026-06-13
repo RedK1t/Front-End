@@ -5,6 +5,20 @@
     <link rel="icon" type="image/svg+xml" href="/favIcon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RedKit</title>
+    <!-- Apply the saved/system theme before paint to avoid a flash of the wrong theme.
+         Kept in sync afterwards by src/context/ThemeContext.tsx -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("redkit-theme") || "system";
+          var dark =
+            t === "dark" ||
+            (t === "system" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.classList.toggle("dark", dark);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="sidebar"></div>

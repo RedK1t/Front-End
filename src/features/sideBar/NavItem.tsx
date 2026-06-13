@@ -48,7 +48,7 @@ export default function NavItem({
               ? { pathname: location.pathname, search: location.search }
               : to
         }
-        className={`flex ${isOpen ? "w-full" : "w-fit"} ${isActive && isOpen ? isActiveStyles : ""} ${disabled ? "cursor-not-allowed opacity-40" : "hover:bg-red"} items-center gap-x-3 rounded-lg pr-7 transition-all duration-200`}
+        className={`group flex ${isOpen ? "w-full" : "w-fit"} ${isActive && isOpen ? isActiveStyles : ""} ${disabled ? "cursor-not-allowed opacity-40" : "hover:bg-red"} items-center gap-x-3 rounded-lg pr-7 transition-all duration-200`}
         onClick={disabled ? undefined : handleClick}
       >
         {/* NavItem Icon */}
@@ -58,12 +58,22 @@ export default function NavItem({
           <img
             src={icon}
             alt={text}
-            className={`h-4 w-4 ${disabled ? "opacity-60" : ""}`}
+            className={`h-4 w-4 ${disabled ? "opacity-60" : ""} ${
+              // White SVG icons are invisible on a light bg. In light theme turn
+              // them black; keep them white in dark, when active (red bg), and on
+              // hover (link turns red).
+              isActive && !disabled
+                ? ""
+                : "brightness-0 group-hover:brightness-100 dark:brightness-100"
+            }`}
           />
         </div>
 
-        {/* NavItem Text */}
-        <div className="flex items-center gap-x-2">
+        {/* NavItem Text — force real white on the red active/hover background
+            (the `white` token flips to black in light theme). */}
+        <div
+          className={`flex items-center gap-x-2 ${isActive ? "text-[#fff]" : ""} ${disabled ? "" : "group-hover:text-[#fff]"}`}
+        >
           <p
             className={`normal-text text-nowrap transition-all duration-300 ${isOpen ? "max-w-96" : "max-w-0 opacity-0"}`}
           >

@@ -5,7 +5,6 @@ import scannerIcon from "../../assets/VulnerabilityScannerIcon.svg";
 import sitemapIcon from "../../assets/sitemapIcon.svg";
 import scopeAndFiltersIcon from "../../assets/scopeAndFiltersIcon.svg";
 import interceptorIcon from "../../assets/interceptorIcon.svg";
-import repeaterIcon from "../../assets/RepeaterIcon.svg";
 import intruderIcon from "../../assets/IntruderIcon.svg";
 import proxyIcon from "../../assets/navProxyIcon.svg";
 import reportIcon from "../../assets/reportIcon.svg";
@@ -13,6 +12,7 @@ import toolsIcon from "../../assets/toolsIcon.svg";
 import settingsIcon from "../../assets/settingsIconCropped.svg";
 import { useEffect, useRef, useState } from "react";
 import NavItem from "./NavItem";
+import ThemeToggle from "./ThemeToggle";
 import { useDomain } from "@/context/DomainContext";
 
 export default function SideBar() {
@@ -86,12 +86,6 @@ export default function SideBar() {
           isOpen={isOpen}
         />
         <NavItem
-          icon={repeaterIcon}
-          text="Repeater"
-          to="/proxy/repeater"
-          isOpen={isOpen}
-        />
-        <NavItem
           icon={intruderIcon}
           text="Intruder"
           to="/proxy/intruder"
@@ -129,6 +123,10 @@ export default function SideBar() {
         to="/settings"
         isOpen={isOpen}
       />
+
+      <div className="mt-1 w-full px-1">
+        <ThemeToggle isOpen={isOpen} />
+      </div>
     </div>,
     sidebarRoot,
   );

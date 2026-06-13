@@ -9,23 +9,21 @@
   themes: false;
 }
 
+::selection {
+  background-color:#ce323244;
+}
+
 @theme {
   --font-quicksand: Quicksand, sans-serif;
   --font-jetbrains-mono: "JetBrains Mono", monospace;
   --radius-6px: 6px;
 
+  /* Accent colors — identical in both themes (brand/semantic) */
   --color-red: #CE3232;
   --color-light-red: #FF5050;
   --color-dark-red: #FA010C;
   --color-button-glow: #CF222230;
   --color-red-transparent: #4F1E1E25;
-
-  --color-black: #0B0B0B;
-  --color-gray: #1F1F1F;
-
-  --color-white: #FFFFFF;
-  --color-yellowish-white: #D7CCBC;
-  --color-dark-yellowish-white: #AB9F8E;
 
   --color-green: #4ADE80;
   --color-green-transparent: #22C55E15;
@@ -40,6 +38,16 @@
 
   --color-cyan: #2DD4BF;
   --color-cyan-transparent: #2DD4BF15;
+
+  /* Neutral tokens — theme-aware. Resolve to the --neutral-* vars defined per
+     theme in :root (light) and .dark (dark) below. The app uses black/gray as
+     background/surface and white/yellowish-white as foreground, so flipping
+     just these five gives a coherent light theme without touching components. */
+  --color-black: var(--neutral-bg);
+  --color-gray: var(--neutral-surface);
+  --color-white: var(--neutral-fg);
+  --color-yellowish-white: var(--neutral-fg-secondary);
+  --color-dark-yellowish-white: var(--neutral-fg-muted);
 }
 
 @layer components {
@@ -158,6 +166,23 @@
   }
 }
 
+/* Text inside a solid-red button/element is always white. The `white` token
+   flips to black in light theme, which would otherwise make red-button labels
+   black. Unlayered so it reliably overrides the `.text-white` utility on the
+   element itself; children that set their own text color still win (the rule
+   only changes the inherited color). Scoped to light theme — dark is already
+   white. Covers hover-to-red buttons too. */
+html:not(.dark) :is(
+  .bg-red,
+  .bg-dark-red,
+  .bg-light-red,
+  .hover\:bg-red:hover,
+  .hover\:bg-dark-red:hover,
+  .hover\:bg-light-red:hover
+) {
+  color: #fff;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -230,10 +255,16 @@
   --sidebar-border: oklch(0.928 0.006 264.531);
   --sidebar-ring: oklch(0.707 0.022 261.325);
 
+  /* Neutral palette — LIGHT theme (default when no .dark class is present) */
+  --neutral-bg: #FFFFFF;
+  --neutral-surface: #ECEAE6;
+  --neutral-fg: #0B0B0B;
+  --neutral-fg-secondary: #5A5343;
+  --neutral-fg-muted: #8C8472;
 
-  /* Override DaisyUI modal scroll background to black */
-  --page-scroll-bg-on: #000000;
-  --page-scroll-bg: #000000;
+  /* DaisyUI modal scroll background */
+  --page-scroll-bg-on: #FFFFFF;
+  --page-scroll-bg: #FFFFFF;
 }
 
 .dark {
@@ -268,4 +299,15 @@
   --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
+
+  /* Neutral palette — DARK theme (the app's original look) */
+  --neutral-bg: #0B0B0B;
+  --neutral-surface: #1F1F1F;
+  --neutral-fg: #FFFFFF;
+  --neutral-fg-secondary: #D7CCBC;
+  --neutral-fg-muted: #AB9F8E;
+
+  /* DaisyUI modal scroll background */
+  --page-scroll-bg-on: #000000;
+  --page-scroll-bg: #000000;
 }
