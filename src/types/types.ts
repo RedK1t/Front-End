@@ -40,3 +40,27 @@ export type supabaseEndpoint = {
   source: string;
   sub_domain_name: string;
 };
+
+// AI Vulnerability Scanner — persisted scan history (Supabase `scans` table).
+export type ScanSummary = {
+  total_endpoints: number;
+  total_payloads_tested: number;
+  total_vulnerabilities: number;
+  sqli_vulnerabilities: number;
+  xss_vulnerabilities: number;
+};
+
+// List-row shape (no heavy `vulnerabilities` payload) for the history panel.
+export type ScanRecordMeta = {
+  id: string;
+  domain: string | null;
+  target_url: string | null;
+  scan_id: string | null;
+  summary: ScanSummary | null;
+  created_at: string;
+};
+
+// Full record including the findings, fetched when a past scan is opened.
+export type ScanRecordFull = ScanRecordMeta & {
+  vulnerabilities: import("@/features/AI-Scanner/types").vulnerabilities;
+};

@@ -1,5 +1,6 @@
 import ToolCard from "./components/ToolCard";
 import MagicToolCard from "./components/MagicToolCard";
+import ReverseShellGenerator from "./components/ReverseShellGenerator";
 
 export default function Tools() {
   return (
@@ -84,6 +85,18 @@ export default function Tools() {
             htmlEncoding={true}
           />
         </div>
+      </section>
+
+      {/* Reverse Shell Generator Section */}
+      <section className="flex flex-col gap-4">
+        <div className="border-gray mb-2 flex items-center gap-3 border-b pb-2">
+          <h2 className="large-text text-white">Reverse Shell Generator</h2>
+        </div>
+        <p className="small-text text-dark-yellowish-white -mt-2 max-w-2xl">
+          Set your listener IP and port, pick a payload, and copy the command.
+          Adjust the shell and encoding to fit the target.
+        </p>
+        <ReverseShellGenerator />
       </section>
 
       {/* Additional   Placeholder */}

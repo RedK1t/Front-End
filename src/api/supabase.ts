@@ -1,9 +1,13 @@
 import type {
   RecentTarget,
+  ScanRecordFull,
+  ScanRecordMeta,
+  ScanSummary,
   supabaseEndpoint,
   supabasePort,
   SupabaseSubdomain,
 } from "@/types/types";
+import type { vulnerabilities } from "@/features/AI-Scanner/types";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -210,6 +214,84 @@ export async function getEndpoints(subdomain: string) {
 
 export async function insertEndpoints(endpoints: supabaseEndpoint[]) {
   const { error } = await supabase.from("endpoints").insert(endpoints).select();
+  if (error) {
+    throw error;
+  }
+}
+
+// AI scanner — scan history (per-user `scans` table).
+export async function insertScan(scan: {
+  domain: string | null;
+  target_url: string | null;
+  scan_id: string | null;
+  summary: ScanSummary | null;
+  vulnerabilities: vulnerabilities;
+}) {
+  const user = await getUser();
+  if (!user) {
+    throw new Error("you must login");
+  }
+  const { error } = await supabase.from("scans").insert({
+    user_id: user.id,
+    domain: scan.domain,
+    target_url: scan.target_url,
+    scan_id: scan.scan_id,
+    summary: scan.summary,
+    vulnerabilities: scan.vulnerabilities,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+// Metadata only (no heavy vulnerabilities payload) for the history list, newest first.
+export async function getScans() {
+  const user = await getUser();
+  if (!user) {
+    return [];
+  }
+  const { data, error } = await supabase
+    .from("scans")
+    .select("id, domain, target_url, scan_id, summary, created_at")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+  return data as ScanRecordMeta[];
+}
+
+// Full record (with findings) for opening a past scan.
+export async function getScan(id: string) {
+  const user = await getUser();
+  if (!user) {
+    return null;
+  }
+  const { data, error } = await supabase
+    .from("scans")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+  return data as ScanRecordFull;
+}
+
+export async function deleteScan(id: string) {
+  const user = await getUser();
+  if (!user) {
+    return;
+  }
+  const { error } = await supabase
+    .from("scans")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("id", id);
+
   if (error) {
     throw error;
   }

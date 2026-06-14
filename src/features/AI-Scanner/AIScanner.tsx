@@ -1,5 +1,6 @@
 import ResultsTable from "./components/ResultsTable";
 import DetailsCard from "./components/DetailsCard";
+import ScanHistory from "./components/ScanHistory";
 import ScannerCacheManager from "./hooks/ScannerCacheManager";
 import { useEffect } from "react";
 import useScannerActions from "./hooks/useScannerActions";
@@ -48,6 +49,9 @@ export default function AIScanner() {
 
         {/* Info Cards */}
         <InfoCardsList />
+
+        {/* Saved scans */}
+        <ScanHistory />
 
         {/* Table */}
         <ResultsTable />

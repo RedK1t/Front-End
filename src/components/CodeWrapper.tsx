@@ -7,6 +7,7 @@ import { json } from "@codemirror/lang-json";
 import { EditorView } from "@codemirror/view";
 import { http } from "./httpLanguage"; // This import is correct
 import { useSearchParams } from "react-router-dom";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function CodeWrapper({
   language = "javascript",
@@ -34,6 +35,32 @@ export default function CodeWrapper({
   const [searchParams] = useSearchParams();
   const query = searchParams.get(`${type}query`) || undefined;
 
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
+  // Syntax-token colors per theme. The dark palette is tuned for a dark background;
+  // on a light background those same colors wash out, so light mode uses darker,
+  // higher-contrast variants. (.ͼ12 is the search-match highlight — readable on both.)
+  const tokens = isDark
+    ? {
+        content: "var(--color-yellowish-white)",
+        p: "#f8c555",
+        u: "#f08d49",
+        t: "#7ec699",
+        ten: "#67cdcc",
+        q: "#cc99cd",
+        gutter: "rgba(255, 255, 240, 0.5)",
+      }
+    : {
+        content: "#1f2937",
+        p: "#b45309",
+        u: "#c2410c",
+        t: "#15803d",
+        ten: "#0e7490",
+        q: "#7e22ce",
+        gutter: "rgba(31, 41, 55, 0.5)",
+      };
+
   const getLanguage = () => {
     switch (language) {
       case "html":
@@ -59,21 +86,21 @@ export default function CodeWrapper({
       value={value}
       height="100%"
       className="bg-gray text-rem-[0.875] h-full"
-      theme="dark"
+      theme={isDark ? "dark" : "light"}
       extensions={[
         ...getLanguage(),
         EditorView.theme(
           {
             "&": { backgroundColor: "var(--color-gray)" },
-            ".cm-content": { color: "var(--color-yellowish-white)" },
+            ".cm-content": { color: tokens.content },
             ".cm-scroller": { backgroundColor: "var(--color-gray)" },
             ".cm-editor": { backgroundColor: "var(--color-gray)" },
-            ".ͼp": { color: "#f8c555" },
+            ".ͼp": { color: tokens.p },
             ".ͼ12": { backgroundColor: "#f8c555", color: "#000" },
-            ".ͼu": { color: "#f08d49" },
-            ".ͼt": { color: "#7ec699" },
-            ".ͼ10": { color: "#67cdcc", textDecoration: "none" },
-            ".ͼq": { color: "#cc99cd" },
+            ".ͼu": { color: tokens.u },
+            ".ͼt": { color: tokens.t },
+            ".ͼ10": { color: tokens.ten, textDecoration: "none" },
+            ".ͼq": { color: tokens.q },
             ".cm-gutters": {
               backgroundColor: "var(--color-gray)",
               borderRight: "none",
@@ -82,10 +109,10 @@ export default function CodeWrapper({
             ".cm-activeLineGutter": { backgroundColor: "var(--color-gray)" },
             ".cm-foldGutter": { backgroundColor: "var(--color-gray)" },
             ".cm-lineNumbers .cm-gutterElement": {
-              color: "rgba(255, 255, 240, 0.5)",
+              color: tokens.gutter,
             },
           },
-          { dark: true },
+          { dark: isDark },
         ),
         // Custom highlight extension applied last
       ]}
