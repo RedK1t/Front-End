@@ -1,4 +1,5 @@
-import { FaCheck, FaSpinner } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa6";
+import Loader from "@/components/Loader";
 import type { ConnectionPhase } from "../context/ProxySessionContext";
 
 interface ProxyConnectingProps {
@@ -47,7 +48,7 @@ export default function ProxyConnecting({
           <div className="relative">
             <div className="bg-red/10 absolute -inset-3 animate-pulse rounded-full blur-2xl" />
             <div className="border-red/20 bg-gray/60 relative flex h-16 w-16 items-center justify-center rounded-2xl border-2">
-              <FaSpinner className="text-red animate-spin text-2xl" />
+              <Loader scale={0.5} />
             </div>
           </div>
           <h1 className="mid-text text-white">Establishing secure connection</h1>
@@ -82,7 +83,7 @@ export default function ProxyConnecting({
                   {done ? (
                     <FaCheck className="text-green text-sm" />
                   ) : active ? (
-                    <FaSpinner className="text-red animate-spin text-sm" />
+                    <Loader scale={0.2} />
                   ) : (
                     <span className="border-dark-yellowish-white/40 h-2.5 w-2.5 rounded-full border" />
                   )}

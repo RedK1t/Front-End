@@ -26,7 +26,7 @@ export default function NavItem({
   const isActive = nested
     ? pathname.split("/")[1].includes(to.split("/")[1])
     : pathname === to;
-  const isActiveStyles = "bg-red shadow-red/30 rounded-lg shadow-[0_0_20px]";
+  const isActiveStyles = "bg-red shadow-red/15 rounded-lg shadow-[0_2px_8px]";
 
   const handleClick = () => {
     if (nested) {

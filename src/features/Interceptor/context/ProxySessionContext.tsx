@@ -31,6 +31,23 @@ import useGetUserLocally from "@/hooks/useGetUserLocally";
 
 const ORCHESTRATOR_URL = import.meta.env.VITE_orchestrator_REST_url as string;
 const HEARTBEAT_MS = 60_000;
+
+// Force noVNC's "Remote Resizing" scaling mode (resize=remote) so the Kali
+// desktop resizes to fit the viewer. Applied to the viewer URL before it's used,
+// preserving any existing ticket/query params and hash.
+function withRemoteResize(rawUrl: string): string {
+  try {
+    const url = new URL(rawUrl);
+    url.searchParams.set("resize", "remote");
+    return url.toString();
+  } catch {
+    if (/[?&]resize=/.test(rawUrl)) return rawUrl;
+    const [base, hash = ""] = rawUrl.split("#");
+    const sep = base.includes("?") ? "&" : "?";
+    return `${base}${sep}resize=remote${hash ? `#${hash}` : ""}`;
+  }
+}
+
 const POLL_MS = 1_000;
 const READY_TIMEOUT_MS = 40_000;
 
@@ -187,12 +204,13 @@ export const ProxySessionProvider = ({ children }: { children: ReactNode }) => {
         setConnectionPhase("ready");
         startHeartbeat();
         if (data.vncUrl) {
-          setVncUrl(data.vncUrl);
+          const vnc = withRemoteResize(data.vncUrl);
+          setVncUrl(vnc);
           // Open the viewer now that the container is actually reachable (only for an
           // explicit open — not a silent reload reconnect).
           if (shouldAutoOpenViewerRef.current) {
             shouldAutoOpenViewerRef.current = false;
-            tryOpenViewer(data.vncUrl);
+            tryOpenViewer(vnc);
           }
         }
       }
@@ -290,7 +308,7 @@ export const ProxySessionProvider = ({ children }: { children: ReactNode }) => {
           startHeartbeat();
           // Silent reconnect on reload: keep the viewer URL for the header button,
           // but do NOT auto-open a tab the user didn't ask for.
-          if (data.vncUrl) setVncUrl(data.vncUrl);
+          if (data.vncUrl) setVncUrl(withRemoteResize(data.vncUrl));
         } else {
           setProgress(0);
           startPolling();

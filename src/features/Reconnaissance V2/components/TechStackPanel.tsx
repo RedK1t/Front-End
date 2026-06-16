@@ -286,7 +286,7 @@ export default function TechStackPanel() {
         return (
           <div
             key={`tech-stack-row-${index}`}
-            className="rounded-6px bg-black p-2"
+            className="rounded-6px bg-black/40 p-2"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h4 className="mid-text text-light-red">

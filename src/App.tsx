@@ -122,7 +122,19 @@ export default function App() {
           </DomainProvider>
         </ThemeProvider>
       </QueryClientProvider>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          // Theme-aware: these tokens flip with the .dark class on <html>, which
+          // also cascades to the toast portal — so toasts match both themes
+          // instead of always rendering as a white box.
+          style: {
+            background: "var(--color-gray)",
+            color: "var(--color-white)",
+            border:
+              "1px solid color-mix(in srgb, var(--color-white) 12%, transparent)",
+          },
+        }}
+      />
     </>
   );
 }

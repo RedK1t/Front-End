@@ -44,8 +44,8 @@ export default function ResultsTable() {
       <div className="h-56 overflow-hidden rounded-xl border border-white/5 bg-black/30">
         <Table
           headers={[
-            "id",
-            "severity",
+            "ID",
+            "Severity",
             "Vulnerability Type",
             "Endpoint",
             "Payload Used",

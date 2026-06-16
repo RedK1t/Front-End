@@ -9,6 +9,7 @@ import { motion } from "motion/react";
 import type { ReactNode } from "react";
 import useGetCompInfo from "../hooks/useGetCompInfo";
 import CompanyInfoView from "./CompanyInfo";
+import CompanyOverview from "./CompanyOverview";
 import Loader from "@/components/Loader";
 
 export default function DomainInfoPanel() {
@@ -53,7 +54,7 @@ export default function DomainInfoPanel() {
       >
         {isFetching && (filter === "DNS" || filter === "WHOIS") && (
           <div className="flex justify-center">
-            <span className="loading bg-red loading-spinner h-12 w-12"></span>
+            <Loader />
           </div>
         )}
         {error && <p className="text-red text-center">{error.message}</p>}
@@ -178,7 +179,7 @@ export default function DomainInfoPanel() {
           })()}
         {crtIsLoading && filter === "SSL" && (
           <div className="flex justify-center">
-            <span className="loading bg-red loading-spinner h-12 w-12"></span>
+            <Loader />
           </div>
         )}
         {crtError && filter === "SSL" && (
@@ -210,16 +211,24 @@ export default function DomainInfoPanel() {
             ))}
           </motion.div>
         )}
-        {compInfoIsLoading && filter === "INFO" && (
-          <div className="flex justify-center">
-            <Loader />
+        {filter === "INFO" && (
+          <div className="flex flex-col gap-5">
+            {/* Free company overview: logo (logo.dev) + paragraph (Wikipedia). */}
+            <CompanyOverview />
+
+            {/* Extra LLM-sourced details below, when available. */}
+            {compInfoIsLoading && (
+              <div className="flex justify-center">
+                <Loader />
+              </div>
+            )}
+            {compInfoError && (
+              <p className="text-red text-center">{compInfoError.message}</p>
+            )}
+            {compInfo?.companyInfo && (
+              <CompanyInfoView data={compInfo.companyInfo} />
+            )}
           </div>
-        )}
-        {compInfoError && filter === "INFO" && (
-          <p className="text-red text-center">{compInfoError.message}</p>
-        )}
-        {compInfo !== undefined && filter === "INFO" && (
-          <CompanyInfoView data={compInfo.companyInfo} />
         )}
       </div>
     </div>

@@ -45,6 +45,7 @@ export default function CookiesPanel() {
             label={cookie.name}
             value={cookie.value}
             rowList={attributes}
+            breakValue
           />
         );
       })}
@@ -59,6 +60,7 @@ export default function CookiesPanel() {
             label={cookie.name}
             value={cookie.value}
             rowList={nameValPairs}
+            breakValue
           />
         );
       })}

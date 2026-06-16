@@ -22,7 +22,7 @@ export default function Filters() {
       </div>
       <Link
         to="/reconnaissance/v2"
-        className="bg-red/60 rounded-6px normal-text flex -translate-x-[30%] items-center gap-2 px-3 py-1.5"
+        className="bg-red/60 rounded-6px normal-text flex -translate-x-[30%] items-center gap-2 px-3 py-1.5 text-[#fff]"
       >
         Switch to Advanced Mode <FaArrowRight />
       </Link>

@@ -112,7 +112,7 @@ export default function SubdomainsPanel() {
       >
         {/*  Subdomain Item */}
         {(isLoading || isScanning) && (
-          <div className="flex h-full w-full items-center justify-center">
+          <div className="flex w-full justify-center">
             <Loader />
           </div>
         )}

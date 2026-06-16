@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { type ReactNode } from "react";
-import { FiLoader } from "react-icons/fi";
+import Loader from "@/components/Loader";
 
 type AuthButtonProps = {
   children: ReactNode;
@@ -45,8 +45,8 @@ export default function AuthButton({
       }`}
     >
       {isLoading ? (
-        <div className="flex items-center justify-center space-x-2">
-          <FiLoader className="animate-spin" />
+        <div className="flex items-center justify-center gap-2">
+          <Loader scale={0.4} color="#ffffff" />
           <span>{loadingText}</span>
         </div>
       ) : (

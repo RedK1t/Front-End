@@ -56,7 +56,11 @@ export default function SubdomainRow({ data }: SubdomainRowProps) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src={openIcon} alt="open icon" className="h-4 w-4" />
+                <img
+                  src={openIcon}
+                  alt="open icon"
+                  className="h-4 w-4 invert dark:invert-0"
+                />
               </a>
             )}
             <button

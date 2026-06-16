@@ -1,5 +1,6 @@
 import refetchImg from "@/assets/refetch.svg";
 // import Loader from "@/components/Loader";
+import { motion } from "motion/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 type PanelFilterProps = {
@@ -36,7 +37,12 @@ export default function Panel({
   }, [children]);
   if (isFetching || error || isNoData) return null;
   return (
-    <div className="bg-gray rounded-6px text-dark-yellowish-white mb-4 flex h-fit max-h-150 min-h-20 w-full break-inside-avoid flex-col gap-2 overflow-hidden p-3">
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="bg-gray rounded-6px text-dark-yellowish-white mb-4 flex h-fit max-h-150 min-h-20 w-full break-inside-avoid flex-col gap-2 overflow-hidden p-3"
+    >
       {/*Header */}
       <div className="flex items-center justify-between">
         {/* Title */}
@@ -48,7 +54,7 @@ export default function Panel({
             <>
               <button
                 key={option}
-                className={`cursor-pointer ${
+                className={`cursor-pointer capitalize ${
                   currentFilter === option
                     ? "text-yellowish-white"
                     : "text-dark-yellowish-white"
@@ -132,6 +138,6 @@ export default function Panel({
           </button>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

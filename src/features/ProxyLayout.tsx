@@ -1,4 +1,5 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import AnimatedOutlet from "@/components/AnimatedOutlet";
 import useProxySocket from "./Interceptor/hooks/useProxySocket";
 import ProxyDisconnected from "./Interceptor/components/ProxyDisconnected";
 import ProxyConnecting from "./Interceptor/components/ProxyConnecting";
@@ -83,10 +84,13 @@ export default function ProxyLayout() {
   // Connected (or on the sitemap page, which works without the proxy) → show content.
   const showContent = isConnected || !isNotSitemap;
   if (showContent) {
+    // Key by the proxy sub-route (interceptor / intruder / scope / sitemap …)
+    // so sitemap's own standard↔hierarchical toggle doesn't remount the page.
+    const subSegment = location.pathname.split("/")[2] || "proxy";
     return (
       <>
         <ProxyCacheManager />
-        <Outlet />
+        <AnimatedOutlet transitionKey={subSegment} />
       </>
     );
   }

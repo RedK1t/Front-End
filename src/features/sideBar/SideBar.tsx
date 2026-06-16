@@ -9,7 +9,7 @@ import intruderIcon from "../../assets/IntruderIcon.svg";
 import proxyIcon from "../../assets/navProxyIcon.svg";
 import reportIcon from "../../assets/reportIcon.svg";
 import toolsIcon from "../../assets/toolsIcon.svg";
-import settingsIcon from "../../assets/settingsIconCropped.svg";
+// import settingsIcon from "../../assets/settingsIconCropped.svg";
 import { useEffect, useRef, useState } from "react";
 import NavItem from "./NavItem";
 import ThemeToggle from "./ThemeToggle";
@@ -44,7 +44,7 @@ export default function SideBar() {
   return createPortal(
     <div
       ref={ref}
-      className={`bg-gray fixed top-1/2 left-0 z-50 flex overflow-hidden drop-shadow-xl drop-shadow-black transition-all duration-300 ${isOpen ? "max-w-96" : "w-12"} -translate-y-1/2 flex-col items-start gap-1 rounded-r-[14px] py-4 pr-4 pl-1 text-white`}
+      className={`bg-gray fixed top-1/2 left-0 z-50 flex -translate-y-1/2 transform-gpu flex-col items-start gap-1 overflow-hidden rounded-r-[14px] py-4 pr-4 pl-1 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.25)] transition-[width] duration-300 ease-out ${isOpen ? "w-80" : "w-12"}`}
     >
       {/* NavItem */}
       <NavItem icon={overviewIcon} text="Overview" to="/" isOpen={isOpen} />
@@ -117,14 +117,14 @@ export default function SideBar() {
         isOpen={isOpen}
       />
 
-      <NavItem
+      {/* <NavItem
         icon={settingsIcon}
         text="Settings"
         to="/settings"
         isOpen={isOpen}
-      />
+      /> */}
 
-      <div className="mt-1 w-full px-1">
+      <div className={`mt-1 w-full ${isOpen ? "px-1" : ""}`}>
         <ThemeToggle isOpen={isOpen} />
       </div>
     </div>,

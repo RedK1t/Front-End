@@ -5,6 +5,8 @@ import openIcon from "../../../assets/openIcon.svg";
 import PortItem from "./PortItem";
 import useGetOpenPorts from "../hooks/useGetOpenPorts";
 import { FaPlay } from "react-icons/fa";
+import Loader from "@/components/Loader";
+import { motion } from "motion/react";
 
 type SubdomainRowProps = {
   subdomain: string;
@@ -28,8 +30,14 @@ export default function SubdomainRow({
     navigate("/proxy/sitemap/standard");
   };
   return (
-    // Subdomain Item
-    <div className="flex flex-col rounded-md bg-black px-4 py-2">
+    // Subdomain Item — slide-in-from-left + stagger, matching the WHOIS rows.
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, x: -20 },
+        visible: { opacity: 1, x: 0 },
+      }}
+      className="flex flex-col rounded-md bg-black px-4 py-2"
+    >
       {/*  Subdomain  */}
       <div className="flex items-center justify-between">
         {/* Subdomain Name & IP */}
@@ -82,7 +90,7 @@ export default function SubdomainRow({
         {/* Port */}
         {isLoading && (
           <div className="flex justify-center">
-            <span className="loading bg-red loading-spinner h-12 w-12"></span>
+            <Loader />
           </div>
         )}
         {!isLoading &&
@@ -99,6 +107,6 @@ export default function SubdomainRow({
             />
           ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

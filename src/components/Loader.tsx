@@ -1,8 +1,15 @@
 import styled from "styled-components";
 
-const Loader = () => {
+type LoaderProps = {
+  /** Uniform scale of the 100×60 loader box (1 = default size). */
+  scale?: number;
+  /** Color of the bouncing dots. */
+  color?: string;
+};
+
+const Loader = ({ scale = 1, color = "#ce3232" }: LoaderProps) => {
   return (
-    <StyledWrapper>
+    <StyledWrapper $scale={scale} $color={color}>
       <div className="wrapper">
         <div className="circle" />
         <div className="circle" />
@@ -15,12 +22,17 @@ const Loader = () => {
   );
 };
 
-const StyledWrapper = styled.div`
+const StyledWrapper = styled.div<{ $scale: number; $color: string }>`
+  width: ${(p) => 100 * p.$scale}px;
+  height: ${(p) => 60 * p.$scale}px;
+
   .wrapper {
     width: 100px;
     height: 60px;
     position: relative;
     z-index: 1;
+    transform: scale(${(p) => p.$scale});
+    transform-origin: top left;
   }
 
   .circle {
@@ -28,7 +40,7 @@ const StyledWrapper = styled.div`
     height: 10px;
     position: absolute;
     border-radius: 50%;
-    background-color: #ce3232;
+    background-color: ${(p) => p.$color};
     left: 15%;
     transform-origin: 50%;
     animation: circle7124 0.5s alternate infinite ease;

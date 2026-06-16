@@ -7,6 +7,8 @@ type DataRowProps = {
   rowList?: (string | number)[][];
   children?: ReactNode; // this will be used for custom inner lists
   breakLabel?: boolean;
+  /** Force the value onto its own full-width line under the label. */
+  breakValue?: boolean;
 };
 export default function DataRow({
   label,
@@ -14,6 +16,7 @@ export default function DataRow({
   rowList,
   children,
   breakLabel = false,
+  breakValue = false,
 }: DataRowProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -44,33 +47,48 @@ export default function DataRow({
         </p>
       </div>
     );
-  if (typeof value === "string" || typeof value === "number")
+  if (typeof value === "string" || typeof value === "number") {
+    const toggle =
+      rowList || children ? (
+        <button
+          className="h-5 w-5 shrink-0 cursor-pointer"
+          onClick={() => setIsOpen((prev) => !prev)}
+        >
+          <MdKeyboardArrowDown className="h-5 w-5" />
+        </button>
+      ) : null;
+    const labelStyle = {
+      textWrap: breakLabel ? ("wrap" as const) : ("nowrap" as const),
+      wordBreak: breakLabel ? ("break-all" as const) : ("normal" as const),
+    };
     return (
       <div className="rounded-6px flex flex-col gap-y-1 bg-black/40 px-2 py-3">
-        <div className="flex items-center justify-between gap-2">
-          <p
-            className="normal-text text-light-red"
-            style={{
-              textWrap: breakLabel ? "wrap" : "nowrap",
-              wordBreak: breakLabel ? "break-all" : "normal",
-            }}
-          >
-            {label}
-          </p>
-          <div className="flex items-center gap-1">
-            <p className="normal-text text-dark-yellowish-white text-end text-wrap break-all">
+        {breakValue ? (
+          // Label (+ toggle) on top, value forced onto its own full-width line.
+          <>
+            <div className="flex items-center justify-between gap-2">
+              <p className="normal-text text-light-red" style={labelStyle}>
+                {label}
+              </p>
+              {toggle}
+            </div>
+            <p className="normal-text text-dark-yellowish-white text-wrap break-all">
               {value}
             </p>
-            {(rowList || children) && (
-              <button
-                className="h-5 w-5 cursor-pointer"
-                onClick={() => setIsOpen((prev) => !prev)}
-              >
-                <MdKeyboardArrowDown className="h-5 w-5" />
-              </button>
-            )}
+          </>
+        ) : (
+          <div className="flex items-center justify-between gap-2">
+            <p className="normal-text text-light-red" style={labelStyle}>
+              {label}
+            </p>
+            <div className="flex items-center gap-1">
+              <p className="normal-text text-dark-yellowish-white text-end text-wrap break-all">
+                {value}
+              </p>
+              {toggle}
+            </div>
           </div>
-        </div>
+        )}
         <div
           className={`flex flex-col gap-2 px-1 ${isOpen ? "max-h-375 pt-2" : "max-h-0 pt-0"} overflow-hidden transition-all duration-300`}
         >
@@ -85,4 +103,5 @@ export default function DataRow({
         </div>
       </div>
     );
+  }
 }
