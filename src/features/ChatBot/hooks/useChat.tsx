@@ -1,27 +1,13 @@
 import { chatWithGroq } from "@/api/groqApi";
+import useGetUserLocally from "@/hooks/useGetUserLocally";
 import { useEffect, useRef, useState } from "react";
 
 function useChat() {
-  const models = [
-    "openai/gpt-oss-120b", // Egyptian Slang: Brins (Perfect) | Expert (High-Capacity) | Aug 2025
-    "llama-3.3-70b-versatile", // Egyptian Slang: Saye' (Natural) | Advanced (Versatile) | Dec 2024
-    "meta-llama/llama-4-maverick-17b-128e-instruct", // Egyptian Slang: Fahem (Smart) | Advanced (Next-Gen) | Apr 2025
-    "meta-llama/llama-4-scout-17b-16e-instruct", // Egyptian Slang: Fahem (Smart) | Advanced (Next-Gen) | Apr 2025
-    "openai/gpt-oss-safeguard-20b", // Egyptian Slang: Mo'adab (Polite/Safe) | Expert (Safeguard) | Oct 2025
-    "moonshotai/kimi-k2-instruct-0905", // Egyptian Slang: Mazboot (Fluent) | Intermediate (Technical) | Sept 2025
-    "groq/compound", // Egyptian Slang: Mazboot (Fluent) | Intermediate (General) | Sept 2025
-    "openai/gpt-oss-20b", // Egyptian Slang: Mazboot (Fluent) | Intermediate (Mid-Scale) | Aug 2025
-    "groq/compound-mini", // Egyptian Slang: Mashy (Basic) | Foundational (Efficient) | Sept 2025
-    "llama-3.1-8b-instant", // Egyptian Slang: Mashy (Basic) | Foundational (Small-Scale) | Sept 2023
-    "meta-llama/llama-guard-4-12b", // Egyptian Slang: Amin (Security Focused) | Expert (Security Guard) | May 2025
-    "meta-llama/llama-prompt-guard-2-86m", // Egyptian Slang: Da'eef (Limited) | Expert (Prompt Guard) | May 2025
-    "meta-llama/llama-prompt-guard-2-22m", // Egyptian Slang: Da'eef (Limited) | Expert (Prompt Guard) | May 2025
-  ];
+  // The system prompt + model fallback now live server-side in the orchestrator's
+  // /api/chat proxy, so the client only carries the visible conversation.
+  const auth = useGetUserLocally();
+  const token = auth?.access_token;
   const [messages, setMessages] = useState([
-    {
-      role: "system",
-      content: import.meta.env.VITE_SYSTEM_PROMPT,
-    },
     {
       role: "assistant",
       content: "أهلاً! أقدر أساعدك إزاي؟",
@@ -30,7 +16,6 @@ function useChat() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesRef = useRef<HTMLDivElement>(null);
-  const modelNumber = useRef(0);
 
   useEffect(() => {
     // Scroll to the bottom of the messages container
@@ -52,8 +37,8 @@ function useChat() {
     setIsLoading(true);
 
     chatWithGroq({
-      model: models[modelNumber.current],
       messages: newMessages,
+      token,
     })
       .then((res) => {
         if (res === "error") {
@@ -61,13 +46,9 @@ function useChat() {
             ...prev,
             {
               role: "assistant",
-              content: "Sorry, I encountered an error. Please try again.",
+              content: "Sorry, I couldn't reach the assistant right now. Please try again.",
             },
           ]);
-          modelNumber.current++;
-          if (modelNumber.current >= models.length) {
-            modelNumber.current = 0;
-          }
         } else {
           setMessages((prev) => [...prev, res]);
         }

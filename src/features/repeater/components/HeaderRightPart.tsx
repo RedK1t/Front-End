@@ -47,7 +47,7 @@ export default function HeaderRightPart({
       <button className="bg-gray rounded-6px flex cursor-pointer items-center justify-center p-1.5">
         <Popover>
           <PopoverTrigger asChild>
-            <IoMdSearch className="h-6 w-6" />
+            <IoMdSearch className="text-yellowish-white h-6 w-6" />
           </PopoverTrigger>
           <PopoverContent className="bg-gray h-60 w-48 overflow-y-auto px-2 py-1">
             <Input

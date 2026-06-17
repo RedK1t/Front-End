@@ -68,7 +68,7 @@ export default function HttpHistoryHeader() {
             onChange={handleOnchange}
             className="bg-gray h-7 border-0 focus-within:ring-0!"
           />
-          <IoIosSearch className="cursor-pointer" />
+          <IoIosSearch className="text-yellowish-white cursor-pointer" />
         </div>
         <div
           onClick={handlePrev}

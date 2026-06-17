@@ -1,6 +1,6 @@
 import { useDomain } from "@/context/DomainContext";
+import useGetUserLocally from "@/hooks/useGetUserLocally";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 
 export type CompanyInfo = {
   companyName: string | null;
@@ -32,65 +32,13 @@ export type CompanyInfo = {
   awards: string[] | null;
 };
 
-type OpenAIChoice = {
-  index: number;
-  message: {
-    role: string;
-    content: string;
-    reasoning?: string;
-  };
-  logprobs: null;
-  finish_reason: string;
-};
-
-type OpenAIResponse = {
-  id: string;
-  object: string;
-  created: number;
-  model: string;
-  choices: OpenAIChoice[];
-  usage: {
-    queue_time: number;
-    prompt_tokens: number;
-    prompt_time: number;
-    completion_tokens: number;
-    completion_time: number;
-    total_tokens: number;
-    total_time: number;
-    prompt_tokens_details: {
-      cached_tokens: number;
-    };
-    completion_tokens_details: {
-      reasoning_tokens: number;
-    };
-  };
-  usage_breakdown: null;
-  system_fingerprint: string;
-  x_groq: {
-    id: string;
-    seed: number;
-  };
-  service_tier: string;
-};
-
 export default function useGetCompInfo() {
-  const models = [
-    "openai/gpt-oss-120b", //  Aug 2025
-    "openai/gpt-oss-safeguard-20b", // Oct 2025
-    "moonshotai/kimi-k2-instruct-0905", //  Sept 2025
-    "groq/compound", //  Sept 2025
-    "groq/compound-mini", //  Sept 2025
-    "openai/gpt-oss-20b", //  Aug 2025
-    "meta-llama/llama-guard-4-12b", //  May 2025
-    "meta-llama/llama-prompt-guard-2-86m", // May 2025
-    "meta-llama/llama-prompt-guard-2-22m", //  May 2025
-    "meta-llama/llama-4-maverick-17b-128e-instruct", //  Apr 2025
-    "meta-llama/llama-4-scout-17b-16e-instruct", //  Apr 2025
-    "llama-3.3-70b-versatile", //  Dec 2024
-    "llama-3.1-8b-instant", //  Sept 2023
-  ];
-  const [modelNumber, setModelNumber] = useState(0);
+  // Calls go through the orchestrator's authenticated Groq proxy (/api/groq) so the
+  // key stays server-side; model fallback is handled there.
   const { domain } = useDomain();
+  const auth = useGetUserLocally();
+  const token = auth?.access_token;
+  const ORCHESTRATOR_URL = import.meta.env.VITE_orchestrator_REST_url as string;
   const messages = [
     {
       role: "system",
@@ -140,45 +88,31 @@ Rules:
       content: `${domain}`,
     },
   ];
-  const url = "https://api.groq.com/openai/v1/chat/completions";
-  const options = {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: models[modelNumber],
-      messages,
-      temperature: 0.3,
-      response_format: { type: "json_object" },
-    }),
-  };
-
   const { data, isLoading, error } = useQuery<{
-    openAIResponse: OpenAIResponse;
     companyInfo: CompanyInfo | null;
   }>({
     queryKey: ["compInfo", domain],
     queryFn: async () => {
-      const res = await fetch(url, options);
-      const openAIResponse: OpenAIResponse = await res.json();
+      const res = await fetch(`${ORCHESTRATOR_URL}/api/groq`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          messages,
+          response_format: { type: "json_object" },
+        }),
+      });
+      if (!res.ok) throw new Error(`groq proxy responded ${res.status}`);
+      const msg = (await res.json()) as { role: string; content: string };
       let companyInfo: CompanyInfo | null = null;
       try {
-        const content = openAIResponse.choices[0]?.message.content;
-        if (content) {
-          companyInfo = JSON.parse(content);
-        }
+        if (msg?.content) companyInfo = JSON.parse(msg.content);
       } catch {
         companyInfo = null;
       }
-      return { openAIResponse, companyInfo };
-    },
-    throwOnError: () => {
-      if (modelNumber < models.length - 1) {
-        setModelNumber((prev) => prev + 1);
-      }
-      return false;
+      return { companyInfo };
     },
   });
   return {

@@ -37,23 +37,46 @@ export default function ProxyConnecting({
   phase,
   progress,
 }: ProxyConnectingProps) {
+  const complete = phase === "connected";
   const step = activeStep(phase, progress);
-  const pct = Math.min(100, Math.max(0, Math.round(progress)));
+  const pct = complete ? 100 : Math.min(100, Math.max(0, Math.round(progress)));
 
   return (
     <div className="bg-black flex min-h-screen w-full flex-col items-center justify-center p-6 transition-all duration-500">
-      <div className="border-red/15 bg-gray/40 w-full max-w-md rounded-2xl border p-8 shadow-2xl">
+      <div
+        className={`bg-gray/40 w-full max-w-md rounded-2xl border p-8 shadow-2xl transition-all duration-500 ${
+          complete ? "border-green/40 scale-[1.01]" : "border-red/15"
+        }`}
+      >
         {/* Header */}
         <div className="mb-6 flex flex-col items-center gap-3 text-center">
           <div className="relative">
-            <div className="bg-red/10 absolute -inset-3 animate-pulse rounded-full blur-2xl" />
-            <div className="border-red/20 bg-gray/60 relative flex h-16 w-16 items-center justify-center rounded-2xl border-2">
-              <Loader scale={0.5} />
+            <div
+              className={`absolute -inset-3 rounded-full blur-2xl ${
+                complete ? "bg-green/15" : "bg-red/10 animate-pulse"
+              }`}
+            />
+            <div
+              className={`bg-gray/60 relative flex h-16 w-16 items-center justify-center rounded-2xl border-2 transition-colors duration-500 ${
+                complete ? "border-green/40" : "border-red/20"
+              }`}
+            >
+              {complete ? (
+                <FaCheck className="text-green text-2xl" />
+              ) : (
+                <Loader scale={0.5} />
+              )}
             </div>
           </div>
-          <h1 className="mid-text text-white">Establishing secure connection</h1>
+          <h1 className="mid-text text-white">
+            {complete
+              ? "Secure connection established"
+              : "Establishing secure connection"}
+          </h1>
           <p className="small-text text-dark-yellowish-white">
-            Spinning up your isolated browser — this usually takes ~15 seconds.
+            {complete
+              ? "Opening your isolated browser…"
+              : "Spinning up your isolated browser — this usually takes ~15 seconds."}
           </p>
         </div>
 
@@ -75,8 +98,8 @@ export default function ProxyConnecting({
         {/* Steps */}
         <ul className="flex flex-col gap-3">
           {STEPS.map((label, i) => {
-            const done = i < step;
-            const active = i === step;
+            const done = complete || i < step;
+            const active = !complete && i === step;
             return (
               <li key={label} className="flex items-center gap-3">
                 <span className="flex h-5 w-5 shrink-0 items-center justify-center">

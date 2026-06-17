@@ -2,9 +2,9 @@ import { signOut } from "@/api/supabase";
 import useGetUserLocally from "@/hooks/useGetUserLocally";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
+import { IoIosSearch } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
-import searchIcon from "../../../assets/SearchIcon.svg";
 import { useState } from "react";
 
 export default function Navbar() {
@@ -34,7 +34,7 @@ export default function Navbar() {
       </div>
 
       <div className="hidden items-center gap-2 rounded-xl bg-black px-1 py-1.5 md:flex md:w-5/12 lg:w-4/12">
-        <img src={searchIcon} alt="Search Icon" />
+        <IoIosSearch className="text-yellowish-white ml-1 h-5 w-5 shrink-0" />
         <input
           type="text"
           className="placeholder:small-text w-full placeholder:text-white/20 focus:outline-0"

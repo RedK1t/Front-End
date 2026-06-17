@@ -21,14 +21,11 @@ export default function ChatBot() {
 
   useEffect(() => {
     // Automatically update the first assistant message based on the current page
-    // only if there's only one message (the initial greeting)
-    if (messages.length <= 2) {
+    // only if there's only the initial greeting. The system prompt now lives
+    // server-side (orchestrator /api/chat), so the client carries only visible messages.
+    if (messages.length <= 1) {
       const summary = getAutoSummary(pathname);
       setMessages([
-        {
-          role: "system",
-          content: import.meta.env.VITE_SYSTEM_PROMPT,
-        },
         {
           role: "assistant",
           content: summary,
@@ -113,10 +110,6 @@ export default function ChatBot() {
   const handleClearChat = () => {
     setMessages([
       {
-        role: "system",
-        content: import.meta.env.VITE_SYSTEM_PROMPT,
-      },
-      {
         role: "assistant",
         content: "أهلاً! أقدر أساعدك إزاي؟",
       },
@@ -148,7 +141,7 @@ export default function ChatBot() {
             />
           </div>
 
-          {messages.length <= 2 && (
+          {messages.length <= 1 && (
             <div className="flex shrink-0 flex-wrap gap-2 px-1">
               {quickSuggestions.map((suggestion) => (
                 <button

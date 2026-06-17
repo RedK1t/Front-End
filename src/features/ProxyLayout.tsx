@@ -25,8 +25,13 @@ export default function ProxyLayout() {
   // Track whether the proxy has ever connected so we can tell "no session yet"
   // (per-user container not started) apart from a genuinely dropped connection.
   const [hasConnected, setHasConnected] = useState(false);
+  // Brief hold after the socket opens so the connection card can show every step
+  // completed (and fade out) before we reveal the page.
+  const [revealContent, setRevealContent] = useState(false);
   // Guard so React 18 StrictMode's double-mount doesn't fire auto-start twice.
   const autoStartedRef = useRef(false);
+  // Guard so we only auto-restart once per drop (avoid an open/fail/open loop).
+  const autoRecoverRef = useRef(false);
   // Grace timer before treating a non-OPEN socket as a genuine drop (avoids flashing the
   // disconnected card during a transient reconnect, e.g. right after navigating back).
   const dropTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -56,6 +61,7 @@ export default function ProxyLayout() {
         dropTimerRef.current = null;
       }
       setHasConnected(true);
+      autoRecoverRef.current = false;
       if (connectionPhase !== "connected") setConnectionPhase("connected");
     } else if (connectionPhase === "connected" && !dropTimerRef.current) {
       dropTimerRef.current = setTimeout(() => {
@@ -71,6 +77,26 @@ export default function ProxyLayout() {
     };
   }, [isConnected, connectionPhase, setConnectionPhase]);
 
+  // Hold the completed connection card briefly (so all steps check off and fade) before
+  // revealing the page. Reset when the socket isn't open so the next connect re-animates.
+  useEffect(() => {
+    if (!isConnected) {
+      setRevealContent(false);
+      return;
+    }
+    const t = setTimeout(() => setRevealContent(true), 900);
+    return () => clearTimeout(t);
+  }, [isConnected]);
+
+  // The container is idle-stopped after a while; if our socket dropped because of that,
+  // transparently restart it (POST /session/open) instead of forcing a manual click.
+  useEffect(() => {
+    if (connectionPhase === "dropped" && !autoRecoverRef.current) {
+      autoRecoverRef.current = true;
+      void openBrowser();
+    }
+  }, [connectionPhase, openBrowser]);
+
   const handleRetry = () => {
     setIsRetrying(true);
     // The useProxySocket hook already has shouldReconnect: () => true
@@ -81,8 +107,9 @@ export default function ProxyLayout() {
     }, 2000);
   };
 
-  // Connected (or on the sitemap page, which works without the proxy) → show content.
-  const showContent = isConnected || !isNotSitemap;
+  // Connected AND the completion card has finished (or on the sitemap page, which works
+  // without the proxy) → show content.
+  const showContent = (isConnected && revealContent) || !isNotSitemap;
   if (showContent) {
     // Key by the proxy sub-route (interceptor / intruder / scope / sitemap …)
     // so sitemap's own standard↔hierarchical toggle doesn't remount the page.
@@ -98,8 +125,9 @@ export default function ProxyLayout() {
   // Genuine problem states → offer Open Browser / retry. Everything else (idle while the
   // initial status check / auto-start is in flight, opening, waiting, ready) shows the
   // staged progress screen, so the user never flashes past a "No connection" card.
-  const needsAttention =
-    connectionPhase === "dropped" || connectionPhase === "error";
+  // "dropped" is handled by the transparent auto-restart above, so only a hard error
+  // surfaces the manual reconnect card.
+  const needsAttention = connectionPhase === "error";
   if (needsAttention) {
     return (
       <>
