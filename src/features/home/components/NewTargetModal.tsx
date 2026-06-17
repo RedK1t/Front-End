@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { IoIosSearch } from "react-icons/io";
 import searchIcon from "../../../assets/SearchIcon.svg";
 import shareIcon from "../../../assets/ShareIcon.svg";
 import BinaryToggle from "@/components/BinaryToggle";
@@ -49,10 +50,7 @@ export default function NewTargetModal() {
               </label>
               <div className="group relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <img
-                    src={searchIcon}
-                    className="h-5 w-5 opacity-40 grayscale transition-all duration-300 group-focus-within:opacity-100 group-focus-within:grayscale-0"
-                  />
+                  <IoIosSearch className="text-yellowish-white h-5 w-5 opacity-50 transition-all duration-300 group-focus-within:opacity-100" />
                 </div>
                 <input
                   type="text"
