@@ -90,9 +90,29 @@ export default function ScannerCacheManager() {
           (oldData: number) => (oldData || 0) + 1,
         );
       }
+      if (type === "error") {
+        toast.dismiss("scan-start");
+        toast.error(lastJsonMessage.error || "The scan failed. Please try again.");
+      }
       if (type === "scan_complete") {
         // Authoritative final totals from the backend
         const result = lastJsonMessage.result;
+        toast.dismiss("scan-start");
+        if (result && result.total_endpoints === 0) {
+          // The scan ran but reached nothing to test — almost always because the
+          // scanner (server-side) couldn't fetch the target directly: it's HTTP-only,
+          // blocks our server's IP, is only reachable via the proxy, or the captured
+          // request had no parameters to test.
+          toast(
+            "Scan finished, but no testable endpoints were reachable — the target may be HTTP-only, block the server, or the request had no parameters.",
+            { icon: "⚠️", duration: 8000 },
+          );
+        } else if (result) {
+          const vulns = result.total_vulnerabilities ?? 0;
+          toast.success(
+            `Scan complete: ${vulns} ${vulns === 1 ? "vulnerability" : "vulnerabilities"} across ${result.total_endpoints} endpoint(s).`,
+          );
+        }
         if (result) {
           queryClient.setQueryData(
             ["total-payloads"],

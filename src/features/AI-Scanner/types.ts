@@ -3,7 +3,15 @@ export type message =
   | progressMessage
   | vulnerabilityMessage
   | endpointTransitionMessage
-  | scanCompleteMessage;
+  | scanCompleteMessage
+  | errorMessage;
+
+type errorMessage = {
+  type: "error";
+  scan_id?: string;
+  error: string;
+  timestamp: string;
+};
 
 export type vulnType = "sql_injection" | "reflected_xss";
 

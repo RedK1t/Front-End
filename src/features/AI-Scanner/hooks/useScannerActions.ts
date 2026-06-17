@@ -1,7 +1,7 @@
 import useScannerSocket from "./useScannerSocket";
 
 function useScannerActions() {
-  const { sendJsonMessage } = useScannerSocket();
+  const { sendJsonMessage, readyState } = useScannerSocket();
   // const queryClient = useQueryClient();
 
   const startScan = (url: string) => {
@@ -27,7 +27,7 @@ function useScannerActions() {
     });
   };
 
-  return { startScan, startRawScan };
+  return { startScan, startRawScan, readyState };
 }
 
 export default useScannerActions;

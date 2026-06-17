@@ -2,7 +2,9 @@ import ResultsTable from "./components/ResultsTable";
 import DetailsCard from "./components/DetailsCard";
 import ScanHistory from "./components/ScanHistory";
 import ScannerCacheManager from "./hooks/ScannerCacheManager";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { ReadyState } from "react-use-websocket";
+import toast from "react-hot-toast";
 import useScannerActions from "./hooks/useScannerActions";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import InfoCardsList from "./components/InfoCardsList";
@@ -11,20 +13,30 @@ import { FaFileAlt } from "react-icons/fa";
 type QuickScanState = { rawRequest?: string; url?: string } | null;
 
 export default function AIScanner() {
-  const { startScan, startRawScan } = useScannerActions();
+  const { startScan, startRawScan, readyState } = useScannerActions();
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state as QuickScanState;
   const url = searchParams.get("url");
+  // Fire the scan exactly once, and only once the WebSocket is actually OPEN — sending
+  // before the (wss) handshake completes can drop the message (the page would then sit
+  // at 0/0/0 with no scan ever starting on the server).
+  const startedRef = useRef(false);
   useEffect(() => {
+    if (startedRef.current) return;
+    if (readyState !== ReadyState.OPEN) return;
     // Prefer a full raw request (tests body params); fall back to URL-only scans.
     if (state?.rawRequest) {
+      startedRef.current = true;
       startRawScan({ rawRequest: state.rawRequest, url: state.url });
+      toast.loading("Starting scan…", { id: "scan-start", duration: 2500 });
     } else if (url) {
+      startedRef.current = true;
       startScan(url);
+      toast.loading("Starting scan…", { id: "scan-start", duration: 2500 });
     }
-  }, []);
+  }, [readyState, state, url, startScan, startRawScan]);
   return (
     <>
       <ScannerCacheManager />
