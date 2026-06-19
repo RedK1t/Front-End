@@ -26,16 +26,18 @@ export default function useScanHistory() {
     queryFn: getScans,
   });
 
-  // Only show history for the target currently being tested. A scan belongs to
-  // the current target when its `domain` matches, or (for scans saved without a
-  // domain) when its target_url's host matches. When no target is selected, show
-  // nothing — there is no active target to scope the history to.
+  // When a target is being tested, scope history to it: a scan belongs to the
+  // current target when its `domain` matches, or (for scans saved without a
+  // domain) when its target_url's host matches. When no target is selected — e.g.
+  // a Quick Scan launched straight from the Interceptor, which never sets a domain
+  // — show ALL of this user's scans instead of nothing (getScans already scopes to
+  // the logged-in user), so freshly found scans are still visible and reportable.
   const scans = domain
     ? allScans.filter(
         (scan) =>
           scan.domain === domain || hostFromUrl(scan.target_url) === domain,
       )
-    : [];
+    : allScans;
 
   // Which saved scan is currently shown (null = the live/most-recent in-memory results).
   const { data: viewingScanId } = useQuery<string | null>({

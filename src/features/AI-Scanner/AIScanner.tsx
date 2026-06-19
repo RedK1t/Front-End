@@ -10,6 +10,7 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import InfoCardsList from "./components/InfoCardsList";
 import { FaFileAlt } from "react-icons/fa";
 import useProxyTraffic from "../Interceptor/hooks/useProxyTraffic";
+import useScannerTraffic from "./hooks/useScannerTraffic";
 
 type QuickScanState = { rawRequest?: string; url?: string } | null;
 
@@ -22,6 +23,10 @@ export default function AIScanner() {
   const url = searchParams.get("url");
   const selectedId = searchParams.get("selected");
   const { interceptedRequests, history } = useProxyTraffic();
+  // Current results (live scan, or a history scan loaded into the cache) — used to
+  // gate the "Generate Report" button: nothing to report when there are no findings.
+  const { vulnerabilities } = useScannerTraffic();
+  const hasVulns = (vulnerabilities?.length ?? 0) > 0;
 
   // Snapshot the scan target on the FIRST render and never let it change.
   // The results table below renders the shared <Table/>, whose mount effect calls
@@ -83,7 +88,15 @@ export default function AIScanner() {
           <button
             type="button"
             onClick={() => navigate("/AiReport")}
-            className="flex items-center gap-2 rounded-xl bg-red px-6 py-3 text-white transition-all hover:bg-light-red hover:shadow-lg hover:shadow-red/20"
+            disabled={!hasVulns}
+            title={
+              hasVulns ? undefined : "No vulnerabilities found to report yet"
+            }
+            className={`flex items-center gap-2 rounded-xl px-6 py-3 text-white transition-all ${
+              hasVulns
+                ? "bg-red hover:bg-light-red hover:shadow-lg hover:shadow-red/20"
+                : "bg-red/40 cursor-not-allowed opacity-60"
+            }`}
           >
             <FaFileAlt className="h-4 w-4" />
             <span className="small-text font-medium">Generate Report</span>
