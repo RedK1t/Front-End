@@ -5,6 +5,22 @@ import useGenerateReport from "./hooks/useGenerateReport";
 import useScanHistory from "@/features/AI-Scanner/hooks/useScanHistory";
 import { useDomain } from "@/context/DomainContext";
 import { getScan } from "@/api/supabase";
+import type { vulnerabilities } from "@/features/AI-Scanner/types";
+
+// Drop duplicate findings when merging several scans of the same target. Two
+// findings are "the same" when they hit the same param at the same URL/method
+// with the same payload — keeping different payloads against one param distinct.
+function dedupeVulns(vulns: vulnerabilities): vulnerabilities {
+  const seen = new Set<string>();
+  return vulns.filter((v) => {
+    const key = `${v.vuln_type}|${v.url}|${v.method}|${JSON.stringify(
+      v.parameter,
+    )}|${v.payload}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
 
 // The report API returns download paths relative to its own origin (e.g.
 // "/api/report/download?format=docx"). Resolve them against the configured base.
@@ -23,38 +39,57 @@ function downloadHref(path: string | null): string | undefined {
 
 export default function AiReport() {
   const { domain } = useDomain();
-  // Scans already scoped to the current user (Supabase user_id) AND the current
-  // target (domain filter). Newest first → [0] is this target's latest scan.
   const { scans, isLoading: historyLoading } = useScanHistory();
-  const latest = scans[0] ?? null;
 
-  // Full record (with findings) for that latest scan.
-  const { data: fullScan, isLoading: scanLoading } = useQuery({
-    queryKey: ["scan", latest?.id],
-    queryFn: () => getScan(latest!.id),
-    enabled: !!latest,
+  // Scans chosen in Scan History to merge into one report. Set by the
+  // "Generate report from N selected" button (and cleared to [] by the AI
+  // Scanner's single "Generate Report" button). Empty → use the latest scan.
+  const { data: selectedIds = [] } = useQuery<string[]>({
+    queryKey: ["report-selection"],
+    queryFn: () => [],
+    initialData: [],
+    staleTime: Infinity,
+  });
+  const latest = scans[0] ?? null;
+  const ids =
+    selectedIds.length > 0 ? selectedIds : latest ? [latest.id] : [];
+
+  // Fetch every chosen scan's full findings, then merge + dedupe them so the
+  // report covers e.g. an XSS from one scan AND an SQLi from another.
+  const { data: merged, isLoading: mergeLoading } = useQuery({
+    queryKey: ["merged-scan", ids],
+    queryFn: async () => {
+      const records = (await Promise.all(ids.map((id) => getScan(id)))).filter(
+        (r): r is NonNullable<typeof r> => Boolean(r),
+      );
+      const vulnerabilities = dedupeVulns(
+        records.flatMap((r) => r.vulnerabilities ?? []),
+      );
+      const target_url = records[0]?.target_url ?? domain ?? "Unknown";
+      return { vulnerabilities, target_url, scanCount: records.length };
+    },
+    enabled: ids.length > 0,
   });
 
   const { generateReport, data, isError, isPending, reset } =
     useGenerateReport();
 
-  // Build the report from THIS target's latest scan only. Re-runs when the
-  // target (or its latest scan) changes; clears when the target has no scan
-  // (e.g. it was just deleted) so a stale report is never shown.
+  // Build the report from the merged findings. Re-runs when the selection (or
+  // its findings) changes; clears when there is no scan to report.
   useEffect(() => {
-    if (fullScan) {
+    if (merged) {
       generateReport({
-        target_url: fullScan.target_url ?? domain ?? "Unknown",
-        vulnerabilities: fullScan.vulnerabilities ?? [],
+        target_url: merged.target_url,
+        vulnerabilities: merged.vulnerabilities,
       });
-    } else if (!latest) {
+    } else if (ids.length === 0) {
       reset();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fullScan?.id, latest]);
+  }, [merged]);
 
-  const loadingScan = historyLoading || (!!latest && scanLoading);
-  const noScanForTarget = !loadingScan && !latest;
+  const loadingScan = historyLoading || (ids.length > 0 && mergeLoading);
+  const noScanForTarget = !loadingScan && ids.length === 0;
 
   const docx = downloadHref(data?.downloads.docx ?? null);
   const pdf = downloadHref(data?.downloads.pdf ?? null);
@@ -79,15 +114,15 @@ export default function AiReport() {
           <button
             type="button"
             onClick={() =>
-              fullScan &&
+              merged &&
               generateReport({
-                target_url: fullScan.target_url ?? domain ?? "Unknown",
-                vulnerabilities: fullScan.vulnerabilities ?? [],
+                target_url: merged.target_url,
+                vulnerabilities: merged.vulnerabilities,
               })
             }
-            disabled={isPending || !fullScan}
+            disabled={isPending || !merged}
             className={`small-text rounded-6px px-4 py-2 transition-colors ${
-              isPending || !fullScan
+              isPending || !merged
                 ? "bg-red/40 text-dark-yellowish-white/60 cursor-not-allowed"
                 : "bg-red hover:bg-light-red cursor-pointer text-white"
             }`}
@@ -141,6 +176,11 @@ export default function AiReport() {
           <iframe
             title="Vulnerability Report Preview"
             srcDoc={data?.html_content || ""}
+            // The report embeds the findings' payloads/raw responses, which for
+            // reflected-XSS results contain live <script> (e.g. confirm(1)). An
+            // un-sandboxed srcDoc iframe EXECUTES them. `sandbox` (no allow-scripts)
+            // still renders the report's HTML/CSS but blocks all script execution.
+            sandbox=""
             className="rounded-6px h-full w-full overflow-auto border border-white/10 bg-[#ffffff]"
           />
         )}

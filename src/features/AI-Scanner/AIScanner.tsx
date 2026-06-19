@@ -11,6 +11,7 @@ import InfoCardsList from "./components/InfoCardsList";
 import { FaFileAlt } from "react-icons/fa";
 import useProxyTraffic from "../Interceptor/hooks/useProxyTraffic";
 import useScannerTraffic from "./hooks/useScannerTraffic";
+import { useQueryClient } from "@tanstack/react-query";
 
 type QuickScanState = { rawRequest?: string; url?: string } | null;
 
@@ -19,6 +20,7 @@ export default function AIScanner() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const state = location.state as QuickScanState;
   const url = searchParams.get("url");
   const selectedId = searchParams.get("selected");
@@ -87,7 +89,12 @@ export default function AIScanner() {
           </div>
           <button
             type="button"
-            onClick={() => navigate("/AiReport")}
+            onClick={() => {
+              // Single-scan report: clear any merged selection so the report
+              // page uses this target's latest scan.
+              queryClient.setQueryData(["report-selection"], []);
+              navigate("/AiReport");
+            }}
             disabled={!hasVulns}
             title={
               hasVulns ? undefined : "No vulnerabilities found to report yet"

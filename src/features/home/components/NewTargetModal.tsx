@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IoIosSearch } from "react-icons/io";
 import searchIcon from "../../../assets/SearchIcon.svg";
 import shareIcon from "../../../assets/ShareIcon.svg";
@@ -8,6 +8,7 @@ import { useDomain } from "@/context/DomainContext";
 import { useSubdomainContext } from "@/context/SubdomainContext";
 import { insertNewTarget } from "@/api/supabase";
 import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 export default function NewTargetModal() {
   const [domainInput, setDomainInput] = useState("");
@@ -18,13 +19,35 @@ export default function NewTargetModal() {
 
   const queryClient = useQueryClient();
 
-  async function handleSubmit(e: React.KeyboardEvent<HTMLInputElement>) {
-    e.preventDefault();
-    setDomain(domainInput);
+  // Save the target, refresh the overview list, then go to the scan page.
+  // The save is awaited BEFORE navigating, errors are surfaced (so a failure is
+  // visible instead of silently swallowed), and we refetch with type:"all" so the
+  // ["targets"] list updates even though it isn't the currently mounted query.
+  async function startScan() {
+    const d = domainInput.trim();
+    if (!d) {
+      toast.error("Enter a target domain first.");
+      return;
+    }
+    setDomain(d);
+    try {
+      await insertNewTarget(d);
+      await queryClient.refetchQueries({ queryKey: ["targets"], type: "all" });
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Couldn't save the target.",
+      );
+      return; // stay on the modal so the error is visible
+    }
+    (
+      document.getElementById("addTargetModal") as HTMLDialogElement | null
+    )?.close();
     navigate(`/reconnaissance`);
-    await insertNewTarget(domainInput).then(() =>
-      queryClient.refetchQueries({ queryKey: ["targets"] }),
-    );
+  }
+
+  function handleSubmit(e: React.KeyboardEvent<HTMLInputElement>) {
+    e.preventDefault();
+    void startScan();
   }
   return (
     <dialog id="addTargetModal" className="modal backdrop-blur-sm">
@@ -95,19 +118,14 @@ export default function NewTargetModal() {
               />
               Share Target
             </button>
-            <Link
-              to={`/reconnaissance`}
-              onClick={async () => {
-                setDomain(domainInput);
-                await insertNewTarget(domainInput).then(() =>
-                  queryClient.refetchQueries({ queryKey: ["targets"] }),
-                );
-              }}
+            <button
+              type="button"
+              onClick={() => void startScan()}
               className="bg-red shadow-red/20 hover:bg-light-red hover:shadow-red/40 mid-text flex cursor-pointer items-center justify-center gap-2 rounded-xl py-3 text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-95"
             >
               <img src={searchIcon} alt="Search Icon" className="h-5 w-5" />
               Start Scan
-            </Link>
+            </button>
           </div>
         </div>
       </div>
