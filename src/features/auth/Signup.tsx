@@ -100,6 +100,9 @@ export default function Signup() {
             >
               <AuthInput
                 type="text"
+                name="name"
+                id="signup-name"
+                autoComplete="name"
                 placeholder="Enter your full name"
                 value={formData.fullName}
                 onChange={(value) => handleInputChange("fullName", value)}
@@ -117,6 +120,9 @@ export default function Signup() {
             >
               <AuthInput
                 type="email"
+                name="email"
+                id="signup-email"
+                autoComplete="email"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={(value) => handleInputChange("email", value)}
@@ -135,6 +141,9 @@ export default function Signup() {
               <AuthInput
                 className="pb-2"
                 type={showPassword ? "text" : "password"}
+                name="new-password"
+                id="signup-password"
+                autoComplete="new-password"
                 placeholder="Create a strong password"
                 value={formData.password}
                 onChange={(value) => handleInputChange("password", value)}
@@ -166,6 +175,9 @@ export default function Signup() {
             >
               <AuthInput
                 type={showConfirmPassword ? "text" : "password"}
+                name="confirm-password"
+                id="signup-confirm-password"
+                autoComplete="new-password"
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={(value) =>

@@ -11,6 +11,11 @@ type AuthInputProps = {
   label: string;
   rightIcon?: ReactNode;
   className?: string;
+  // Form-field identity so browsers / password managers map each field correctly
+  // (without these, the email box is treated as a generic username field).
+  name?: string;
+  id?: string;
+  autoComplete?: string;
 };
 
 export default function AuthInput({
@@ -23,6 +28,9 @@ export default function AuthInput({
   label,
   rightIcon,
   className = "",
+  name,
+  id,
+  autoComplete,
 }: AuthInputProps) {
   return (
     <div className={`space-y-2 ${className}`}>
@@ -37,6 +45,9 @@ export default function AuthInput({
         </div>
         <input
           type={type}
+          name={name}
+          id={id}
+          autoComplete={autoComplete}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}

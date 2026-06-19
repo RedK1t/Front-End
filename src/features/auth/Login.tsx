@@ -107,6 +107,9 @@ export default function Login() {
             >
               <AuthInput
                 type="email"
+                name="email"
+                id="login-email"
+                autoComplete="email"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={(value) => handleInputChange("email", value)}
@@ -124,6 +127,9 @@ export default function Login() {
             >
               <AuthInput
                 type={showPassword ? "text" : "password"}
+                name="password"
+                id="login-password"
+                autoComplete="current-password"
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={(value) => handleInputChange("password", value)}
