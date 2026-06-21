@@ -2,6 +2,7 @@ import { signIn, signUp } from "@/api/supabase";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export interface AuthFormData {
   email: string;
@@ -114,18 +115,25 @@ export const useAuthForm = () => {
       setIsLoading(false);
       return;
     }
-    try {
-      await signUp(formData.email, formData.password, formData.fullName);
-    } catch (error) {
-      setIsLoading(false);
-      throw error;
-    }
-    // Wipe ANY cached queries from a previous user before entering the app, so the
-    // new user always fetches their own data (cache is global, staleTime: Infinity).
-    queryClient.clear();
+
+    await toast.promise(
+      (async () => {
+        await signUp(formData.email, formData.password, formData.fullName);
+        // Wipe ANY cached queries from a previous user before entering the app
+        queryClient.clear();
+        navigate("/");
+      })(),
+      {
+        loading: "Creating your account...",
+        success: "Account created successfully! Welcome to RedKit!",
+        error: (err) =>
+          err instanceof Error ? err.message : "Failed to create account",
+      },
+    );
+
     setIsLoading(false);
-    navigate("/");
   }
+
   async function handleLogin(
     e: React.FormEvent,
     formData: { email: string; password: string },
@@ -140,17 +148,23 @@ export const useAuthForm = () => {
       setIsLoading(false);
       return;
     }
-    try {
-      await signIn(formData.email, formData.password);
-    } catch (error) {
-      setIsLoading(false);
-      throw error;
-    }
-    // Wipe ANY cached queries from a previous user before entering the app, so the
-    // new user always fetches their own data (cache is global, staleTime: Infinity).
-    queryClient.clear();
+
+    await toast.promise(
+      (async () => {
+        await signIn(formData.email, formData.password);
+        // Wipe ANY cached queries from a previous user before entering the app
+        queryClient.clear();
+        navigate("/");
+      })(),
+      {
+        loading: "Signing you in...",
+        success: "Welcome back to RedKit!",
+        error: (err) =>
+          err instanceof Error ? err.message : "Failed to sign in",
+      },
+    );
+
     setIsLoading(false);
-    navigate("/");
   }
 
   return {
