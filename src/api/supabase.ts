@@ -20,11 +20,13 @@ export async function signUp(email: string, password: string, name: string) {
   const { error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: { name },
+    },
   });
   if (error) {
     throw error;
   }
-  await updateUserName({ name });
   return;
 }
 
@@ -41,15 +43,6 @@ export async function signIn(email: string, password: string) {
 
 export async function signOut() {
   const { error } = await supabase.auth.signOut();
-  if (error) {
-    throw error;
-  }
-}
-
-export async function updateUserName(data: { name: string }) {
-  const { error } = await supabase.auth.updateUser({
-    data,
-  });
   if (error) {
     throw error;
   }
